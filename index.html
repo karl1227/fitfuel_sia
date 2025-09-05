@@ -1,482 +1,801 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home - FitFuel</title>
-    <link rel="icon" href="img/LOGO-Fitfuel.png" type="image/png">
+    <link rel="icon" href="img/LOGO-Fitfuel.png" type="image/png" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="font-body bg-white text-slate-600">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="font-body bg-white text-slate-600">
     <!-- First Navigation Bar -->
     <nav class="bg-white text-black py-2">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-end space-x-6 text-sm">
-                <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Account</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Login</a>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="flex justify-end space-x-6 text-sm">
+          <a href="#" class="hover:text-emerald-400 transition-colors"
+            >Review</a
+          >
+          <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
+          <a href="#" class="hover:text-emerald-400 transition-colors"
+            >Account</a
+          >
+          <a href="#" class="hover:text-emerald-400 transition-colors">Login</a>
         </div>
+      </div>
     </nav>
 
     <!-- Second Navigation Bar -->
     <nav class="sticky-nav bg-black border-b border-white py-4">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <img src="img/LOGO-Fitfuel.png" width="75" height="auto" alt="LOGO">
-            
-                </div>
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between">
+          <!-- Logo -->
+          <div class="flex items-center">
+            <img
+              src="img/LOGO-Fitfuel.png"
+              width="75"
+              height="auto"
+              alt="LOGO"
+            />
+          </div>
 
-                <!-- Added dropdown menus for main categories -->
-                <div class="hidden md:flex space-x-8">
-                    <div class="dropdown">
-                        <a href="#" class="font-medium text-white hover:text-emerald-600 transition-colors">Gym Accessories</a>
-                        <div class="dropdown-menu">
-                            <a href="#">Lifting Straps</a>
-                            <a href="#">Gym Gloves</a>
-                            <a href="#">Weight Belts</a>
-                            <a href="#">Knee Wraps</a>
-                            <a href="#">Wrist Wraps</a>
-                            <a href="#">Gym Bags</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <a href="#" class="font-medium text-white hover:text-emerald-600 transition-colors">Gym Supplements</a>
-                        <div class="dropdown-menu">
-                            <a href="#">Whey Protein</a>
-                            <a href="#">Pre-Workout</a>
-                            <a href="#">Post-Workout</a>
-                            <a href="#">Creatine</a>
-                            <a href="#">BCAAs</a>
-                            <a href="#">Fat Burners</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <a href="#" class="font-medium text-white hover:text-emerald-600 transition-colors">Gym Equipment</a>
-                        <div class="dropdown-menu">
-                            <a href="#">Dumbbells</a>
-                            <a href="#">Barbells</a>
-                            <a href="#">Resistance Bands</a>
-                            <a href="#">Kettlebells</a>
-                            <a href="#">Yoga Mats</a>
-                            <a href="#">Cardio Equipment</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search and Icons -->
-                <div class="flex items-center space-x-4">
-                    <!-- Search Bar -->
-                    <div class="relative hidden md:block">
-                        <input type="text" placeholder="Search products..." class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-                    </div>
-                    
-                    <!-- Icons -->
-                    <button class="relative p-2 text-white hover:text-emerald-600 transition-colors">
-                        <i class="fas fa-bell text-xl"></i>
-        
-                    </button>
-                    
-                    <button class="relative p-2 text-white hover:text-emerald-600 transition-colors">
-                        <i class="fas fa-shopping-cart text-xl"></i> 
-                    </button>
-                    
-                    <button class="p-2 text-white hover:text-emerald-600 transition-colors">
-                        <i class="fas fa-user text-xl"></i>
-                    </button>
-                </div>
+          <!-- Added dropdown menus for main categories -->
+          <div class="hidden md:flex space-x-8">
+            <div class="dropdown">
+              <a
+                href="#"
+                class="font-medium text-white hover:text-emerald-600 transition-colors"
+                >Gym Accessories</a
+              >
+              <div class="dropdown-menu">
+                <a href="#">Lifting Straps</a>
+                <a href="#">Gym Gloves</a>
+                <a href="#">Weight Belts</a>
+                <a href="#">Knee Wraps</a>
+                <a href="#">Wrist Wraps</a>
+                <a href="#">Gym Bags</a>
+              </div>
             </div>
+            <div class="dropdown">
+              <a
+                href="#"
+                class="font-medium text-white hover:text-emerald-600 transition-colors"
+                >Gym Supplements</a
+              >
+              <div class="dropdown-menu">
+                <a href="#">Whey Protein</a>
+                <a href="#">Pre-Workout</a>
+                <a href="#">Post-Workout</a>
+                <a href="#">Creatine</a>
+                <a href="#">BCAAs</a>
+                <a href="#">Fat Burners</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a
+                href="#"
+                class="font-medium text-white hover:text-emerald-600 transition-colors"
+                >Gym Equipment</a
+              >
+              <div class="dropdown-menu">
+                <a href="#">Dumbbells</a>
+                <a href="#">Barbells</a>
+                <a href="#">Resistance Bands</a>
+                <a href="#">Kettlebells</a>
+                <a href="#">Yoga Mats</a>
+                <a href="#">Cardio Equipment</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search and Icons -->
+          <div class="flex items-center space-x-4">
+            <!-- Search Bar -->
+            <div class="relative hidden md:block">
+              <input
+                type="text"
+                placeholder="Search products..."
+                class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+            </div>
+
+            <!-- Icons -->
+            <button
+              class="relative p-2 text-white hover:text-emerald-600 transition-colors"
+            >
+              <i class="fas fa-bell text-xl"></i>
+            </button>
+
+            <a
+              href="cart.html"
+              class="relative p-2 text-white hover:text-emerald-600 transition-colors"
+            >
+              <i class="fas fa-shopping-cart text-xl"></i>
+            </a>
+
+            <button
+              class="p-2 text-white hover:text-emerald-600 transition-colors"
+            >
+              <i class="fas fa-user text-xl"></i>
+            </button>
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Hero Carousel -->
-    <section class="carousel-container bg-gradient-to-r from-stone-10 to-stone-500">
-        <div class="carousel-slide active">
-            <div class="container mx-auto px-4 py-16">
-                <div class="flex items-center justify-between">
-                    <div class="w-1/2">
-                        <h2 class="font-heading text-5xl font-bold text-slate-800 mb-4">Fuel Your Fitness Journey</h2>
-                        <p class="text-xl text-slate-600 mb-8">Premium gym equipment, supplements, and accessories for serious athletes</p>
-                        <button class="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">Shop Now</button>
-                    </div>
-                    <div class="w-1/2">
-                        <img src="img/carousel/C1.png" alt="Gym Equipment" class="w-full h-auto rounded-lg shadow-lg">
-                    </div>
-                </div>
+    <section
+      class="carousel-container bg-gradient-to-r from-stone-10 to-stone-500"
+    >
+      <div class="carousel-slide active">
+        <div class="container mx-auto px-4 py-16">
+          <div class="flex items-center justify-between">
+            <div class="w-1/2">
+              <h2 class="font-heading text-5xl font-bold text-slate-800 mb-4">
+                Fuel Your Fitness Journey
+              </h2>
+              <p class="text-xl text-slate-600 mb-8">
+                Premium gym equipment, supplements, and accessories for serious
+                athletes
+              </p>
+              <button
+                class="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
+              >
+                Shop Now
+              </button>
             </div>
-        </div>
-        
-        <div class="carousel-slide">
-            <div class="container mx-auto px-4 py-16">
-                <div class="flex items-center justify-between">
-                    <div class="w-1/2">
-                        <h2 class="font-heading text-5xl font-bold text-slate-800 mb-4">Premium Supplements</h2>
-                        <p class="text-xl text-slate-600 mb-8">Scientifically formulated nutrition to maximize your performance</p>
-                        <button class="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">Explore Supplements</button>
-                    </div>
-                    <div class="w-1/2">
-                        <img src="img/carousel/C2.png" alt="Supplements" class="w-full h-auto rounded-lg shadow-lg">
-                    </div>
-                </div>
+            <div class="w-1/2">
+              <img
+                src="img/carousel/C1.png"
+                alt="Gym Equipment"
+                class="w-full h-auto rounded-lg shadow-lg"
+              />
             </div>
+          </div>
         </div>
-        
-        <div class="carousel-slide">
-            <div class="container mx-auto px-4 py-16">
-                <div class="flex items-center justify-between">
-                    <div class="w-1/2">
-                        <h2 class="font-heading text-5xl font-bold text-slate-800 mb-4">Essential Accessories</h2>
-                        <p class="text-xl text-slate-600 mb-8">Complete your workout with our range of premium accessories</p>
-                        <button class="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">View Accessories</button>
-                    </div>
-                    <div class="w-1/2">
-                        <img src="img/carousel/C3.png" alt="Accessories" class="w-full h-auto rounded-lg shadow-lg">
-                    </div>
-                </div>
+      </div>
+
+      <div class="carousel-slide">
+        <div class="container mx-auto px-4 py-16">
+          <div class="flex items-center justify-between">
+            <div class="w-1/2">
+              <h2 class="font-heading text-5xl font-bold text-slate-800 mb-4">
+                Premium Supplements
+              </h2>
+              <p class="text-xl text-slate-600 mb-8">
+                Scientifically formulated nutrition to maximize your performance
+              </p>
+              <button
+                class="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
+              >
+                Explore Supplements
+              </button>
             </div>
+            <div class="w-1/2">
+              <img
+                src="img/carousel/C2.png"
+                alt="Supplements"
+                class="w-full h-auto rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
         </div>
-        
-        <!-- Carousel Controls -->
-        <button onclick="previousSlide()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all">
-            <i class="fas fa-chevron-left text-emerald-600"></i>
-        </button>
-        <button onclick="nextSlide()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all">
-            <i class="fas fa-chevron-right text-emerald-600"></i>
-        </button>
-        
-        <!-- Carousel Indicators -->
-        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-            <button onclick="currentSlide(1)" class="carousel-indicator active w-3 h-3 rounded-full bg-emerald-600"></button>
-            <button onclick="currentSlide(2)" class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50"></button>
-            <button onclick="currentSlide(3)" class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50"></button>
+      </div>
+
+      <div class="carousel-slide">
+        <div class="container mx-auto px-4 py-16">
+          <div class="flex items-center justify-between">
+            <div class="w-1/2">
+              <h2 class="font-heading text-5xl font-bold text-slate-800 mb-4">
+                Essential Accessories
+              </h2>
+              <p class="text-xl text-slate-600 mb-8">
+                Complete your workout with our range of premium accessories
+              </p>
+              <button
+                class="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
+              >
+                View Accessories
+              </button>
+            </div>
+            <div class="w-1/2">
+              <img
+                src="img/carousel/C3.png"
+                alt="Accessories"
+                class="w-full h-auto rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Carousel Controls -->
+      <button
+        onclick="previousSlide()"
+        class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all"
+      >
+        <i class="fas fa-chevron-left text-emerald-600"></i>
+      </button>
+      <button
+        onclick="nextSlide()"
+        class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all"
+      >
+        <i class="fas fa-chevron-right text-emerald-600"></i>
+      </button>
+
+      <!-- Carousel Indicators -->
+      <div
+        class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
+      >
+        <button
+          onclick="currentSlide(1)"
+          class="carousel-indicator active w-3 h-3 rounded-full bg-emerald-600"
+        ></button>
+        <button
+          onclick="currentSlide(2)"
+          class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50"
+        ></button>
+        <button
+          onclick="currentSlide(3)"
+          class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50"
+        ></button>
+      </div>
     </section>
 
     <!-- Added promotional banner between carousel and featured section -->
     <section class="py-8 bg-gradient-to-r from-black to-gray-800">
-        <div class="container mx-auto px-4">
-            <div class="text-center text-white">
-                <h3 class="font-heading text-2xl font-bold mb-2">🔥 Limited Time Offer!</h3>
-                <p class="text-lg mb-4">Get 20% OFF on all gym equipment + FREE shipping on orders over $100</p>
-                <div class="flex justify-center items-center space-x-4">
-                    <span class="bg-white text-emerald-600 px-4 py-2 rounded-lg font-bold">Use Code: FITFUEL20</span>
-                    <button class="bg-white text-emerald-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"> <a href="shop.html">Shop Now</a>
-                        
-                    </button>
-                </div>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="text-center text-white">
+          <h3 class="font-heading text-2xl font-bold mb-2">
+            🔥 Limited Time Offer!
+          </h3>
+          <p class="text-lg mb-4">
+            Get 20% OFF on all gym equipment + FREE shipping on orders over $100
+          </p>
+          <div class="flex justify-center items-center space-x-4">
+            <span
+              class="bg-white text-emerald-600 px-4 py-2 rounded-lg font-bold"
+              >Use Code: FITFUEL20</span
+            >
+            <button
+              class="bg-white text-emerald-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              <a href="shop.html">Shop Now</a>
+            </button>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Added banner for featured section -->
     <section class="py-4 bg-slate-100 border-b border-gray-200">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-center space-x-4">
-                <i class="fas fa-star text-yellow-500"></i>
-                <span class="font-semibold text-slate-700">Featured Products - Hand-picked by our fitness experts</span>
-                <i class="fas fa-star text-yellow-500"></i>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-center space-x-4">
+          <i class="fas fa-star text-yellow-500"></i>
+          <span class="font-semibold text-slate-700"
+            >Featured Products - Hand-picked by our fitness experts</span
+          >
+          <i class="fas fa-star text-yellow-500"></i>
         </div>
+      </div>
     </section>
 
     <!-- Featured Products -->
     <section class="py-16 bg-white">
-        <div class="w-full">
-            <div class="text-center mb-12">
-                <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">Featured Products</h2>
-                <p class="text-xl text-slate-600">Discover our most popular fitness essentials</p>
-            </div>
-            
-                <div class="grid grid-cols-1 md:grid-cols-2 max-w-full h-[1300px]">
-                <!-- Product Card 1 -->
-                <div class="product-card relative shadow-lg overflow-hidden ">
-                <!-- Product Image -->
-                <img src="/img/Featured/1.png" alt="Adjustable Dumbbells" class="w-full h-full object-cover">
-
-                <!-- Overlay Content -->
-                <div class="absolute inset-0 flex flex-col items-start justify-end text-start p-4">
-                    <h3 class="font-semibold text-lg text-white mb-4">Essentials That Push You Further</h3>
-                     <a href="shop.html">
-                         <button class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors">
-                            SHOP NOW
-                        </button>
-                    </a>
-                </div>
-                </div>
-                <div class="product-card relative shadow-lg overflow-hidden">
-                <!-- Product Image -->
-                <img src="/img/Featured/3.png" alt="Adjustable Dumbbells" class="w-full h-full object-cover">
-
-      
-
-                <!-- Overlay Content -->
-                <div class="absolute inset-0 flex flex-col items-start justify-end text-start p-4">
-                    <h3 class="font-semibold text-lg text-white mb-4">Power Up Your Performance</h3>
-                    <a href="shop.html">
-                         <button class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors">
-                            SHOP NOW
-                        </button>
-                    </a>
-                </div>
-                </div>
-                <div class="product-card relative shadow-lg overflow-hidden">
-                <!-- Product Image -->
-                <img src="/img/Featured/4.png" alt="Adjustable Dumbbells" class="w-full h-full object-cover">
-
-         
-
-                <!-- Overlay Content -->
-                <div class="absolute inset-0 flex flex-col items-start justify-end text-start p-4">
-                    <h3 class="font-semibold text-lg text-white mb-4">Strength Anywhere, Anytime</h3>
-                    <a href="shop.html">
-                         <button class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors">
-                            SHOP NOW
-                        </button>
-                    </a>
-                </div>
-                </div>
-                <div class="product-card relative shadow-lg overflow-hidden">
-                <!-- Product Image -->
-                <img src="/img/Featured/2.png" alt="Paralletes" class="w-full h-full object-cover">
-
-
-                <!-- Overlay Content -->
-                <div class="absolute inset-0 flex flex-col items-start justify-end text-start p-4">
-                    <h3 class="font-semibold text-lg text-white mb-4">Train Hard. Stay Strong</h3>
-                    <a href="shop.html">
-                         <button class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors">
-                            SHOP NOW
-                        </button>
-                    </a>
-                   
-                </div>
-                </div>
-
-
-
-            </div>
+      <div class="w-full">
+        <div class="text-center mb-12">
+          <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">
+            Featured Products
+          </h2>
+          <p class="text-xl text-slate-600">
+            Discover our most popular fitness essentials
+          </p>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 max-w-full h-[1300px]">
+          <!-- Product Card 1 -->
+          <div class="product-card relative shadow-lg overflow-hidden">
+            <!-- Product Image -->
+            <img
+              src="/img/Featured/1.png"
+              alt="Adjustable Dumbbells"
+              class="w-full h-full object-cover"
+            />
+
+            <!-- Overlay Content -->
+            <div
+              class="absolute inset-0 flex flex-col items-start justify-end text-start p-4"
+            >
+              <h3 class="font-semibold text-lg text-white mb-4">
+                Essentials That Push You Further
+              </h3>
+              <a href="shop.html">
+                <button
+                  class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors"
+                >
+                  SHOP NOW
+                </button>
+              </a>
+            </div>
+          </div>
+          <div class="product-card relative shadow-lg overflow-hidden">
+            <!-- Product Image -->
+            <img
+              src="/img/Featured/3.png"
+              alt="Adjustable Dumbbells"
+              class="w-full h-full object-cover"
+            />
+
+            <!-- Overlay Content -->
+            <div
+              class="absolute inset-0 flex flex-col items-start justify-end text-start p-4"
+            >
+              <h3 class="font-semibold text-lg text-white mb-4">
+                Power Up Your Performance
+              </h3>
+              <a href="shop.html">
+                <button
+                  class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors"
+                >
+                  SHOP NOW
+                </button>
+              </a>
+            </div>
+          </div>
+          <div class="product-card relative shadow-lg overflow-hidden">
+            <!-- Product Image -->
+            <img
+              src="/img/Featured/4.png"
+              alt="Adjustable Dumbbells"
+              class="w-full h-full object-cover"
+            />
+
+            <!-- Overlay Content -->
+            <div
+              class="absolute inset-0 flex flex-col items-start justify-end text-start p-4"
+            >
+              <h3 class="font-semibold text-lg text-white mb-4">
+                Strength Anywhere, Anytime
+              </h3>
+              <a href="shop.html">
+                <button
+                  class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors"
+                >
+                  SHOP NOW
+                </button>
+              </a>
+            </div>
+          </div>
+          <div class="product-card relative shadow-lg overflow-hidden">
+            <!-- Product Image -->
+            <img
+              src="/img/Featured/2.png"
+              alt="Paralletes"
+              class="w-full h-full object-cover"
+            />
+
+            <!-- Overlay Content -->
+            <div
+              class="absolute inset-0 flex flex-col items-start justify-end text-start p-4"
+            >
+              <h3 class="font-semibold text-lg text-white mb-4">
+                Train Hard. Stay Strong
+              </h3>
+              <a href="shop.html">
+                <button
+                  class="bg-white text-black px-4 py-2 rounded-lg hover:bg-stone-200 transition-colors"
+                >
+                  SHOP NOW
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Popular Products -->
     <section class="py-16 bg-slate-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">Popular Products</h2>
-                <p class="text-xl text-slate-600">Best-selling items loved by our customers</p>
-            </div>
-            
-            <div id="popular-products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Popular Product Cards will be populated by JavaScript -->
-            </div>
-            
-            <!-- Pagination -->
-            <div class="pagination">
-                <button onclick="changePage('prev')" id="prev-btn">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button onclick="goToPage(1)" class="page-btn active" data-page="1">1</button>
-                <button onclick="goToPage(2)" class="page-btn" data-page="2">2</button>
-                <button onclick="goToPage(3)" class="page-btn" data-page="3">3</button>
-                <button onclick="changePage('next')" id="next-btn">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">
+            Popular Products
+          </h2>
+          <p class="text-xl text-slate-600">
+            Best-selling items loved by our customers
+          </p>
         </div>
+
+        <div
+          id="popular-products"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+        >
+          <!-- Popular Product Cards will be populated by JavaScript -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button onclick="changePage('prev')" id="prev-btn">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button onclick="goToPage(1)" class="page-btn active" data-page="1">
+            1
+          </button>
+          <button onclick="goToPage(2)" class="page-btn" data-page="2">
+            2
+          </button>
+          <button onclick="goToPage(3)" class="page-btn" data-page="3">
+            3
+          </button>
+          <button onclick="changePage('next')" id="next-btn">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
     </section>
 
     <!-- Added banner for shop by categories section -->
     <section class="relative w-full">
-    <!-- Banner Image -->
-    <img src="img/Banner/banner2.png" alt="Banner" class="w-full h-auto">
+      <!-- Banner Image -->
+      <img src="img/Banner/banner2.png" alt="Banner" class="w-full h-auto" />
 
-    <!-- Overlay Text + Button -->
-    <div class="flex flex-col justify-center items-center text-center px-4">
-        <h2 class="uppercase tracking-tight font-extrabold text-black md:text-7xl text-4xl mt-12 mb-6">
-        FUELED-UP. WORKOUT-READY.
+      <!-- Overlay Text + Button -->
+      <div class="flex flex-col justify-center items-center text-center px-4">
+        <h2
+          class="uppercase tracking-tight font-extrabold text-black md:text-7xl text-4xl mt-12 mb-6"
+        >
+          FUELED-UP. WORKOUT-READY.
         </h2>
 
         <p class="text-base md:text-lg text-slate-600 mb-6 max-w-2xl">
-        Hydration meets hustle. Gear up with gym essentials, from supplements to equipment.
+          Hydration meets hustle. Gear up with gym essentials, from supplements
+          to equipment.
         </p>
         <a href="shop.html">
-        <button class="bg-black text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-gray-800 transition-colors"> 
+          <button
+            class="bg-black text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-gray-800 transition-colors"
+          >
             Shop All Fitness
-        </button>
+          </button>
         </a>
-    </div>
+      </div>
     </section>
-
-
-
 
     <!-- Shop by Categories -->
     <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">Shop by Categories</h2>
-                <p class="text-xl text-slate-600">Find exactly what you need for your fitness journey</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Category 1 -->
-                <div class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer">
-                    <img src="/placeholder.svg?height=300&width=400" alt="Gym Equipment" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center text-white">
-                            <h3 class="font-heading text-2xl font-bold mb-2">Gym Equipment</h3>
-                            <p class="text-lg">Professional grade equipment</p>
-                            <button class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
-                                Shop Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Category 2 -->
-                <div class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer">
-                    <img src="/placeholder.svg?height=300&width=400" alt="Supplements" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center text-white">
-                            <h3 class="font-heading text-2xl font-bold mb-2">Supplements</h3>
-                            <p class="text-lg">Premium nutrition products</p>
-                            <button class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
-                                Shop Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Category 3 -->
-                <div class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer">
-                    <img src="/placeholder.svg?height=300&width=400" alt="Accessories" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center text-white">
-                            <h3 class="font-heading text-2xl font-bold mb-2">Accessories</h3>
-                            <p class="text-lg">Essential workout gear</p>
-                            <button class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
-                                Shop Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">
+            Shop by Categories
+          </h2>
+          <p class="text-xl text-slate-600">
+            Find exactly what you need for your fitness journey
+          </p>
         </div>
-    </section>
 
-    
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Category 1 -->
+          <div
+            class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer"
+          >
+            <img
+              src="/placeholder.svg?height=300&width=400"
+              alt="Gym Equipment"
+              class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"
+            ></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center text-white">
+                <h3 class="font-heading text-2xl font-bold mb-2">
+                  Gym Equipment
+                </h3>
+                <p class="text-lg">Professional grade equipment</p>
+                <button
+                  class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  Shop Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category 2 -->
+          <div
+            class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer"
+          >
+            <img
+              src="/placeholder.svg?height=300&width=400"
+              alt="Supplements"
+              class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"
+            ></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center text-white">
+                <h3 class="font-heading text-2xl font-bold mb-2">
+                  Supplements
+                </h3>
+                <p class="text-lg">Premium nutrition products</p>
+                <button
+                  class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  Shop Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category 3 -->
+          <div
+            class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer"
+          >
+            <img
+              src="/placeholder.svg?height=300&width=400"
+              alt="Accessories"
+              class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"
+            ></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center text-white">
+                <h3 class="font-heading text-2xl font-bold mb-2">
+                  Accessories
+                </h3>
+                <p class="text-lg">Essential workout gear</p>
+                <button
+                  class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  Shop Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Product Features -->
     <section class="py-16 bg-slate-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">Why Choose FitFuel?</h2>
-                <p class="text-xl text-slate-600">We're committed to your fitness success</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-shipping-fast text-2xl text-emerald-600"></i>
-                    </div>
-                    <h3 class="font-heading text-xl font-semibold text-slate-800 mb-2">Free Shipping</h3>
-                    <p class="text-slate-600">Free shipping on orders over $75. Fast and reliable delivery nationwide.</p>
-                </div>
-                
-                <div class="text-center">
-                    <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-medal text-2xl text-emerald-600"></i>
-                    </div>
-                    <h3 class="font-heading text-xl font-semibold text-slate-800 mb-2">Premium Quality</h3>
-                    <p class="text-slate-600">Only the highest quality products from trusted brands and manufacturers.</p>
-                </div>
-                
-                <div class="text-center">
-                    <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-headset text-2xl text-emerald-600"></i>
-                    </div>
-                    <h3 class="font-heading text-xl font-semibold text-slate-800 mb-2">Expert Support</h3>
-                    <p class="text-slate-600">Get personalized advice from our fitness experts and nutritionists.</p>
-                </div>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">
+            Why Choose FitFuel?
+          </h2>
+          <p class="text-xl text-slate-600">
+            We're committed to your fitness success
+          </p>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div
+              class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-shipping-fast text-2xl text-emerald-600"></i>
+            </div>
+            <h3 class="font-heading text-xl font-semibold text-slate-800 mb-2">
+              Free Shipping
+            </h3>
+            <p class="text-slate-600">
+              Free shipping on orders over $75. Fast and reliable delivery
+              nationwide.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-medal text-2xl text-emerald-600"></i>
+            </div>
+            <h3 class="font-heading text-xl font-semibold text-slate-800 mb-2">
+              Premium Quality
+            </h3>
+            <p class="text-slate-600">
+              Only the highest quality products from trusted brands and
+              manufacturers.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-headset text-2xl text-emerald-600"></i>
+            </div>
+            <h3 class="font-heading text-xl font-semibold text-slate-800 mb-2">
+              Expert Support
+            </h3>
+            <p class="text-slate-600">
+              Get personalized advice from our fitness experts and
+              nutritionists.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Newsletter -->
     <section class="py-16 bg-emerald-600">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="font-heading text-3xl font-bold text-white mb-4">Stay Updated</h2>
-            <p class="text-emerald-100 mb-8 text-lg">Get the latest fitness tips, product updates, and exclusive offers</p>
-            <div class="max-w-md mx-auto flex">
-                <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-emerald-300">
-                <button class="bg-slate-800 text-white px-6 py-3 rounded-r-lg hover:bg-slate-700 transition-colors">Subscribe</button>
-            </div>
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="font-heading text-3xl font-bold text-white mb-4">
+          Stay Updated
+        </h2>
+        <p class="text-emerald-100 mb-8 text-lg">
+          Get the latest fitness tips, product updates, and exclusive offers
+        </p>
+        <div class="max-w-md mx-auto flex">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            class="flex-1 px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-emerald-300"
+          />
+          <button
+            class="bg-slate-800 text-white px-6 py-3 rounded-r-lg hover:bg-slate-700 transition-colors"
+          >
+            Subscribe
+          </button>
         </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="bg-slate-800 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="font-heading text-2xl font-bold text-White-400 mb-4">FitFuel</h3>
-                    <p class="text-slate-300 mb-4">Your ultimate destination for premium fitness equipment, supplements, and accessories.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-facebook text-xl"></i></a>
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-instagram text-xl"></i></a>
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-twitter text-xl"></i></a>
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-youtube text-xl"></i></a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">About Us</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Contact</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Blog</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">FAQs</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Categories</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Gym Equipment</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Supplements</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Accessories</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Apparel</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Customer Service</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Shipping Info</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Returns</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Size Guide</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Track Order</a></li>
-                    </ul>
-                </div>
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="font-heading text-2xl font-bold text-White-400 mb-4">
+              FitFuel
+            </h3>
+            <p class="text-slate-300 mb-4">
+              Your ultimate destination for premium fitness equipment,
+              supplements, and accessories.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-slate-300 hover:text-emerald-400 transition-colors"
+                ><i class="fab fa-facebook text-xl"></i
+              ></a>
+              <a
+                href="#"
+                class="text-slate-300 hover:text-emerald-400 transition-colors"
+                ><i class="fab fa-instagram text-xl"></i
+              ></a>
+              <a
+                href="#"
+                class="text-slate-300 hover:text-emerald-400 transition-colors"
+                ><i class="fab fa-twitter text-xl"></i
+              ></a>
+              <a
+                href="#"
+                class="text-slate-300 hover:text-emerald-400 transition-colors"
+                ><i class="fab fa-youtube text-xl"></i
+              ></a>
             </div>
-            
-            <div class="border-t border-slate-700 mt-8 pt-8 text-center">
-                <p class="text-slate-300">&copy; 2024 FitFuel. All rights reserved. | Privacy Policy | Terms of Service</p>
-            </div>
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Blog</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >FAQs</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-lg mb-4">Categories</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Gym Equipment</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Supplements</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Accessories</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Apparel</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-lg mb-4">Customer Service</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Shipping Info</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Returns</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Size Guide</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-slate-300 hover:text-emerald-400 transition-colors"
+                  >Track Order</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
-        
+
+        <div class="border-t border-slate-700 mt-8 pt-8 text-center">
+          <p class="text-slate-300">
+            &copy; 2024 FitFuel. All rights reserved. | Privacy Policy | Terms
+            of Service
+          </p>
+        </div>
+      </div>
     </footer>
 
     <script src="js/index.js"></script>
-
-</body>
+  </body>
 </html>
