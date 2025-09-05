@@ -42,7 +42,74 @@
             top: 0;
             z-index: 50;
             backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(0, 0, 0, 0.95);
+        }
+
+        /* Mobile Navigation Improvements */
+        @media (max-width: 768px) {
+            .sticky-nav .container {
+                padding: 0 1rem;
+            }
+            
+            .sticky-nav .flex {
+                flex-wrap: wrap;
+            }
+            
+            .sticky-nav .hidden.md\\:flex {
+                display: none;
+            }
+            
+            .mobile-menu {
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+            
+            .mobile-menu.show {
+                max-height: 500px;
+            }
+            
+            .mobile-nav-item {
+                border-bottom: 1px solid #374151;
+                padding: 0.5rem 0;
+            }
+            
+            .mobile-nav-item:last-child {
+                border-bottom: none;
+            }
+        }
+
+        /* Responsive Grid Improvements */
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .responsive-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Responsive Typography */
+        .responsive-text {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+        }
+
+        .responsive-heading {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+        }
+
+        /* Responsive Spacing */
+        .responsive-padding {
+            padding: clamp(1rem, 4vw, 3rem);
+        }
+
+        .responsive-margin {
+            margin: clamp(0.5rem, 2vw, 2rem);
         }
 
         /* Added dropdown menu styles */

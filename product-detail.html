@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kettlebell - FitFuel</title>
+    <link rel="icon" href="img/LOGO-Fitfuel.png" type="image/png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    
+    <!-- Load shared components -->
+    <script src="shared/config.js"></script>
+    <script src="shared/utils.js"></script>
+    <script src="shared/seo.js"></script>
+    <script src="shared/image-utils.js"></script>
+    <script src="shared/error-handler.js"></script>
+    <script src="shared/form-validator.js"></script>
+    <script src="shared/component-loader.js"></script>
+    <script src="components/header.js"></script>
+    <script src="components/footer.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'heading': ['Space Grotesk', 'sans-serif'],
+                        'body': ['DM Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#059669',
+                        'secondary': '#10b981',
+                        'accent': '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-body bg-white text-slate-600">
+
+    <!-- Page Title -->
+    <section class="bg-gray-800 py-4">
+        <div class="container mx-auto px-4">
+            <h1 class="text-white text-2xl font-heading">Product Page</h1>
+        </div>
+    </section>
+
+    <!-- Breadcrumbs -->
+    <section class="bg-white py-3 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <nav class="text-sm">
+                <a href="index.html" class="text-gray-600 hover:text-emerald-600">Home</a>
+                <span class="mx-2 text-gray-400">></span>
+                <a href="shop.html" class="text-gray-600 hover:text-emerald-600">Equipments</a>
+                <span class="mx-2 text-gray-400">></span>
+                <a href="shop.html#kettlebells" class="text-gray-600 hover:text-emerald-600">Weights</a>
+                <span class="mx-2 text-gray-400">></span>
+                <span class="text-gray-900 font-medium">Kettlebell</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Product Image -->
+                <div class="space-y-4">
+                    <div class="bg-gray-100 rounded-lg p-8 flex items-center justify-center">
+                        <img src="img/Featured/1.png" alt="Kettlebell" class="max-w-full h-auto max-h-96 object-contain" />
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="space-y-6">
+                    <div>
+                        <h1 class="text-4xl font-heading font-bold text-gray-900 mb-2">Kettlebell</h1>
+                        <div class="flex items-center space-x-2 mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl font-bold text-gray-900">4.9</span>
+                                <i class="fas fa-star text-yellow-400 ml-1"></i>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900 mb-4">P 1,200</p>
+                        <p class="text-gray-600 text-lg leading-relaxed">
+                            Versatile and durable kettlebell designed for dynamic strength training, conditioning and cardio.
+                        </p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-4">
+                        <!-- Favorite Button -->
+                        <button id="favorite-btn" class="flex items-center space-x-2 text-gray-600 hover:text-red-500 transition-colors">
+                            <i class="far fa-heart text-xl"></i>
+                            <span>Favorite</span>
+                        </button>
+
+                        <!-- Quantity Selector -->
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-700 font-medium">Quantity:</span>
+                            <div class="flex items-center border border-gray-300 rounded-lg">
+                                <button id="decrease-qty" class="px-3 py-2 hover:bg-gray-100 transition-colors">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span id="quantity" class="px-4 py-2 border-x border-gray-300 bg-white min-w-[60px] text-center">1</span>
+                                <button id="increase-qty" class="px-3 py-2 hover:bg-gray-100 transition-colors">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Add to Cart Button -->
+                        <button id="add-to-cart" class="w-full bg-black text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-gray-800 transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Description -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-heading font-bold text-gray-900 mb-6">Product Description</h2>
+            <div class="prose max-w-none">
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="far fa-star text-yellow-400"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Ratings -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-heading font-bold text-gray-900 mb-6">Product Ratings</h2>
+            
+            <!-- Overall Rating -->
+            <div class="mb-8">
+                <div class="flex items-center space-x-2 mb-4">
+                    <span class="text-2xl font-bold text-emerald-600">0 out of 5</span>
+                    <div class="flex space-x-1">
+                        <i class="far fa-star text-emerald-600"></i>
+                        <i class="far fa-star text-emerald-600"></i>
+                        <i class="far fa-star text-emerald-600"></i>
+                        <i class="far fa-star text-emerald-600"></i>
+                        <i class="far fa-star text-emerald-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rating Filters -->
+            <div class="mb-8">
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors">all</button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">5 star (0)</button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">4 star (0)</button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">3 star (0)</button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">2 star (0)</button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">1 star (0)</button>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">With Comments (0)</button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">With Media (0)</button>
+                </div>
+            </div>
+
+            <!-- No Ratings Message -->
+            <div class="text-center py-12">
+                <i class="far fa-star text-6xl text-emerald-200 mb-4"></i>
+                <p class="text-xl text-gray-500">No ratings yet</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- You may also like -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-heading font-bold text-gray-900 mb-8">You may also like</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Related Product 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div class="bg-gray-100 p-6 flex items-center justify-center">
+                        <img src="img/Featured/2.png" alt="Dumbbell" class="max-w-full h-32 object-contain" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-1">Dumbbell</h3>
+                        <p class="text-gray-500 text-sm mb-2">Weights</p>
+                        <p class="text-xl font-bold text-gray-900">P 1,950</p>
+                    </div>
+                </div>
+
+                <!-- Related Product 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div class="bg-gray-100 p-6 flex items-center justify-center">
+                        <img src="img/Featured/3.png" alt="Barbell Pads" class="max-w-full h-32 object-contain" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-1">Barbell Pads</h3>
+                        <p class="text-gray-500 text-sm mb-2">Lifting Gear</p>
+                        <p class="text-xl font-bold text-gray-900">P 1,100</p>
+                    </div>
+                </div>
+
+                <!-- Related Product 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div class="bg-gray-100 p-6 flex items-center justify-center">
+                        <img src="img/Featured/4.png" alt="Weightlifting Belt" class="max-w-full h-32 object-contain" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-1">Weightlifting Belt</h3>
+                        <p class="text-gray-500 text-sm mb-2">Lifting Gear</p>
+                        <p class="text-xl font-bold text-gray-900">P 1,200</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script src="js/products-data.js"></script>
+    <script src="js/cart-utils.js"></script>
+    <script src="js/product-detail.js"></script>
+</body>
+</html>

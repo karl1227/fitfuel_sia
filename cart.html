@@ -9,60 +9,19 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/cart.css">
+    
+    <!-- Load shared components -->
+    <script src="shared/config.js"></script>
+    <script src="shared/utils.js"></script>
+    <script src="shared/seo.js"></script>
+    <script src="shared/image-utils.js"></script>
+    <script src="shared/error-handler.js"></script>
+    <script src="shared/form-validator.js"></script>
+    <script src="shared/component-loader.js"></script>
+    <script src="components/header.js"></script>
+    <script src="components/footer.js"></script>
 </head>
 <body class="font-body bg-gray-50 text-slate-600">
-    <!-- First Navigation Bar -->
-    <nav class="bg-white text-black py-2">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-end space-x-6 text-sm">
-                <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Account</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Login</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Second Navigation Bar -->
-    <nav class="sticky-nav bg-black border-b border-white py-4">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="index.html"><img src="img/LOGO-Fitfuel.png" width="75" height="auto" alt="LOGO"></a>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden md:flex space-x-8">
-                    <a href="shop.html" class="font-medium text-white hover:text-emerald-600 transition-colors">Gym Accessories</a>
-                    <a href="shop.html" class="font-medium text-white hover:text-emerald-600 transition-colors">Gym Supplements</a>
-                    <a href="shop.html" class="font-medium text-white hover:text-emerald-600 transition-colors">Gym Equipment</a>
-                </div>
-
-                <!-- Search and Icons -->
-                <div class="flex items-center space-x-4">
-                    <!-- Search Bar -->
-                    <div class="relative hidden md:block">
-                        <input type="text" placeholder="Search products..." class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-                    </div>
-                    
-                    <!-- Icons -->
-                    <button class="relative p-2 text-white hover:text-emerald-600 transition-colors">
-                        <i class="fas fa-bell text-xl"></i>
-                    </button>
-                    
-                    <a href="cart.html" class="relative p-2 text-white hover:text-emerald-600 transition-colors">
-                        <i class="fas fa-shopping-cart text-xl"></i> 
-                    </a>
-                    
-                    <button class="p-2 text-white hover:text-emerald-600 transition-colors">
-                        <i class="fas fa-user text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- Cart Page Content -->
     <div class="container mx-auto px-4 py-8">
@@ -213,58 +172,8 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-white py-12 mt-16">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="font-heading text-2xl font-bold text-White-400 mb-4">FitFuel</h3>
-                    <p class="text-slate-300 mb-4">Your ultimate destination for premium fitness equipment, supplements, and accessories.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-facebook text-xl"></i></a>
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-instagram text-xl"></i></a>
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-twitter text-xl"></i></a>
-                        <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-youtube text-xl"></i></a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">About Us</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Contact</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Blog</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">FAQs</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Categories</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Gym Equipment</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Supplements</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Accessories</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Apparel</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Customer Service</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Shipping Info</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Returns</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Size Guide</a></li>
-                        <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Track Order</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-slate-700 mt-8 pt-8 text-center">
-                <p class="text-slate-300">&copy; 2024 FitFuel. All rights reserved. | Privacy Policy | Terms of Service</p>
-            </div>
-        </div>
-    </footer>
 
-    <script src="JS/cart.js"></script>
+    <script src="js/cart-utils.js"></script>
+    <script src="js/cart.js"></script>
 </body>
 </html>
