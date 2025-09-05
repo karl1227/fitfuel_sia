@@ -138,9 +138,18 @@ $customers = $custStmt->fetchAll();
             document.getElementById('edit_username').value = username;
             document.getElementById('edit_email').value = email;
             document.getElementById('edit_status').value = status;
-            // Role editable only for admins
+            // Role editable only for admins and only for admin/staff users
             const roleSel = document.getElementById('edit_role');
-            if (roleSel){ roleSel.value = role; }
+            const roleDiv = document.getElementById('edit_role_div');
+            if (roleSel && roleDiv){ 
+                roleSel.value = role; 
+                // Hide role selection for customers
+                if (role === 'customer') {
+                    roleDiv.style.display = 'none';
+                } else {
+                    roleDiv.style.display = 'block';
+                }
+            }
             document.getElementById('editUserModal').classList.remove('hidden');
         }
         function closeEdit(){ document.getElementById('editUserModal').classList.add('hidden'); }
@@ -166,6 +175,18 @@ $customers = $custStmt->fetchAll();
             params.set('customer_status', st);
             window.location = '?' + params.toString();
         }
+        function toggleUserMenu(){
+            const menu = document.getElementById('userMenu');
+            menu.classList.toggle('hidden');
+        }
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('userMenu');
+            const userButton = event.target.closest('[onclick="toggleUserMenu()"]');
+            if (!userButton && userMenu && !userMenu.contains(event.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
     </script>
 </head>
 <body class="font-body bg-gray-50">
@@ -175,8 +196,39 @@ $customers = $custStmt->fetchAll();
             <h1 class="text-xl font-bold uppercase">Admin</h1>
         </div>
         <div class="flex items-center space-x-4">
-            <button class="p-2 hover:bg-gray-800 rounded-lg transition-colors"><i class="fas fa-bell text-xl"></i></button>
-            <button class="p-2 hover:bg-gray-800 rounded-lg transition-colors" onclick="location.href='../logout.php'"><i class="fas fa-user text-xl"></i></button>
+            <button class="p-2 hover:bg-gray-800 rounded-lg transition-colors relative">
+                <i class="fas fa-bell text-xl"></i>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+            </button>
+            <div class="relative">
+                <button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg transition-colors">
+                    <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <span class="hidden md:block text-sm"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <div class="px-4 py-2 border-b border-gray-200">
+                        <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></p>
+                        <p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></p>
+                        <span class="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"><?php echo ucfirst($_SESSION['role'] ?? 'admin'); ?></span>
+                    </div>
+                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user-cog mr-3 text-gray-400"></i>
+                        Profile Settings
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-cog mr-3 text-gray-400"></i>
+                        Preferences
+                    </a>
+                    <div class="border-t border-gray-200 mt-2"></div>
+                    <a href="../logout.php" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
     <aside class="fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto">
@@ -264,16 +316,16 @@ $customers = $custStmt->fetchAll();
         <?php if ($message): ?><div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
         <?php if ($error): ?><div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
 
-        <div class="bg-white rounded-lg border border-gray-200">
-            <!-- Top global search removed per request -->
+        <!-- Admin Section Card -->
+        <div class="bg-white rounded-lg border border-gray-200 mb-8">
             <div class="overflow-x-auto">
-                <h3 class="text-lg font-bold text-gray-800 px-6 pt-4">ADMIN</h3>
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between px-6 pb-2">
+                <h3 class="text-lg font-bold text-gray-800 px-6 pt-4 pb-2">ADMIN</h3>
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 px-6 pb-4">
                     <div class="relative">
-                        <input id="adminSearch" type="text" placeholder="Search admins..." class="w-full sm:w-64 pl-4 pr-10 py-2 rounded-lg border border-gray-300" value="<?php echo htmlspecialchars($adminSearch); ?>" onkeypress="if(event.key==='Enter') filterAdmin()">
+                        <input id="adminSearch" type="text" placeholder="Search admins..." class="w-full sm:w-72 pl-4 pr-10 py-2 rounded-lg border border-gray-300" value="<?php echo htmlspecialchars($adminSearch); ?>" onkeypress="if(event.key==='Enter') filterAdmin()">
                         <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     </div>
-                    <div class="mt-2 lg:mt-0">
+                    <div>
                         <select id="adminStatus" class="px-4 py-2 rounded-lg border border-gray-300" onchange="filterAdmin()">
                             <option value="" <?php echo $adminStatus===''?'selected':''; ?>>All Status</option>
                             <option value="active" <?php echo $adminStatus==='active'?'selected':''; ?>>Active</option>
@@ -282,7 +334,7 @@ $customers = $custStmt->fetchAll();
                         </select>
                     </div>
                 </div>
-                <table class="w-full mb-8">
+                <table class="w-full">
                     <thead class="bg-gray-50"><tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
@@ -323,14 +375,19 @@ $customers = $custStmt->fetchAll();
                     <?php endforeach; endif; ?>
                     </tbody>
                 </table>
+            </div>
+        </div>
 
-                <h3 class="text-lg font-bold text-gray-800 px-6 pt-2">CUSTOMERS</h3>
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between px-6 pb-2">
+        <!-- Customers Section Card -->
+        <div class="bg-white rounded-lg border border-gray-200">
+            <div class="overflow-x-auto">
+                <h3 class="text-lg font-bold text-gray-800 px-6 pt-4 pb-2">CUSTOMERS</h3>
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 px-6 pb-4">
                     <div class="relative">
-                        <input id="customerSearch" type="text" placeholder="Search customers..." class="w-full sm:w-64 pl-4 pr-10 py-2 rounded-lg border border-gray-300" value="<?php echo htmlspecialchars($customerSearch); ?>" onkeypress="if(event.key==='Enter') filterCustomer()">
+                        <input id="customerSearch" type="text" placeholder="Search customers..." class="w-full sm:w-72 pl-4 pr-10 py-2 rounded-lg border border-gray-300" value="<?php echo htmlspecialchars($customerSearch); ?>" onkeypress="if(event.key==='Enter') filterCustomer()">
                         <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     </div>
-                    <div class="mt-2 lg:mt-0">
+                    <div>
                         <select id="customerStatus" class="px-4 py-2 rounded-lg border border-gray-300" onchange="filterCustomer()">
                             <option value="" <?php echo $customerStatus===''?'selected':''; ?>>All Status</option>
                             <option value="active" <?php echo $customerStatus==='active'?'selected':''; ?>>Active</option>
@@ -370,7 +427,6 @@ $customers = $custStmt->fetchAll();
                     </tbody>
                 </table>
             </div>
-            <!-- Pagination removed for split lists -->
         </div>
 
         <?php if ($isAdmin): ?>
@@ -386,7 +442,7 @@ $customers = $custStmt->fetchAll();
                             <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Email</label><input type="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg"/></div>
                             <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><input type="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg"/></div>
                             <div class="grid grid-cols-2 gap-4 mb-6">
-                                <div><label class="block text-sm font-medium text-gray-700 mb-2">Role</label><select name="role" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="staff">Staff</option><option value="manager">Manager</option><option value="admin">Admin</option></select></div>
+                                <div><label class="block text-sm font-medium text-gray-700 mb-2">Role</label><select name="role" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="staff">Inventory Staff</option><option value="manager">Manager</option><option value="admin">Admin</option></select></div>
                                 <div><label class="block text-sm font-medium text-gray-700 mb-2">Status</label><select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="active">Active</option><option value="suspended">Suspended</option><option value="inactive">Inactive</option></select></div>
                             </div>
                             <div class="flex justify-end space-x-3"><button type="button" onclick="closeAddAdmin()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg">Cancel</button><button type="submit" class="px-4 py-2 bg-black text-white rounded-lg">Create</button></div>
@@ -411,7 +467,7 @@ $customers = $custStmt->fetchAll();
                             <div class="grid grid-cols-2 gap-4 mb-4">
                                 <div><label class="block text-sm font-medium text-gray-700 mb-2">Status</label><select name="status" id="edit_status" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="active">Active</option><option value="suspended">Suspended</option><option value="inactive">Inactive</option></select></div>
                                 <?php if ($isAdmin): ?>
-                                <div><label class="block text-sm font-medium text-gray-700 mb-2">Role</label><select name="role" id="edit_role" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="staff">Inventory Staff</option><option value="manager">Manager</option><option value="admin">Admin</option><option value="customer">Customer</option></select></div>
+                                <div id="edit_role_div"><label class="block text-sm font-medium text-gray-700 mb-2">Role</label><select name="role" id="edit_role" class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="staff">Inventory Staff</option><option value="manager">Manager</option><option value="admin">Admin</option></select></div>
                                 <?php endif; ?>
                             </div>
                             <?php if ($isAdmin): ?>

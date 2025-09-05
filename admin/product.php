@@ -249,12 +249,39 @@ if (isset($_GET['edit'])) {
             <h1 class="text-xl font-bold uppercase">Admin</h1>
         </div>
         <div class="flex items-center space-x-4">
-            <button class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+            <button class="p-2 hover:bg-gray-800 rounded-lg transition-colors relative">
                 <i class="fas fa-bell text-xl"></i>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
             </button>
-            <button class="p-2 hover:bg-gray-800 rounded-lg transition-colors" onclick="logout()">
-                <i class="fas fa-user text-xl"></i>
-            </button>
+            <div class="relative">
+                <button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg transition-colors">
+                    <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <span class="hidden md:block text-sm"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <div class="px-4 py-2 border-b border-gray-200">
+                        <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></p>
+                        <p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></p>
+                        <span class="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"><?php echo ucfirst($_SESSION['role'] ?? 'admin'); ?></span>
+                    </div>
+                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user-cog mr-3 text-gray-400"></i>
+                        Profile Settings
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-cog mr-3 text-gray-400"></i>
+                        Preferences
+                    </a>
+                    <div class="border-t border-gray-200 mt-2"></div>
+                    <a href="../logout.php" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -287,7 +314,7 @@ if (isset($_GET['edit'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+                    <a href="users.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
                         <i class="fas fa-users text-gray-600"></i>
                         <span>Users</span>
                     </a>
@@ -757,6 +784,20 @@ if (isset($_GET['edit'])) {
                 window.location.href = '../logout.php';
             }
         }
+        
+        function toggleUserMenu(){
+            const menu = document.getElementById('userMenu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('userMenu');
+            const userButton = event.target.closest('[onclick="toggleUserMenu()"]');
+            if (!userButton && userMenu && !userMenu.contains(event.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
         
         // Handle edit mode
         <?php if ($edit_product): ?>
