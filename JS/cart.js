@@ -7,11 +7,18 @@ class Cart {
         this.taxRate = 0.08; // 8% tax rate
         this.promoCode = null;
         this.promoDiscount = 0;
+        this.selectedItems = new Set(); // Track selected items
         
         this.init();
     }
 
     init() {
+        // Select all items by default
+        this.items.forEach(item => {
+            const itemKey = `${item.id}-${item.size}`;
+            this.selectedItems.add(itemKey);
+        });
+        
         this.renderCart();
         this.updateSummary();
         this.setupEventListeners();
@@ -81,9 +88,15 @@ class Cart {
         }
     }
 
-    // Get cart total
+    // Get cart total (only for selected items)
     getSubtotal() {
-        return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+        return this.items.reduce((total, item) => {
+            const itemKey = `${item.id}-${item.size}`;
+            if (this.selectedItems.has(itemKey)) {
+                return total + (item.price * item.quantity);
+            }
+            return total;
+        }, 0);
     }
 
     // Get shipping cost
@@ -148,9 +161,24 @@ class Cart {
         emptyCartContainer.classList.add('hidden');
         itemCountElement.textContent = `${this.items.length} item${this.items.length !== 1 ? 's' : ''}`;
 
-        cartItemsContainer.innerHTML = this.items.map(item => `
-            <div class="p-6 cart-item cart-item-enter">
+        // Update select all checkbox state
+        this.updateSelectAllCheckbox();
+
+        cartItemsContainer.innerHTML = this.items.map(item => {
+            const itemKey = `${item.id}-${item.size}`;
+            const isSelected = this.selectedItems.has(itemKey);
+            
+            return `
+            <div class="p-6 cart-item cart-item-enter ${isSelected ? 'bg-white' : 'bg-gray-50 opacity-75'}">
                 <div class="flex items-center space-x-4 cart-item-details">
+                    <!-- Checkbox -->
+                    <div class="flex-shrink-0">
+                        <input type="checkbox" 
+                               class="w-5 h-5 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 focus:ring-2" 
+                               ${isSelected ? 'checked' : ''}
+                               onchange="cart.toggleItemSelection(${item.id}, '${item.size}', this.checked)">
+                    </div>
+                    
                     <!-- Product Image -->
                     <div class="flex-shrink-0">
                         <img src="${item.image}" alt="${item.name}" class="w-24 h-24 object-cover rounded-lg product-image">
@@ -194,7 +222,8 @@ class Cart {
                     </div>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     // Update order summary
@@ -250,9 +279,88 @@ class Cart {
         }, 3000);
     }
 
+    // Toggle individual item selection
+    toggleItemSelection(itemId, size, isSelected) {
+        const itemKey = `${itemId}-${size}`;
+        if (isSelected) {
+            this.selectedItems.add(itemKey);
+        } else {
+            this.selectedItems.delete(itemKey);
+        }
+        this.updateSelectAllCheckbox();
+        this.updateSummary();
+    }
+
+    // Toggle select all items
+    toggleSelectAll(isSelected) {
+        if (isSelected) {
+            // Select all items
+            this.items.forEach(item => {
+                const itemKey = `${item.id}-${item.size}`;
+                this.selectedItems.add(itemKey);
+            });
+        } else {
+            // Deselect all items
+            this.selectedItems.clear();
+        }
+        this.renderCart();
+        this.updateSummary();
+    }
+
+    // Update select all checkbox state
+    updateSelectAllCheckbox() {
+        const selectAllCheckbox = document.getElementById('select-all');
+        const removeSelectedBtn = document.getElementById('remove-selected');
+        
+        if (!selectAllCheckbox) return;
+
+        const totalItems = this.items.length;
+        const selectedCount = this.selectedItems.size;
+
+        if (selectedCount === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+            if (removeSelectedBtn) removeSelectedBtn.classList.add('hidden');
+        } else if (selectedCount === totalItems) {
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+            if (removeSelectedBtn) removeSelectedBtn.classList.remove('hidden');
+        } else {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
+            if (removeSelectedBtn) removeSelectedBtn.classList.remove('hidden');
+        }
+    }
+
+    // Remove selected items
+    removeSelectedItems() {
+        if (this.selectedItems.size === 0) return;
+        
+        if (confirm(`Are you sure you want to remove ${this.selectedItems.size} selected item(s)?`)) {
+            // Remove selected items from the cart
+            this.items = this.items.filter(item => {
+                const itemKey = `${item.id}-${item.size}`;
+                return !this.selectedItems.has(itemKey);
+            });
+            
+            // Clear selection
+            this.selectedItems.clear();
+            
+            // Save and update
+            this.saveCartToStorage();
+            this.renderCart();
+            this.updateSummary();
+        }
+    }
+
     // Checkout function (non-functional as requested)
     checkout() {
-        alert('Checkout functionality is not implemented yet. This is a demo cart page.');
+        const selectedCount = this.selectedItems.size;
+        if (selectedCount === 0) {
+            alert('Please select at least one item to checkout.');
+            return;
+        }
+        alert(`Checkout functionality is not implemented yet. You have ${selectedCount} selected item(s). This is a demo cart page.`);
     }
 }
 
@@ -277,6 +385,10 @@ function applyPromoCode() {
 
 function checkout() {
     cart.checkout();
+}
+
+function removeSelectedItems() {
+    cart.removeSelectedItems();
 }
 
 // Initialize cart when page loads

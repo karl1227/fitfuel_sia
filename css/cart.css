@@ -195,6 +195,37 @@
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
 }
 
+/* Checkbox styling */
+input[type="checkbox"] {
+    accent-color: #10b981;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+/* Selected item styling */
+.cart-item.selected {
+    background-color: #f0fdf4;
+    border-left: 4px solid #10b981;
+}
+
+.cart-item.unselected {
+    background-color: #f9fafb;
+    opacity: 0.7;
+}
+
+/* Select all checkbox styling */
+#select-all {
+    transform: scale(1.1);
+}
+
+#select-all:indeterminate {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
     .cart-item-details {
