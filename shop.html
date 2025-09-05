@@ -87,9 +87,9 @@
         
                     </button>
                     
-                    <button class="relative p-2 text-white hover:text-emerald-600 transition-colors">
+                    <a href="cart.html" class="relative p-2 text-white hover:text-emerald-600 transition-colors">
                         <i class="fas fa-shopping-cart text-xl"></i> 
-                    </button>
+                    </a>
                     
                     <button class="p-2 text-white hover:text-emerald-600 transition-colors">
                         <i class="fas fa-user text-xl"></i>
@@ -100,89 +100,223 @@
     </nav>
 
      <!-- Shop Page Content  -->
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex gap-8">
-             <!-- Sidebar  -->
-            <div class="w-1/4 bg-white rounded-lg shadow-lg p-6 h-fit">
-                 <!-- Best Seller, New Arrival, Bundle & Deal  -->
-                <div class="mb-8">
-                    <h3 class="font-heading text-lg font-semibold text-slate-800 mb-4">Featured</h3>
-                    <div class="space-y-2">
-                        <div class="sidebar-category p-3 rounded-lg" onclick="filterProducts('bestseller')">
-                            <!-- <i class="fas fa-star text-yellow-500 mr-2"></i> -->
-                            Best Seller
-                        </div>
-                        <div class="sidebar-category p-3 rounded-lg" onclick="filterProducts('newarrival')">
-                            <!-- <i class="fas fa-sparkles text-emerald-500 mr-2"></i> -->
-                            New Arrival
-                        </div>
-                        <div class="sidebar-category p-3 rounded-lg" onclick="filterProducts('bundle')">
-                            <!-- <i class="fas fa-gift text-purple-500 mr-2"></i> -->
-                            Bundle & Deal
-                        </div>
-                    </div>
+    <div class="shop-container">
+         <!-- Fixed Sidebar  -->
+        <div class="fixed-sidebar">
+            <div class="sidebar-scroll-indicator">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+
+            <!-- Sale & Offers Section -->
+            <div class="filter-section mb-6">
+                <h3 class="filter-section-title">Sale & Offers</h3>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="sale">
+                        <span class="filter-text">EXTRA 30% OFF</span>
+                        <span class="filter-count">(12)</span>
+                    </label>
                 </div>
+            </div>
 
-                 <!-- Main Categories with Subcategories  -->
-                <div class="space-y-4">
-                     Gym Accessories 
-                    <div>
-                        <div class="sidebar-category p-3 rounded-lg font-semibold" onclick="toggleCategory('accessories')">
-                            <i class="fas fa-dumbbell text-emerald-600 mr-2"></i>
-                            Gym Accessories
-                            <i class="fas fa-chevron-down float-right mt-1"></i>
-                        </div>
-                        <div id="accessories-sub" class="subcategory-list ml-4 mt-2">
-                            <div class="space-y-1">
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('lifting-straps')">Lifting Straps</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('gym-gloves')">Gym Gloves</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('weight-belts')">Weight Belts</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('knee-wraps')">Knee Wraps</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('wrist-wraps')">Wrist Wraps</div>
-                            </div>
-                        </div>
+            <!-- Product Discounts Section -->
+            <div class="filter-section mb-6">
+                <h3 class="filter-section-title">Product Discounts</h3>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="discount-40-50">
+                        <span class="filter-text">40-50%</span>
+                        <span class="filter-count">(8)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="discount-30-40">
+                        <span class="filter-text">30-40%</span>
+                        <span class="filter-count">(15)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="discount-20-30">
+                        <span class="filter-text">20-30%</span>
+                        <span class="filter-count">(23)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Gender Section -->
+            <div class="filter-section mb-6">
+                <h3 class="filter-section-title">Gender</h3>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="men">
+                        <span class="filter-text">Men</span>
+                        <span class="filter-count">(45)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="women">
+                        <span class="filter-text">Women</span>
+                        <span class="filter-count">(38)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="unisex">
+                        <span class="filter-text">Unisex</span>
+                        <span class="filter-count">(12)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Categories Section -->
+            <div class="filter-section mb-6">
+                <h3 class="filter-section-title">Categories</h3>
+                <div class="filter-options">
+                    <div class="filter-category" onclick="toggleCategory('accessories')">
+                        <span class="filter-text">Gym Accessories</span>
+                        <i class="fas fa-chevron-down filter-chevron"></i>
+                    </div>
+                    <div id="accessories-sub" class="subcategory-list">
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="lifting-straps">
+                            <span class="filter-text">Lifting Straps</span>
+                            <span class="filter-count">(8)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="gym-gloves">
+                            <span class="filter-text">Gym Gloves</span>
+                            <span class="filter-count">(12)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="weight-belts">
+                            <span class="filter-text">Weight Belts</span>
+                            <span class="filter-count">(6)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="knee-wraps">
+                            <span class="filter-text">Knee Wraps</span>
+                            <span class="filter-count">(9)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="wrist-wraps">
+                            <span class="filter-text">Wrist Wraps</span>
+                            <span class="filter-count">(7)</span>
+                        </label>
                     </div>
 
-                     <!-- Gym Supplements  -->
-                    <div>
-                        <div class="sidebar-category p-3 rounded-lg font-semibold" onclick="toggleCategory('supplements')">
-                            <i class="fas fa-pills text-emerald-600 mr-2"></i>
-                            Gym Supplements
-                            <i class="fas fa-chevron-down float-right mt-1"></i>
-                        </div>
-                        <div id="supplements-sub" class="subcategory-list ml-4 mt-2">
-                            <div class="space-y-1">
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('whey-protein')">Whey Protein</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('pre-workout')">Pre-Workout</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('post-workout')">Post-Workout</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('creatine')">Creatine</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('bcaas')">BCAAs</div>
-                            </div>
-                        </div>
+                    <div class="filter-category" onclick="toggleCategory('supplements')">
+                        <span class="filter-text">Gym Supplements</span>
+                        <i class="fas fa-chevron-down filter-chevron"></i>
+                    </div>
+                    <div id="supplements-sub" class="subcategory-list">
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="whey-protein">
+                            <span class="filter-text">Whey Protein</span>
+                            <span class="filter-count">(15)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="pre-workout">
+                            <span class="filter-text">Pre-Workout</span>
+                            <span class="filter-count">(10)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="post-workout">
+                            <span class="filter-text">Post-Workout</span>
+                            <span class="filter-count">(8)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="creatine">
+                            <span class="filter-text">Creatine</span>
+                            <span class="filter-count">(6)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="bcaas">
+                            <span class="filter-text">BCAAs</span>
+                            <span class="filter-count">(9)</span>
+                        </label>
                     </div>
 
-                     <!-- Gym Equipment  -->
-                    <div>
-                        <div class="sidebar-category p-3 rounded-lg font-semibold" onclick="toggleCategory('equipment')">
-                            <i class="fas fa-weight-hanging text-emerald-600 mr-2"></i>
-                            Gym Equipment
-                            <i class="fas fa-chevron-down float-right mt-1"></i>
-                        </div>
-                        <div id="equipment-sub" class="subcategory-list ml-4 mt-2">
-                            <div class="space-y-1">
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('dumbbells')">Dumbbells</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('barbells')">Barbells</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('resistance-bands')">Resistance Bands</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('kettlebells')">Kettlebells</div>
-                                <div class="sidebar-category p-2 rounded text-sm" onclick="filterProducts('yoga-mats')">Yoga Mats</div>
-                            </div>
-                        </div>
+                    <div class="filter-category" onclick="toggleCategory('equipment')">
+                        <span class="filter-text">Gym Equipment</span>
+                        <i class="fas fa-chevron-down filter-chevron"></i>
+                    </div>
+                    <div id="equipment-sub" class="subcategory-list">
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="dumbbells">
+                            <span class="filter-text">Dumbbells</span>
+                            <span class="filter-count">(18)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="barbells">
+                            <span class="filter-text">Barbells</span>
+                            <span class="filter-count">(12)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="resistance-bands">
+                            <span class="filter-text">Resistance Bands</span>
+                            <span class="filter-count">(14)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="kettlebells">
+                            <span class="filter-text">Kettlebells</span>
+                            <span class="filter-count">(11)</span>
+                        </label>
+                        <label class="filter-option subcategory">
+                            <input type="checkbox" class="filter-checkbox" data-filter="yoga-mats">
+                            <span class="filter-text">Yoga Mats</span>
+                            <span class="filter-count">(7)</span>
+                        </label>
                     </div>
                 </div>
             </div>
 
-             <!-- Main Content  -->
-            <div class="w-3/4">
+            <!-- Price Range Section -->
+            <div class="filter-section mb-6">
+                <h3 class="filter-section-title">Price Range</h3>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="price-under-25">
+                        <span class="filter-text">Under $25</span>
+                        <span class="filter-count">(22)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="price-25-50">
+                        <span class="filter-text">$25 - $50</span>
+                        <span class="filter-count">(35)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="price-50-100">
+                        <span class="filter-text">$50 - $100</span>
+                        <span class="filter-count">(28)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="price-over-100">
+                        <span class="filter-text">Over $100</span>
+                        <span class="filter-count">(15)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Brand Section -->
+            <div class="filter-section mb-6">
+                <h3 class="filter-section-title">Brand</h3>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="fitfuel-pro">
+                        <span class="filter-text">FitFuel Pro</span>
+                        <span class="filter-count">(25)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="powermax">
+                        <span class="filter-text">PowerMax</span>
+                        <span class="filter-count">(18)</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="filter-checkbox" data-filter="strengthcore">
+                        <span class="filter-text">StrengthCore</span>
+                        <span class="filter-count">(22)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+         <!-- Main Content  -->
+        <div class="main-content">
                  <!-- Filter and Sort Bar  -->
                 <div class="bg-white rounded-lg shadow-lg p-4 mb-6">
                     <div class="flex justify-between items-center">
@@ -266,7 +400,21 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
+        </div>
+    </div>
+
+    <!-- Gallery Overlay Modal -->
+    <div id="gallery-overlay" class="gallery-overlay" aria-hidden="true">
+        <div class="gallery-modal" role="dialog" aria-modal="true" aria-label="Product gallery">
+            <div class="gallery-main">
+                <button id="gallery-close" class="gallery-close" aria-label="Close gallery"><i class="fas fa-times"></i></button>
+                <div class="gallery-nav">
+                    <button id="gallery-prev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+                    <button id="gallery-next" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <img id="gallery-image" src="" alt="Product image">
             </div>
+            <div id="gallery-thumbs" class="gallery-thumbs"></div>
         </div>
     </div>
 
@@ -321,6 +469,7 @@
         </div>
     </footer>
     
+    <script src="JS/cart-utils.js"></script>
     <script src="JS/shop.js"></script>
 
 </body>
