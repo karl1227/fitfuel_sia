@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'config/google_config.php';
 
 // Handle registration form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -214,6 +215,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     <?php endif; ?>
                     
+                    <!-- Google SSO Error Message -->
+                    <?php if (isset($_SESSION['google_error'])): ?>
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+                            <?php echo htmlspecialchars($_SESSION['google_error']); unset($_SESSION['google_error']); ?>
+                        </div>
+                    <?php endif; ?>
+                    
                     <!-- Registration Form -->
                     <form method="POST" class="space-y-6">
                         <!-- Username Field -->
@@ -293,12 +301,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         
                         <!-- Google SSO Button -->
-                        <button type="button" 
-                                onclick="handleGoogleSSO()"
-                                class="w-full py-3 rounded-lg google-btn flex items-center justify-center space-x-3 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        <a href="<?php echo getGoogleAuthUrl(); ?>" 
+                           class="w-full py-3 rounded-lg google-btn flex items-center justify-center space-x-3 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-decoration-none">
                             <i class="fab fa-google text-blue-500"></i>
                             <span class="text-gray-700 font-medium">Sign up with Google</span>
-                        </button>
+                        </a>
                         
                         <!-- Login Link -->
                         <div class="text-center text-gray-700">
@@ -328,10 +335,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
         
-        function handleGoogleSSO() {
-            // Google SSO implementation would go here
-            alert('Google SSO functionality will be implemented in the next phase');
-        }
         
         // Password match validation
         document.getElementById('confirm_password').addEventListener('input', function() {
