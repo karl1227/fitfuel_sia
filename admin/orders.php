@@ -90,15 +90,23 @@ try {
 	if ($action === 'update_status') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
 		$newStatus = $_POST['status'] ?? 'pending';
+		$paymentStatus = $_POST['payment_status'] ?? null;
+		$paymentMethod = $_POST['payment_method'] ?? null;
+		$shippingAddress = $_POST['shipping_address'] ?? null;
+		$deliveryDate = $_POST['estimated_delivery_date'] ?? null;
+		
 		$allowed = ['pending','processing','shipped','delivered','cancelled','returned','refunded'];
 		if (!in_array($newStatus, $allowed, true)) { throw new InvalidArgumentException('Invalid status'); }
-		$stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE order_id = ?");
-		$stmt->execute([$newStatus, $orderId]);
+		
+		// Update all fields in one query
+		$stmt = $pdo->prepare("UPDATE orders SET status = ?, payment_status = COALESCE(?, payment_status), payment_method = COALESCE(?, payment_method), shipping_address = COALESCE(?, shipping_address), estimated_delivery_date = COALESCE(?, estimated_delivery_date) WHERE order_id = ?");
+		$stmt->execute([$newStatus, $paymentStatus, $paymentMethod, $shippingAddress, $deliveryDate, $orderId]);
+		
 		// Stock control on processing or paid
 		if (in_array($newStatus, ['processing','shipped','delivered'], true)) {
 			applyStockControl($pdo, $orderId, (int)($_SESSION['user_id'] ?? 0));
 		}
-		$message = 'Order status updated.';
+		$message = 'Order updated successfully.';
 	}
 	if ($action === 'update_payment') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
@@ -403,58 +411,23 @@ $orders = $stm->fetchAll();
 						<td class="p-3"><span class="badge border <?php echo $o['status']==='delivered'?'bg-green-100 text-green-800':($o['status']==='processing'?'bg-yellow-100 text-yellow-800':($o['status']==='cancelled'?'bg-red-100 text-red-800':'bg-gray-100 text-gray-800')); ?>"><?php echo ucfirst($o['status']); ?></span></td>
 						<td class="p-3"><?php echo htmlspecialchars(ucfirst($o['payment_status'])); ?><?php if ($o['payment_method']): ?> <span class="text-gray-500">(<?php echo htmlspecialchars($o['payment_method']); ?>)</span><?php endif; ?></td>
 						<td class="p-3"><?php echo $o['estimated_delivery_date'] ? htmlspecialchars($o['estimated_delivery_date']) : '-'; ?></td>
-						<td class="p-3 space-x-2">
-							<form method="post" class="inline">
-								<input type="hidden" name="action" value="update_status" />
-								<input type="hidden" name="order_id" value="<?php echo (int)$o['order_id']; ?>" />
-								<select name="status" class="border rounded px-2 py-1 text-xs">
-									<?php foreach (['pending','processing','shipped','delivered','cancelled','returned','refunded'] as $st): ?>
-										<option value="<?php echo $st; ?>" <?php echo $o['status']===$st?'selected':''; ?>><?php echo ucfirst($st); ?></option>
-									<?php endforeach; ?>
-								</select>
-								<button class="ml-1 bg-gray-800 text-white rounded px-2 py-1 text-xs">Save</button>
-							</form>
-							<form method="post" class="inline">
-								<input type="hidden" name="action" value="update_payment" />
-								<input type="hidden" name="order_id" value="<?php echo (int)$o['order_id']; ?>" />
-								<select name="payment_status" class="border rounded px-2 py-1 text-xs">
-									<?php foreach (['pending','paid','refunded','failed'] as $ps): ?>
-										<option value="<?php echo $ps; ?>" <?php echo $o['payment_status']===$ps?'selected':''; ?>><?php echo ucfirst($ps); ?></option>
-									<?php endforeach; ?>
-								</select>
-								<select name="payment_method" class="border rounded px-2 py-1 text-xs">
-									<option value="">Method</option>
-									<?php foreach (['cash_on_delivery','paypal','gcash','card'] as $pm): ?>
-										<option value="<?php echo $pm; ?>" <?php echo ($o['payment_method']??'')===$pm?'selected':''; ?>><?php echo ucfirst(str_replace('_',' ',$pm)); ?></option>
-									<?php endforeach; ?>
-								</select>
-								<button class="ml-1 bg-gray-800 text-white rounded px-2 py-1 text-xs">Save</button>
-							</form>
-							<form method="post" class="inline">
-								<input type="hidden" name="action" value="update_shipping" />
-								<input type="hidden" name="order_id" value="<?php echo (int)$o['order_id']; ?>" />
-								<input type="text" name="shipping_address" value="<?php echo htmlspecialchars($o['shipping_address'] ?? ''); ?>" placeholder="Shipping address" class="border rounded px-2 py-1 text-xs w-52" />
-								<input type="date" name="estimated_delivery_date" value="<?php echo htmlspecialchars($o['estimated_delivery_date'] ?? ''); ?>" class="border rounded px-2 py-1 text-xs" />
-								<button class="ml-1 bg-gray-800 text-white rounded px-2 py-1 text-xs">Save</button>
-							</form>
-							<form method="post" class="inline" onsubmit="return confirm('Cancel this order?');">
-								<input type="hidden" name="action" value="cancel_order" />
-								<input type="hidden" name="order_id" value="<?php echo (int)$o['order_id']; ?>" />
-								<button class="ml-1 border border-red-600 text-red-600 rounded px-2 py-1 text-xs">Cancel</button>
-							</form>
-							<div class="mt-2"></div>
-							<form method="post" class="inline">
-								<input type="hidden" name="action" value="approve_return" />
-								<input type="hidden" name="order_id" value="<?php echo (int)$o['order_id']; ?>" />
-								<input type="text" name="return_reason" placeholder="Return reason" class="border rounded px-2 py-1 text-xs w-40" />
-								<input type="number" step="0.01" name="refund_amount" placeholder="Refund ₱" class="border rounded px-2 py-1 text-xs w-24" />
-								<button class="ml-1 border border-emerald-700 text-emerald-700 rounded px-2 py-1 text-xs">Approve Return</button>
-							</form>
-							<form method="post" class="inline">
-								<input type="hidden" name="action" value="reject_return" />
-								<input type="hidden" name="order_id" value="<?php echo (int)$o['order_id']; ?>" />
-								<button class="ml-1 border border-gray-600 text-gray-700 rounded px-2 py-1 text-xs">Reject Return</button>
-							</form>
+						<td class="p-3">
+							<div class="flex items-center space-x-2">
+								<button onclick="openOrderModal(<?php echo htmlspecialchars(json_encode($o)); ?>)" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+									<i class="fas fa-edit mr-1"></i>
+									Edit
+								</button>
+								<?php if (!in_array($o['status'], ['processing','shipped','delivered','cancelled'], true)): ?>
+								<form method="post" class="inline" onsubmit="return confirm('Cancel this order?');">
+									<input type="hidden" name="action" value="cancel_order" />
+									<input type="hidden" name="order_id" value="<?php echo (int)$o['order_id']; ?>" />
+									<button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+										<i class="fas fa-times mr-1"></i>
+										Cancel
+									</button>
+								</form>
+								<?php endif; ?>
+							</div>
 						</td>
 					</tr>
 					<?php endforeach; endif; ?>
@@ -462,6 +435,125 @@ $orders = $stm->fetchAll();
 			</table>
 		</div>
 	</main>
+
+	<!-- Order Edit Modal -->
+	<div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+		<div class="flex items-center justify-center min-h-screen p-4">
+			<div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+				<div class="flex items-center justify-between p-6 border-b">
+					<h3 class="text-xl font-semibold text-gray-900">Edit Order</h3>
+					<button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-600">
+						<i class="fas fa-times text-xl"></i>
+					</button>
+				</div>
+				
+				<form id="orderEditForm" method="post" class="p-6 space-y-6">
+					<input type="hidden" name="order_id" id="modalOrderId">
+					
+					<!-- Order Status -->
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-2">Order Status</label>
+						<select name="status" id="modalStatus" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+							<option value="pending">Pending</option>
+							<option value="processing">Processing</option>
+							<option value="shipped">Shipped</option>
+							<option value="delivered">Delivered</option>
+							<option value="cancelled">Cancelled</option>
+							<option value="returned">Returned</option>
+							<option value="refunded">Refunded</option>
+						</select>
+					</div>
+					
+					<!-- Payment Information -->
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-2">Payment Status</label>
+							<select name="payment_status" id="modalPaymentStatus" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+								<option value="pending">Pending</option>
+								<option value="paid">Paid</option>
+								<option value="refunded">Refunded</option>
+								<option value="failed">Failed</option>
+							</select>
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+							<select name="payment_method" id="modalPaymentMethod" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+								<option value="">Select Method</option>
+								<option value="cash_on_delivery">Cash on Delivery</option>
+								<option value="paypal">PayPal</option>
+							</select>
+						</div>
+					</div>
+					
+					<!-- Shipping Information -->
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-2">Shipping Address</label>
+						<div class="space-y-3">
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+								<div>
+									<label class="block text-xs text-gray-600 mb-1">Full Name</label>
+									<input type="text" name="shipping_full_name" id="modalShippingFullName" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Full Name">
+								</div>
+								<div>
+									<label class="block text-xs text-gray-600 mb-1">Phone Number</label>
+									<input type="text" name="shipping_phone" id="modalShippingPhone" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Phone Number">
+								</div>
+							</div>
+							<div>
+								<label class="block text-xs text-gray-600 mb-1">Street Address</label>
+								<input type="text" name="shipping_address" id="modalShippingAddress" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Street Address">
+							</div>
+							<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+								<div>
+									<label class="block text-xs text-gray-600 mb-1">City</label>
+									<input type="text" name="shipping_city" id="modalShippingCity" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="City">
+								</div>
+								<div>
+									<label class="block text-xs text-gray-600 mb-1">State/Region</label>
+									<input type="text" name="shipping_state" id="modalShippingState" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="State/Region">
+								</div>
+								<div>
+									<label class="block text-xs text-gray-600 mb-1">Postal Code</label>
+									<input type="text" name="shipping_postal_code" id="modalShippingPostalCode" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Postal Code">
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-2">Estimated Delivery Date</label>
+						<input type="date" name="estimated_delivery_date" id="modalDeliveryDate" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+					</div>
+					
+					<!-- Return Management -->
+					<div class="border-t pt-6">
+						<h4 class="text-lg font-medium text-gray-900 mb-4">Return Management</h4>
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Return Reason</label>
+								<input type="text" name="return_reason" id="modalReturnReason" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter return reason">
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Refund Amount (₱)</label>
+								<input type="number" step="0.01" name="refund_amount" id="modalRefundAmount" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0.00">
+							</div>
+						</div>
+					</div>
+					
+					<!-- Action Buttons -->
+					<div class="flex items-center justify-end space-x-3 pt-6 border-t">
+						<button type="button" onclick="closeOrderModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+							Cancel
+						</button>
+						<button type="submit" name="action" value="update_status" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+							<i class="fas fa-save mr-1"></i>
+							Save Changes
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<script>
 		// basic UX sugar: keep sidebar active
@@ -476,6 +568,124 @@ $orders = $stm->fetchAll();
 				el.addEventListener('change', () => filterForm.submit());
 			});
 		}
+		
+		// Order Modal Functions
+		function openOrderModal(orderData) {
+			// Populate form fields with order data
+			document.getElementById('modalOrderId').value = orderData.order_id;
+			document.getElementById('modalStatus').value = orderData.status;
+			document.getElementById('modalPaymentStatus').value = orderData.payment_status;
+			// Set payment method - handle different formats
+			const paymentMethod = orderData.payment_method || '';
+			const paymentMethodSelect = document.getElementById('modalPaymentMethod');
+			
+			// Debug: log the payment method value
+			console.log('Payment method from database:', paymentMethod);
+			
+			// Map different payment method formats to dropdown values
+			let selectedValue = '';
+			if (paymentMethod === 'cod') {
+				selectedValue = 'cash_on_delivery';
+			} else if (paymentMethod === 'paypal') {
+				selectedValue = 'paypal';
+			}
+			
+			console.log('Selected value for dropdown:', selectedValue);
+			paymentMethodSelect.value = selectedValue;
+			document.getElementById('modalDeliveryDate').value = orderData.estimated_delivery_date || '';
+			document.getElementById('modalReturnReason').value = orderData.return_reason || '';
+			document.getElementById('modalRefundAmount').value = orderData.refund_amount || '';
+			
+			// Parse shipping address JSON
+			let shippingData = {};
+			try {
+				if (orderData.shipping_address) {
+					shippingData = JSON.parse(orderData.shipping_address);
+				}
+			} catch (e) {
+				console.log('Error parsing shipping address:', e);
+			}
+			
+			// Populate shipping address fields
+			document.getElementById('modalShippingFullName').value = shippingData.full_name || '';
+			document.getElementById('modalShippingPhone').value = shippingData.phone || '';
+			document.getElementById('modalShippingAddress').value = shippingData.address || '';
+			document.getElementById('modalShippingCity').value = shippingData.city || '';
+			document.getElementById('modalShippingState').value = shippingData.state || '';
+			document.getElementById('modalShippingPostalCode').value = shippingData.postal_code || '';
+			
+			// Show modal
+			document.getElementById('orderModal').classList.remove('hidden');
+		}
+		
+		function closeOrderModal() {
+			document.getElementById('orderModal').classList.add('hidden');
+		}
+		
+		// Close modal when clicking outside
+		document.getElementById('orderModal').addEventListener('click', function(e) {
+			if (e.target === this) {
+				closeOrderModal();
+			}
+		});
+		
+		// Handle form submission
+		document.getElementById('orderEditForm').addEventListener('submit', function(e) {
+			// Reconstruct shipping address JSON from individual fields
+			const shippingData = {
+				full_name: document.getElementById('modalShippingFullName').value,
+				phone: document.getElementById('modalShippingPhone').value,
+				address: document.getElementById('modalShippingAddress').value,
+				city: document.getElementById('modalShippingCity').value,
+				state: document.getElementById('modalShippingState').value,
+				postal_code: document.getElementById('modalShippingPostalCode').value
+			};
+			
+			// Create hidden input for reconstructed shipping address
+			const shippingInput = document.createElement('input');
+			shippingInput.type = 'hidden';
+			shippingInput.name = 'shipping_address';
+			shippingInput.value = JSON.stringify(shippingData);
+			this.appendChild(shippingInput);
+			
+			// Map payment method dropdown value back to database format
+			const paymentMethodValue = document.getElementById('modalPaymentMethod').value;
+			let dbPaymentMethod = '';
+			if (paymentMethodValue === 'cash_on_delivery') {
+				dbPaymentMethod = 'cod';
+			} else if (paymentMethodValue === 'paypal') {
+				dbPaymentMethod = 'paypal';
+			}
+			
+			// Create hidden input for payment method in database format
+			const paymentMethodInput = document.createElement('input');
+			paymentMethodInput.type = 'hidden';
+			paymentMethodInput.name = 'payment_method';
+			paymentMethodInput.value = dbPaymentMethod;
+			this.appendChild(paymentMethodInput);
+			
+			// Determine which action to take based on the form data
+			const formData = new FormData(this);
+			const returnReason = formData.get('return_reason');
+			const refundAmount = formData.get('refund_amount');
+			
+			// Create hidden inputs for the appropriate action
+			if (returnReason || refundAmount) {
+				// If return fields are filled, handle as return approval
+				const returnInput = document.createElement('input');
+				returnInput.type = 'hidden';
+				returnInput.name = 'action';
+				returnInput.value = 'approve_return';
+				this.appendChild(returnInput);
+			} else {
+				// Otherwise, handle as status update
+				const statusInput = document.createElement('input');
+				statusInput.type = 'hidden';
+				statusInput.name = 'action';
+				statusInput.value = 'update_status';
+				this.appendChild(statusInput);
+			}
+		});
 	</script>
 </body>
 </html>

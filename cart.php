@@ -560,8 +560,12 @@ if (isset($_SESSION['user_id'])) {
                 return;
             }
             
-            // For now, just show an alert. You can implement actual checkout later
-            alert('Checkout functionality coming soon!');
+            // Get selected cart item IDs
+            const selectedItems = Array.from(checkedItems).map(checkbox => checkbox.dataset.itemId);
+            
+            // Redirect to checkout page with selected items
+            const url = 'checkout.php?selected_items=' + encodeURIComponent(JSON.stringify(selectedItems));
+            window.location.href = url;
         }
 
 
