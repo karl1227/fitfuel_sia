@@ -70,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="icon" href="img/LOGO-Fitfuel.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cousine:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
         .register-bg {
@@ -77,11 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-        }
-        
-        .brand-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
         }
         
         .register-panel {
@@ -154,53 +150,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body class="font-body min-h-screen register-bg">
     <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <!-- Left Panel - Branding -->
-            <div class="brand-panel p-8 lg:p-12 rounded-2xl shadow-2xl">
-                <div class="space-y-8">
-                    <!-- Logo -->
-                    <div class="flex items-center space-x-3">
-                        <img src="img/LOGO-Fitfuel.png" alt="FitFuel Logo" class="w-12 h-12">
-                        <h1 class="text-3xl font-bold text-black font-heading">FITFUEL</h1>
-                    </div>
-                    
-                    <!-- Slogan -->
-                    <div class="space-y-4">
-                        <h2 class="text-2xl font-semibold text-black leading-relaxed">
-                            Join Our Fitness Community<br>
-                            Get Access to Premium<br>
-                            Supplements & Equipment<br>
-                            Start Your Journey Today!
-                        </h2>
-                    </div>
-                    
-                    <!-- Social Media -->
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-2">
-                            <h3 class="text-lg font-semibold text-black">Connect With Us</h3>
-                            <div class="flex-1 h-px bg-gray-300"></div>
+        <div class="w-full max-w-6xl">
+            <div class="register-panel p-8 lg:p-12 rounded-2xl shadow-2xl">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <!-- Left Side - Branding -->
+                    <div class="space-y-8 flex flex-col justify-between h-full">
+                        <!-- Logo - Top Left -->
+                        <div class="flex justify-start">
+                            <img src="img/fitfuel_login.png" alt="FitFuel Logo" class="h-16">
                         </div>
                         
-                        <div class="flex space-x-4">
-                            <a href="#" class="social-icon facebook-icon">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="social-icon google-icon">
-                                <i class="fab fa-google"></i>
-                            </a>
-                            <a href="#" class="social-icon instagram-icon">
-                                <i class="fab fa-instagram"></i>
-                            </a>
+                        <!-- Slogan - Center -->
+                        <div class="space-y-4">
+                            <h2 class="text-3xl font-semibold text-black leading-relaxed" style="font-family: 'Cousine', monospace;">
+                                Fuel your fitness,<br>
+                                find the right supplements,<br>
+                                track your orders & power up<br>
+                                your performance.
+                            </h2>
+                        </div>
+                        
+                        <!-- Social Media - Bottom Left -->
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-2">
+                                <h3 class="text-lg font-semibold text-black">Connect With Us</h3>
+                                <div class="flex-1 h-px bg-gray-300"></div>
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <a href="#" class="social-icon facebook-icon">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-icon google-icon">
+                                    <i class="fab fa-google"></i>
+                                </a>
+                                <a href="#" class="social-icon instagram-icon">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Right Panel - Registration Form -->
-            <div class="register-panel p-8 lg:p-12 rounded-2xl shadow-2xl">
-                <div class="space-y-6">
-                    <!-- Title -->
-                    <h2 class="text-3xl font-bold text-black text-center font-heading">Create Account</h2>
+                    
+                    <!-- Right Side - Registration Form -->
+                    <div class="space-y-6">
+                        <!-- Title -->
+                        <h2 class="text-3xl font-bold text-black text-center font-heading">Create Account</h2>
                     
                     <!-- Success Message -->
                     <?php if (isset($_SESSION['success'])): ?>
@@ -312,6 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <a href="login.php" class="text-emerald-600 hover:text-emerald-700 font-medium underline">Login Here</a>
                         </div>
                     </form>
+                    </div>
                 </div>
             </div>
         </div>
