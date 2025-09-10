@@ -247,7 +247,7 @@ $customers = $custStmt->fetchAll();
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+                    <a href="orders.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
                         <i class="fas fa-shopping-cart text-gray-600"></i>
                         <span>Orders</span>
                     </a>
