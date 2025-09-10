@@ -168,9 +168,8 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     <!-- Header -->
     <header class="bg-black text-white fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-6">
         <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 bg-white rounded flex items-center justify-center">
-                <span class="text-black font-bold text-lg">F</span>
-            </div>
+            <img src="../img/LOGO-Fitfuel.png" alt="FitFuel Logo" class="w-8 h-8 object-contain">
+            <div class="w-px h-6 bg-white"></div>
             <h1 class="text-xl font-bold uppercase">Admin</h1>
         </div>
         <div class="flex items-center space-x-4">
@@ -277,18 +276,6 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
             </ul>
         </nav>
 
-        <!-- User Info Panel -->
-        <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
-                    <i class="fas fa-user text-white"></i>
-                </div>
-                <div>
-                    <p class="font-medium">Admin User</p>
-                    <p class="text-sm text-gray-300">Admin@fitfuel.com</p>
-                </div>
-            </div>
-        </div>
     </aside>
 
     <!-- Main Content -->
