@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input type="checkbox" name="remember" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 <span>Remember Me</span>
                             </label>
-                            <a href="#" class="text-emerald-600 hover:text-emerald-700 text-sm">Forget Password?</a>
+                            <button type="button" onclick="openForgotPasswordModal()" class="text-emerald-600 hover:text-emerald-700 text-sm">Forget Password?</button>
                         </div>
                         
                         <!-- Login Button -->
@@ -262,6 +262,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
     
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                <div class="p-6">
+                    <!-- Modal Header -->
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-black font-heading">Reset Password</h3>
+                        <button onclick="closeForgotPasswordModal()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <div class="space-y-4">
+                        <p class="text-gray-600">Enter your email address and we'll send you a link to reset your password.</p>
+                        
+                        <!-- Forgot Password Form -->
+                        <form id="forgotPasswordForm" class="space-y-4">
+                            <div>
+                                <input type="email" 
+                                       id="resetEmail" 
+                                       name="email" 
+                                       placeholder="Enter your email address" 
+                                       class="w-full px-4 py-3 rounded-lg input-field focus:outline-none"
+                                       required>
+                            </div>
+                            
+                            <div class="flex space-x-3">
+                                <button type="button" 
+                                        onclick="closeForgotPasswordModal()" 
+                                        class="flex-1 py-3 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                    Cancel
+                                </button>
+                                <button type="submit" 
+                                        class="flex-1 py-3 rounded-lg text-white font-semibold login-btn focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                    Send Reset Link
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- Success/Error Messages -->
+                        <div id="forgotPasswordMessage" class="hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         function togglePassword() {
             const passwordField = document.getElementById('password');
@@ -277,6 +326,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 toggleIcon.classList.add('fa-eye');
             }
         }
+        
+        function openForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.remove('hidden');
+            document.getElementById('resetEmail').focus();
+        }
+        
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').reset();
+            document.getElementById('forgotPasswordMessage').classList.add('hidden');
+        }
+        
+        // Handle forgot password form submission
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('resetEmail').value;
+            const messageDiv = document.getElementById('forgotPasswordMessage');
+            const submitBtn = this.querySelector('button[type="submit"]');
+            
+            // Show loading state
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('forgot_password.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'email=' + encodeURIComponent(email)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    messageDiv.className = 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg';
+                    messageDiv.textContent = result.message;
+                    messageDiv.classList.remove('hidden');
+                    
+                    // Clear form
+                    document.getElementById('forgotPasswordForm').reset();
+                    
+                    // Close modal after 3 seconds
+                    setTimeout(() => {
+                        closeForgotPasswordModal();
+                    }, 3000);
+                } else {
+                    messageDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg';
+                    messageDiv.textContent = result.message;
+                    messageDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                messageDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg';
+                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.classList.remove('hidden');
+            } finally {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
         
     </script>
 </body>
