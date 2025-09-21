@@ -1,0 +1,279 @@
+/* Cart Page Specific Styles */
+
+/* Nike-style cart item styling */
+.cart-item {
+    transition: all 0.2s ease-in-out;
+}
+
+.cart-item:hover {
+    background-color: #f9fafb;
+}
+
+/* Quantity selector styling */
+.quantity-selector {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.quantity-selector button {
+    transition: background-color 0.2s ease;
+}
+
+.quantity-selector button:hover {
+    background-color: #f3f4f6;
+}
+
+.quantity-selector button:active {
+    background-color: #e5e7eb;
+}
+
+/* Promo code input styling */
+.promo-input {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.promo-input:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Checkout button styling */
+.checkout-btn {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.checkout-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.checkout-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.checkout-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Empty cart state styling */
+.empty-cart-icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Cart summary sticky positioning */
+.cart-summary {
+    position: sticky;
+    top: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .cart-summary {
+        position: static;
+        margin-top: 2rem;
+    }
+}
+
+/* Nike-style breadcrumb */
+.breadcrumb-item {
+    position: relative;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 1px solid #9ca3af;
+    border-bottom: 1px solid #9ca3af;
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+/* Product image hover effects */
+.product-image {
+    transition: transform 0.2s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
+}
+
+/* Remove button styling */
+.remove-btn {
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Promo message animations */
+.promo-message {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Success/Error message styling */
+.message-success {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+
+.message-error {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
+
+/* Cart item animations */
+.cart-item-enter {
+    animation: cartItemEnter 0.3s ease-out;
+}
+
+@keyframes cartItemEnter {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.cart-item-exit {
+    animation: cartItemExit 0.3s ease-in;
+}
+
+@keyframes cartItemExit {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+}
+
+/* Nike-style focus states */
+.focus-ring:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+    accent-color: #10b981;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+/* Selected item styling */
+.cart-item.selected {
+    background-color: #f0fdf4;
+    border-left: 4px solid #10b981;
+}
+
+.cart-item.unselected {
+    background-color: #f9fafb;
+    opacity: 0.7;
+}
+
+/* Select all checkbox styling */
+#select-all {
+    transform: scale(1.1);
+}
+
+#select-all:indeterminate {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .cart-item-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cart-item-price {
+        align-self: flex-end;
+        margin-top: 1rem;
+    }
+    
+    .quantity-controls {
+        margin-top: 0.5rem;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .cart-item {
+        border: 2px solid #000;
+    }
+    
+    .quantity-selector {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .cart-item,
+    .quantity-selector button,
+    .checkout-btn,
+    .product-image,
+    .remove-btn {
+        transition: none;
+    }
+    
+    .empty-cart-icon {
+        animation: none;
+    }
+    
+    .promo-message {
+        animation: none;
+    }
+    
+    .cart-item-enter,
+    .cart-item-exit {
+        animation: none;
+    }
+}
