@@ -19,8 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $subcategory_id = intval($_POST['subcategory_id']);
             $stock_quantity = intval($_POST['stock_quantity'] ?? 0);
             $status = $_POST['status'];
-            $is_popular = isset($_POST['is_popular']) ? 1 : 0;
-            $is_best_seller = isset($_POST['is_best_seller']) ? 1 : 0;
+            $sale_percentage = intval($_POST['sale_percentage'] ?? 0);
             
             // Handle image upload
             $image_path = '';
@@ -45,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             try {
                 $images_json = json_encode($image_path ? [$image_path] : []);
-                $stmt = $pdo->prepare("INSERT INTO products (name, description, price, category_id, subcategory_id, stock_quantity, status, is_popular, is_best_seller, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $is_popular, $is_best_seller, $images_json]);
+                $stmt = $pdo->prepare("INSERT INTO products (name, description, price, category_id, subcategory_id, stock_quantity, status, sale_percentage, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $sale_percentage, $images_json]);
                 $message = "Product added successfully!";
             } catch (PDOException $e) {
                 $error = "Failed to add product: " . $e->getMessage();
@@ -62,8 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $subcategory_id = intval($_POST['subcategory_id']);
             $stock_quantity = intval($_POST['stock_quantity'] ?? 0);
             $status = $_POST['status'];
-            $is_popular = isset($_POST['is_popular']) ? 1 : 0;
-            $is_best_seller = isset($_POST['is_best_seller']) ? 1 : 0;
+            $sale_percentage = intval($_POST['sale_percentage'] ?? 0);
             
             // Get existing image
             $stmt = $pdo->prepare("SELECT images FROM products WHERE product_id = ?");
@@ -97,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             try {
                 $images_json = json_encode($final_image ? [$final_image] : []);
-                $stmt = $pdo->prepare("UPDATE products SET name=?, description=?, price=?, category_id=?, subcategory_id=?, stock_quantity=?, status=?, is_popular=?, is_best_seller=?, images=? WHERE product_id=?");
-                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $is_popular, $is_best_seller, $images_json, $product_id]);
+                $stmt = $pdo->prepare("UPDATE products SET name=?, description=?, price=?, category_id=?, subcategory_id=?, stock_quantity=?, status=?, sale_percentage=?, images=? WHERE product_id=?");
+                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $sale_percentage, $images_json, $product_id]);
                 $message = "Product updated successfully!";
             } catch (PDOException $e) {
                 $error = "Failed to update product: " . $e->getMessage();
@@ -465,11 +463,8 @@ if (isset($_GET['edit'])) {
                                                 <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($product['name']); ?></div>
                                                 <div class="text-sm text-gray-500"><?php echo htmlspecialchars(substr($product['description'], 0, 50)) . '...'; ?></div>
                                                 <div class="flex space-x-2 mt-1">
-                                                    <?php if ($product['is_popular']): ?>
-                                                        <span class="badge-popular px-2 py-1 text-xs rounded-full">Popular</span>
-                                                    <?php endif; ?>
-                                                    <?php if ($product['is_best_seller']): ?>
-                                                        <span class="badge-bestseller px-2 py-1 text-xs rounded-full">Best Seller</span>
+                                                    <?php if ($product['sale_percentage'] > 0): ?>
+                                                        <span class="bg-red-100 text-red-800 px-2 py-1 text-xs rounded-full"><?php echo $product['sale_percentage']; ?>% OFF</span>
                                                     <?php endif; ?>
                                                 </div>
                                             </div>
@@ -482,7 +477,18 @@ if (isset($_GET['edit'])) {
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        ₱<?php echo number_format($product['price'], 2); ?>
+                                        <?php if ($product['sale_percentage'] > 0): ?>
+                                            <?php 
+                                            $original_price = $product['price'];
+                                            $sale_price = $original_price * (1 - $product['sale_percentage'] / 100);
+                                            ?>
+                                            <div class="flex flex-col">
+                                                <span class="text-red-600 font-semibold">₱<?php echo number_format($sale_price, 2); ?></span>
+                                                <span class="text-gray-500 line-through text-xs">₱<?php echo number_format($original_price, 2); ?></span>
+                                            </div>
+                                        <?php else: ?>
+                                            ₱<?php echo number_format($product['price'], 2); ?>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <?php echo $product['stock_quantity']; ?>
@@ -566,7 +572,10 @@ if (isset($_GET['edit'])) {
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Price (₱)</label>
-                                <input type="number" name="price" id="productPrice" step="0.01" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+                                <input type="number" name="price" id="productPrice" step="0.01" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" oninput="calculateSalePrice()">
+                                <div id="salePriceDisplay" class="mt-2 text-sm text-green-600 font-semibold" style="display: none;">
+                                    Sale Price: <span id="salePriceValue"></span>
+                                </div>
                             </div>
                             
                             <div>
@@ -603,6 +612,22 @@ if (isset($_GET['edit'])) {
                                 </select>
                             </div>
                             
+                            <div>
+                                <label for="productSalePercentage" class="block text-sm font-medium text-gray-700 mb-2">Sale Percentage</label>
+                                <select name="sale_percentage" id="productSalePercentage" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" onchange="calculateSalePrice()">
+                                    <option value="0">No Sale</option>
+                                    <option value="10">10% OFF</option>
+                                    <option value="15">15% OFF</option>
+                                    <option value="20">20% OFF</option>
+                                    <option value="25">25% OFF</option>
+                                    <option value="30">30% OFF</option>
+                                    <option value="35">35% OFF</option>
+                                    <option value="40">40% OFF</option>
+                                    <option value="45">45% OFF</option>
+                                    <option value="50">50% OFF</option>
+                                </select>
+                            </div>
+                            
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
                                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
@@ -612,19 +637,6 @@ if (isset($_GET['edit'])) {
                                         <i class="fas fa-upload mr-2"></i>Choose Image
                                     </button>
                                     <p class="text-sm text-gray-500 mt-2">Upload one image (JPG, PNG, GIF, WebP)</p>
-                                </div>
-                            </div>
-                            
-                            <div class="md:col-span-2">
-                                <div class="flex space-x-6">
-                                    <label class="flex items-center">
-                                        <input type="checkbox" name="is_popular" id="productPopular" class="rounded border-gray-300 text-black focus:ring-black">
-                                        <span class="ml-2 text-sm text-gray-700">Popular Product</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="checkbox" name="is_best_seller" id="productBestSeller" class="rounded border-gray-300 text-black focus:ring-black">
-                                        <span class="ml-2 text-sm text-gray-700">Best Seller</span>
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -724,6 +736,24 @@ if (isset($_GET['edit'])) {
         
         function closeModal() {
             document.getElementById('productModal').classList.add('hidden');
+            document.getElementById('productForm').reset();
+            document.getElementById('productImagePreview').style.display = 'none';
+            document.getElementById('productImagePreview').src = '';
+            document.getElementById('salePriceDisplay').style.display = 'none';
+        }
+
+        function calculateSalePrice() {
+            const originalPrice = parseFloat(document.getElementById('productPrice').value) || 0;
+            const salePercentage = parseInt(document.getElementById('productSalePercentage').value) || 0;
+            
+            if (salePercentage > 0) {
+                const discountAmount = originalPrice * (salePercentage / 100);
+                const salePrice = originalPrice - discountAmount;
+                document.getElementById('salePriceValue').textContent = '₱' + salePrice.toFixed(2);
+                document.getElementById('salePriceDisplay').style.display = 'block';
+            } else {
+                document.getElementById('salePriceDisplay').style.display = 'none';
+            }
         }
         
         function closeDeleteModal() {
@@ -799,8 +829,10 @@ if (isset($_GET['edit'])) {
                 document.getElementById('productStock').value = <?php echo $edit_product['stock_quantity']; ?>;
                 document.getElementById('productCategory').value = <?php echo $edit_product['category_id'] ?? '""'; ?>;
                 document.getElementById('productStatus').value = '<?php echo $edit_product['status']; ?>';
-                document.getElementById('productPopular').checked = <?php echo $edit_product['is_popular'] ? 'true' : 'false'; ?>;
-                document.getElementById('productBestSeller').checked = <?php echo $edit_product['is_best_seller'] ? 'true' : 'false'; ?>;
+                document.getElementById('productSalePercentage').value = <?php echo $edit_product['sale_percentage'] ?? 0; ?>;
+                
+                // Calculate sale price for editing
+                calculateSalePrice();
                 
                 // Display existing image
                 <?php 

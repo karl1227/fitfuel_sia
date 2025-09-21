@@ -14,7 +14,11 @@ try {
     
     // Get user's cart and items
     $cart_sql = "SELECT c.cart_id, ci.cart_item_id, ci.product_id, ci.quantity, 
-                        p.name, p.price, p.images
+                        p.name, p.price, p.sale_percentage, p.images,
+                        CASE 
+                            WHEN p.sale_percentage > 0 THEN p.price * (1 - p.sale_percentage / 100)
+                            ELSE p.price
+                        END as final_price
                  FROM cart c 
                  LEFT JOIN cart_items ci ON c.cart_id = ci.cart_id 
                  LEFT JOIN products p ON ci.product_id = p.product_id 
@@ -31,7 +35,7 @@ try {
     $total_items = 0;
     
     foreach ($cart_items as $item) {
-        $subtotal += $item['price'] * $item['quantity'];
+        $subtotal += $item['final_price'] * $item['quantity'];
         $total_items += $item['quantity'];
     }
     
@@ -189,8 +193,13 @@ if (isset($_SESSION['user_id'])) {
                         <div class="space-y-4">
                             <?php foreach ($cart_items as $item): ?>
                                 <?php 
-                                $images = json_decode($item['images'], true);
-                                $image_url = !empty($images) ? $images[0] : 'img/placeholder.svg';
+                                $image_url = 'img/Featured/1.png'; // Default image
+                                if ($item['images']) {
+                                    $images = json_decode($item['images'], true);
+                                    if (is_array($images) && !empty($images)) {
+                                        $image_url = $images[0]; // Images already include full path
+                                    }
+                                }
                                 ?>
                                 <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
                                     <!-- Checkbox -->
@@ -206,7 +215,14 @@ if (isset($_SESSION['user_id'])) {
                                     <!-- Product Info -->
                                     <div class="flex-1">
                                         <h3 class="font-semibold text-slate-800"><?php echo htmlspecialchars($item['name']); ?></h3>
-                                        <p class="text-emerald-600 font-semibold">₱<?php echo number_format($item['price'], 2); ?></p>
+                                        <?php if ($item['sale_percentage'] > 0): ?>
+                                            <div class="flex flex-col">
+                                                <span class="text-red-600 font-semibold">₱<?php echo number_format($item['final_price'], 2); ?></span>
+                                                <span class="text-gray-500 line-through text-sm">₱<?php echo number_format($item['price'], 2); ?></span>
+                                            </div>
+                                        <?php else: ?>
+                                            <p class="text-emerald-600 font-semibold">₱<?php echo number_format($item['price'], 2); ?></p>
+                                        <?php endif; ?>
                                     </div>
                                     
                                     <!-- Quantity Controls -->

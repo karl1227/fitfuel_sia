@@ -57,9 +57,16 @@ try {
     // Always use the order_id_param as the custom_order_id for display
     $custom_order_id = $order_id_param;
     
+    // Debug logging
+    error_log("Order Success Debug - order_id_param: '$order_id_param', custom_order_id: '$custom_order_id'");
+    
     if ($order) {
         // Get order items (use the actual order_id from the database)
-        $items_sql = "SELECT oi.*, p.name, p.images 
+        $items_sql = "SELECT oi.*, p.name, p.price, p.sale_percentage, p.images,
+                            CASE 
+                                WHEN p.sale_percentage > 0 THEN p.price * (1 - p.sale_percentage / 100)
+                                ELSE p.price
+                            END as final_price
                       FROM order_items oi 
                       JOIN products p ON oi.product_id = p.product_id 
                       WHERE oi.order_id = ?";
@@ -79,7 +86,7 @@ try {
     $order = null;
     $order_items = [];
     $shipping_address = [];
-    $custom_order_id = '';
+    $custom_order_id = $order_id_param; // Ensure custom_order_id is preserved even in error
     $error = "Database error: " . $e->getMessage();
 }
 
@@ -179,7 +186,7 @@ if (isset($_SESSION['user_id'])) {
                         <div class="space-y-4">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Order Number:</span>
-                                <span class="font-semibold"><?php echo $custom_order_id; ?></span>
+                                <span class="font-semibold text-emerald-600 text-lg"><?php echo htmlspecialchars($custom_order_id ?: 'N/A'); ?></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Order Date:</span>
@@ -234,7 +241,7 @@ if (isset($_SESSION['user_id'])) {
                             if ($item['images']) {
                                 $images = json_decode($item['images'], true);
                                 if (is_array($images) && !empty($images)) {
-                                    $image_url = 'uploads/products/' . $images[0];
+                                    $image_url = $images[0]; // Images already include full path
                                 }
                             }
                             ?>
@@ -247,8 +254,14 @@ if (isset($_SESSION['user_id'])) {
                                     <p class="text-gray-600">Quantity: <?php echo $item['quantity']; ?></p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="font-semibold text-emerald-600">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
-                                    <p class="text-sm text-gray-500">₱<?php echo number_format($item['price'], 2); ?> each</p>
+                                    <?php if ($item['sale_percentage'] > 0): ?>
+                                        <p class="font-semibold text-red-600">₱<?php echo number_format($item['final_price'] * $item['quantity'], 2); ?></p>
+                                        <p class="text-sm text-gray-500 line-through">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
+                                        <p class="text-sm text-gray-500">₱<?php echo number_format($item['final_price'], 2); ?> each</p>
+                                    <?php else: ?>
+                                        <p class="font-semibold text-emerald-600">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
+                                        <p class="text-sm text-gray-500">₱<?php echo number_format($item['price'], 2); ?> each</p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -289,7 +302,7 @@ if (isset($_SESSION['user_id'])) {
                         <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Order ID:</span>
-                                <span class="font-semibold"><?php echo $custom_order_id; ?></span>
+                                <span class="font-semibold text-emerald-600 text-lg"><?php echo htmlspecialchars($custom_order_id ?: 'N/A'); ?></span>
                             </div>
                             
                             <?php if ($order && isset($order['estimated_delivery_date'])): ?>

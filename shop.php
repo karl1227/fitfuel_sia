@@ -115,6 +115,14 @@ if (isset($_SESSION['user_id'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/shop.css">
+    <style>
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body class="font-body bg-white text-slate-600">
     <!-- First Navigation Bar -->
@@ -342,28 +350,37 @@ if (isset($_SESSION['user_id'])) {
                         $images = json_decode($product['images'], true);
                         $image_url = !empty($images) ? $images[0] : 'img/placeholder.svg';
                         ?>
-                        <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow">
+                        <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow flex flex-col h-full">
                             <div class="relative">
                                 <img src="<?php echo htmlspecialchars($image_url); ?>" 
                                      alt="<?php echo htmlspecialchars($product['name']); ?>" 
                                      class="w-full h-64 object-cover">
                                 
                                 <!-- Product Badges -->
-                                <?php if ($product['is_best_seller']): ?>
-                                    <span class="absolute top-4 left-4 bg-emerald-500 text-white px-2 py-1 rounded text-sm font-semibold">Best Seller</span>
-                                <?php elseif ($product['is_popular']): ?>
-                                    <span class="absolute top-4 left-4 bg-blue-500 text-white px-2 py-1 rounded text-sm font-semibold">Popular</span>
+                                <?php if ($product['sale_percentage'] > 0): ?>
+                                    <span class="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold"><?php echo $product['sale_percentage']; ?>% OFF</span>
                                 <?php endif; ?>
                                 
                             </div>
                             
-                            <div class="p-6">
+                            <div class="p-6 flex flex-col flex-grow">
                                 <h3 class="font-semibold text-lg text-slate-800 mb-2"><?php echo htmlspecialchars($product['name']); ?></h3>
-                                <p class="text-slate-600 mb-4"><?php echo htmlspecialchars($product['description']); ?></p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-2xl font-bold text-emerald-600">₱<?php echo number_format($product['price'], 2); ?></span>
+                                <p class="text-slate-600 mb-4 flex-grow line-clamp-3"><?php echo htmlspecialchars($product['description']); ?></p>
+                                <div class="flex items-end justify-between mt-auto">
+                                    <?php if ($product['sale_percentage'] > 0): ?>
+                                        <?php 
+                                        $original_price = $product['price'];
+                                        $sale_price = $original_price * (1 - $product['sale_percentage'] / 100);
+                                        ?>
+                                        <div class="flex flex-col">
+                                            <span class="text-2xl font-bold text-red-600">₱<?php echo number_format($sale_price, 2); ?></span>
+                                            <span class="text-sm text-gray-500 line-through">₱<?php echo number_format($original_price, 2); ?></span>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="text-2xl font-bold text-emerald-600">₱<?php echo number_format($product['price'], 2); ?></span>
+                                    <?php endif; ?>
                                     <button onclick="addToCart(<?php echo $product['product_id']; ?>)" 
-                                            class="bg-black text-white p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                                            class="bg-black text-white p-3 rounded-lg hover:bg-gray-800 transition-colors flex-shrink-0">
                                         <i class="fas fa-shopping-cart"></i>
                                     </button>
                                 </div>

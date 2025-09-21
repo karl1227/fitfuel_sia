@@ -215,6 +215,7 @@ CREATE TABLE `products` (
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `is_popular` tinyint(1) NOT NULL DEFAULT 0,
   `is_best_seller` tinyint(1) NOT NULL DEFAULT 0,
+  `sale_percentage` int(11) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `min_stock_level` int(11) NOT NULL DEFAULT 10

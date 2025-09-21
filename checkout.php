@@ -26,7 +26,11 @@ try {
     // Get user's selected cart items
     $placeholders = str_repeat('?,', count($selected_items) - 1) . '?';
     $cart_sql = "SELECT c.cart_id, ci.cart_item_id, ci.product_id, ci.quantity, 
-                        p.name, p.price, p.images
+                        p.name, p.price, p.sale_percentage, p.images,
+                        CASE 
+                            WHEN p.sale_percentage > 0 THEN p.price * (1 - p.sale_percentage / 100)
+                            ELSE p.price
+                        END as final_price
                  FROM cart c 
                  LEFT JOIN cart_items ci ON c.cart_id = ci.cart_id 
                  LEFT JOIN products p ON ci.product_id = p.product_id 
@@ -64,7 +68,7 @@ try {
     $total_items = 0;
     
     foreach ($cart_items as $item) {
-        $subtotal += $item['price'] * $item['quantity'];
+        $subtotal += $item['final_price'] * $item['quantity'];
         $total_items += $item['quantity'];
     }
     
@@ -275,7 +279,7 @@ if (isset($_SESSION['user_id'])) {
                                 if ($item['images']) {
                                     $images = json_decode($item['images'], true);
                                     if (is_array($images) && !empty($images)) {
-                                        $image_url = 'uploads/products/' . $images[0];
+                                        $image_url = $images[0]; // Images already include full path
                                     }
                                 }
                                 ?>
@@ -288,8 +292,14 @@ if (isset($_SESSION['user_id'])) {
                                         <p class="text-gray-600 text-sm">Qty: <?php echo $item['quantity']; ?></p>
                                     </div>
                                     <div class="text-right">
-                                        <p class="font-semibold text-emerald-600">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
-                                        <p class="text-xs text-gray-500">₱<?php echo number_format($item['price'], 2); ?> each</p>
+                                        <?php if ($item['sale_percentage'] > 0): ?>
+                                            <p class="font-semibold text-red-600">₱<?php echo number_format($item['final_price'] * $item['quantity'], 2); ?></p>
+                                            <p class="text-xs text-gray-500 line-through">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
+                                            <p class="text-xs text-gray-500">₱<?php echo number_format($item['final_price'], 2); ?> each</p>
+                                        <?php else: ?>
+                                            <p class="font-semibold text-emerald-600">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
+                                            <p class="text-xs text-gray-500">₱<?php echo number_format($item['price'], 2); ?> each</p>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
