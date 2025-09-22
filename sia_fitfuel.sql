@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2025 at 10:10 PM
+-- Generation Time: Sep 22, 2025 at 04:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,7 +40,9 @@ CREATE TABLE `cart` (
 
 INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`, `updated_at`) VALUES
 (6, 4, '2025-09-10 14:53:45', '2025-09-10 14:53:45'),
-(7, 8, '2025-09-10 14:58:41', '2025-09-10 14:58:41');
+(7, 8, '2025-09-10 14:58:41', '2025-09-10 14:58:41'),
+(14, 14, '2025-09-21 15:56:02', '2025-09-21 15:56:02'),
+(15, 15, '2025-09-21 16:04:25', '2025-09-21 16:04:25');
 
 -- --------------------------------------------------------
 
@@ -65,7 +67,11 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (7, 6, 145, 4, '2025-09-10 14:56:41'),
 (8, 6, 144, 3, '2025-09-10 14:56:44'),
 (85, 6, 161, 2, '2025-09-10 19:46:42'),
-(86, 7, 161, 3, '2025-09-10 19:56:09');
+(86, 7, 161, 3, '2025-09-10 19:56:09'),
+(92, 15, 143, 4, '2025-09-21 16:04:25'),
+(93, 15, 144, 1, '2025-09-21 16:04:41'),
+(94, 15, 146, 1, '2025-09-21 16:04:42'),
+(95, 15, 147, 1, '2025-09-21 16:04:43');
 
 -- --------------------------------------------------------
 
@@ -146,7 +152,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payment_method`, `payment_status`, `shipping_address`, `total_amount`, `estimated_delivery_date`, `return_reason`, `refund_amount`, `stock_deducted`, `created_at`, `updated_at`) VALUES
-(12, 'FF-20250910-SD5JR', 8, 'pending', 'cod', 'pending', '{\"full_name\":\"Karl Blackstack\",\"phone\":\"09765123456\",\"address\":\"Testing St. Brgy Test Angono, Rizal\",\"city\":\"Angono\",\"state\":\"South Luzon\",\"postal_code\":\"1930\"}', 2050.00, '2025-09-14', NULL, NULL, 0, '2025-09-10 20:05:43', '2025-09-10 20:05:43');
+(12, 'FF-20250910-SD5JR', 8, 'pending', 'cod', 'pending', '{\"full_name\":\"Karl Blackstack\",\"phone\":\"09765123456\",\"address\":\"Testing St. Brgy Test Angono, Rizal\",\"city\":\"Angono\",\"state\":\"South Luzon\",\"postal_code\":\"1930\"}', 2050.00, '2025-09-14', NULL, NULL, 0, '2025-09-10 20:05:43', '2025-09-10 20:05:43'),
+(13, 'FF-20250921-IPUQ6', 14, 'pending', 'cod', 'pending', '{\"full_name\":\"Karl Test\",\"phone\":\"09765700300\",\"address\":\"R. Testing St.\",\"city\":\"Antipolo\",\"state\":\"South Luzon\",\"postal_code\":\"1940\"}', 6680.00, '2025-09-25', NULL, NULL, 0, '2025-09-21 16:12:06', '2025-09-22 14:10:53');
 
 -- --------------------------------------------------------
 
@@ -167,7 +174,13 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(18, 12, 144, 3, 650.00);
+(18, 12, 144, 3, 650.00),
+(19, 13, 143, 1, 990.00),
+(20, 13, 161, 1, 2800.00),
+(21, 13, 144, 1, 650.00),
+(22, 13, 145, 1, 1200.00),
+(23, 13, 146, 1, 190.00),
+(24, 13, 147, 1, 750.00);
 
 -- --------------------------------------------------------
 
@@ -215,7 +228,7 @@ CREATE TABLE `products` (
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `is_popular` tinyint(1) NOT NULL DEFAULT 0,
   `is_best_seller` tinyint(1) NOT NULL DEFAULT 0,
-  `sale_percentage` int(11) NOT NULL DEFAULT 0,
+  `sale_percentage` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `min_stock_level` int(11) NOT NULL DEFAULT 10
@@ -225,52 +238,52 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category_id`, `subcategory_id`, `images`, `stock_quantity`, `status`, `is_popular`, `is_best_seller`, `created_at`, `updated_at`, `min_stock_level`) VALUES
-(143, 'Weightlifting Gloves', 'Padded gloves for better grip and hand protection during heavy lifts.', 990.00, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 29, 'active', 1, 0, '2025-09-06 14:37:21', '2025-09-10 19:56:17', 10),
-(144, 'Wrist Straps', 'Durable straps to support your wrists during intense workouts.', 650.00, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 32, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-10 20:05:43', 10),
-(145, 'Weightlifting Belt', 'Provides back support for heavy lifting and powerlifting.', 1200.00, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 24, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:52:12', 10),
-(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 97, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:40:03', 10),
-(147, 'Barbell Pads', 'Protect your joints during intense workouts with padded barbell support.', 750.00, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 45, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:25:37', 10),
-(148, 'Massage Gun', 'Deep tissue massage tool for faster muscle recovery.', 3500.00, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 18, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:47:24', 10),
-(149, 'Gel Pack', 'Hot and cold gel pack for muscle relief.', 450.00, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 48, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:51:13', 10),
-(150, 'Compression Sleeves', 'Enhances blood flow and reduces soreness.', 700.00, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 35, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:26:43', 10),
-(151, 'Stretching Strap', 'Assists in improving flexibility and stretching.', 400.00, 1, 12, NULL, 60, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(152, 'Resistance Band', 'Multi-purpose band for rehab and warm-up routines.', 300.00, 1, 12, NULL, 80, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(153, 'Shaker Bottle', 'Durable shaker for protein shakes and supplements.', 350.00, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 100, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:15', 10),
-(154, 'Duffle Bag', 'Spacious gym bag for gear and clothes.', 1500.00, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 40, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:24', 10),
-(155, 'Meal Prep Box', 'Keeps meals fresh and organized for fitness diets.', 800.00, 1, 13, '[\"uploads\\/products\\/68bf201c32d80_1757356060.jpg\"]', 50, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:40', 10),
-(156, 'Cooling Towel', 'Stay cool during intense workouts with this quick-dry towel.', 450.00, 1, 13, '[\"uploads\\/products\\/68bf20859727c_1757356165.jpg\"]', 60, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:29:25', 10),
-(157, 'Electrolyte Tablets', 'Replenishes lost minerals during heavy sweating.', 300.00, 1, 13, '[\"uploads\\/products\\/68bf207c0a68a_1757356156.jpg\"]', 70, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:29:16', 10),
-(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is ideal for strength, toning, and full-body workouts.', 3500.00, 2, 14, '[\"uploads\\/products\\/68bf202ba629f_1757356075.jpg\"]', 25, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:55', 10),
-(159, 'Kettlebell', 'Durable kettlebell for swings, squats, and functional training.', 1750.00, 2, 14, '[\"uploads\\/products\\/68bf20353a176_1757356085.jpg\"]', 30, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:05', 10),
-(160, 'Barbell', 'Olympic and standard barbells for heavy lifting.', 2200.00, 2, 14, '[\"uploads\\/products\\/68bf2047c35f2_1757356103.jpg\"]', 20, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:23', 10),
-(161, 'Weight Plates', 'Plates for Olympic and standard barbells.', 2800.00, 2, 14, '[\"uploads\\/products\\/68bf2055b3c7e_1757356117.jpg\"]', 31, 'active', 0, 1, '2025-09-06 14:37:21', '2025-09-10 19:44:59', 10),
-(162, 'Medicine Ball', 'Perfect for strength and core training exercises.', 1200.00, 2, 14, '[\"uploads\\/products\\/68bf206938a61_1757356137.jpg\"]', 30, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:57', 10),
-(163, 'Jump Rope', 'Adjustable speed rope for cardio and endurance.', 400.00, 2, 15, '[\"uploads\\/products\\/68bf214535d73_1757356357.jpg\"]', 60, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:32:37', 10),
-(164, 'Parallette Bars', 'Perfect for calisthenics and bodyweight training.', 2200.00, 2, 15, '[\"uploads\\/products\\/68bf20ee48d21_1757356270.jpg\"]', 20, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:10', 10),
-(165, 'Dip Belts', 'Adds extra weight for dips and pull-ups.', 1500.00, 2, 15, '[\"uploads\\/products\\/68bf21a0ddab8_1757356448.jpg\"]', 20, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:34:08', 10),
-(166, 'Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 20, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:34', 10),
-(167, 'Gymnastic Rings', 'Adjustable rings for advanced bodyweight exercises.', 1800.00, 2, 15, '[\"uploads\\/products\\/68bf20ba61d06_1757356218.jpg\"]', 20, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:18', 10),
-(168, 'Foam Roller', 'Helps relieve muscle tension and improve mobility.', 900.00, 2, 16, '[\"uploads\\/products\\/68bf215a4ddd2_1757356378.jpg\"]', 35, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:32:58', 10),
-(169, 'Massage Stick', 'Portable tool for deep tissue massage.', 600.00, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 40, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:44', 10),
-(170, 'Mobility Ball', 'Small ball for targeted muscle release.', 300.00, 2, 16, '[\"uploads\\/products\\/68bf212524638_1757356325.jpg\"]', 69, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:36:30', 10),
-(171, 'Stretching Strap', 'Assists in deep stretches for flexibility.', 400.00, 2, 16, NULL, 50, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(172, 'Yoga Mat', 'Non-slip mat for yoga, pilates, and stretching.', 1200.00, 2, 16, '[\"uploads\\/products\\/68bf20d9d9219_1757356249.jpg\"]', 49, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:36:30', 10),
-(173, 'Whey Protein', 'High-quality whey protein for muscle recovery and growth.', 2200.00, 3, 17, NULL, 40, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(174, 'Casein Protein', 'Slow-digesting protein perfect for nighttime recovery.', 2300.00, 3, 17, NULL, 35, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(175, 'Plant-Based Protein', 'Vegan protein blend for clean nutrition.', 2400.00, 3, 17, NULL, 30, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(176, 'Isolate Whey', 'Ultra-pure whey isolate with fast absorption.', 2500.00, 3, 17, NULL, 35, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(177, 'Mass Gainer', 'High-calorie protein blend for bulking.', 2600.00, 3, 17, NULL, 25, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(178, 'Pre-workout Booster', 'Energy and focus enhancer for improved workout performance.', 1500.00, 3, 18, NULL, 50, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(179, 'Caffeine Booster', 'Fast-acting energy formula for intense training.', 1200.00, 3, 18, NULL, 45, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(180, 'Beta-Alanine Formula', 'Improves endurance and reduces fatigue.', 1300.00, 3, 18, NULL, 40, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(181, 'Nitric Oxide Booster', 'Enhances blood flow and pumps during workouts.', 1400.00, 3, 18, NULL, 35, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(182, 'Creatine Monohydrate', 'Boost strength and power during high-intensity workouts.', 1200.00, 3, 18, NULL, 45, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(183, 'Multivitamins', 'Daily vitamins to support overall health and wellness.', 800.00, 3, 19, NULL, 60, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(184, 'Vitamin D3', 'Supports bone and immune health.', 500.00, 3, 19, NULL, 70, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(185, 'Vitamin C', 'Boosts immunity and reduces fatigue.', 400.00, 3, 19, NULL, 80, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(186, 'Omega-3 Fish Oil', 'Supports heart and brain health.', 900.00, 3, 19, NULL, 55, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(187, 'B-Complex Vitamins', 'Helps energy production and nervous system health.', 650.00, 3, 19, NULL, 65, 'active', 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10);
+INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category_id`, `subcategory_id`, `images`, `stock_quantity`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`) VALUES
+(143, 'Weightlifting Gloves', 'Padded gloves for better grip and hand protection during heavy lifts.', 990.00, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 28, 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
+(144, 'Wrist Straps', 'Durable straps to support your wrists during intense workouts.', 650.00, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 31, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
+(145, 'Weightlifting Belt', 'Provides back support for heavy lifting and powerlifting.', 1200.00, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 23, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
+(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 96, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
+(147, 'Barbell Pads', 'Protect your joints during intense workouts with padded barbell support.', 750.00, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 44, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
+(148, 'Massage Gun', 'Deep tissue massage tool for faster muscle recovery.', 3500.00, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 18, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:47:24', 10),
+(149, 'Gel Pack', 'Hot and cold gel pack for muscle relief.', 450.00, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 48, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:51:13', 10),
+(150, 'Compression Sleeves', 'Enhances blood flow and reduces soreness.', 700.00, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:26:43', 10),
+(151, 'Stretching Strap', 'Assists in improving flexibility and stretching.', 400.00, 1, 12, NULL, 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(152, 'Resistance Band', 'Multi-purpose band for rehab and warm-up routines.', 300.00, 1, 12, NULL, 80, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(153, 'Shaker Bottle', 'Durable shaker for protein shakes and supplements.', 350.00, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 100, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:15', 10),
+(154, 'Duffle Bag', 'Spacious gym bag for gear and clothes.', 1500.00, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 40, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:24', 10),
+(155, 'Meal Prep Box', 'Keeps meals fresh and organized for fitness diets.', 800.00, 1, 13, '[\"uploads\\/products\\/68bf201c32d80_1757356060.jpg\"]', 50, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:40', 10),
+(156, 'Cooling Towel', 'Stay cool during intense workouts with this quick-dry towel.', 450.00, 1, 13, '[\"uploads\\/products\\/68bf20859727c_1757356165.jpg\"]', 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:29:25', 10),
+(157, 'Electrolyte Tablets', 'Replenishes lost minerals during heavy sweating.', 300.00, 1, 13, '[\"uploads\\/products\\/68bf207c0a68a_1757356156.jpg\"]', 70, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:29:16', 10),
+(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is ideal for strength, toning, and full-body workouts.', 3500.00, 2, 14, '[\"uploads\\/products\\/68bf202ba629f_1757356075.jpg\"]', 25, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:55', 10),
+(159, 'Kettlebell', 'Durable kettlebell for swings, squats, and functional training.', 1750.00, 2, 14, '[\"uploads\\/products\\/68bf20353a176_1757356085.jpg\"]', 30, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:05', 10),
+(160, 'Barbell', 'Olympic and standard barbells for heavy lifting.', 2200.00, 2, 14, '[\"uploads\\/products\\/68bf2047c35f2_1757356103.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:23', 10),
+(161, 'Weight Plates', 'Plates for Olympic and standard barbells.', 2800.00, 2, 14, '[\"uploads\\/products\\/68bf2055b3c7e_1757356117.jpg\"]', 30, 'active', 0, 1, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
+(162, 'Medicine Ball', 'Perfect for strength and core training exercises.', 1200.00, 2, 14, '[\"uploads\\/products\\/68bf206938a61_1757356137.jpg\"]', 30, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:57', 10),
+(163, 'Jump Rope', 'Adjustable speed rope for cardio and endurance.', 400.00, 2, 15, '[\"uploads\\/products\\/68bf214535d73_1757356357.jpg\"]', 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:32:37', 10),
+(164, 'Parallette Bars', 'Perfect for calisthenics and bodyweight training.', 2200.00, 2, 15, '[\"uploads\\/products\\/68bf20ee48d21_1757356270.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:10', 10),
+(165, 'Dip Belts', 'Adds extra weight for dips and pull-ups.', 1500.00, 2, 15, '[\"uploads\\/products\\/68bf21a0ddab8_1757356448.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:34:08', 10),
+(166, 'Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:34', 10),
+(167, 'Gymnastic Rings', 'Adjustable rings for advanced bodyweight exercises.', 1800.00, 2, 15, '[\"uploads\\/products\\/68bf20ba61d06_1757356218.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:18', 10),
+(168, 'Foam Roller', 'Helps relieve muscle tension and improve mobility.', 900.00, 2, 16, '[\"uploads\\/products\\/68bf215a4ddd2_1757356378.jpg\"]', 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:32:58', 10),
+(169, 'Massage Stick', 'Portable tool for deep tissue massage.', 600.00, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 40, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:44', 10),
+(170, 'Mobility Ball', 'Small ball for targeted muscle release.', 300.00, 2, 16, '[\"uploads\\/products\\/68bf212524638_1757356325.jpg\"]', 69, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:36:30', 10),
+(171, 'Stretching Strap', 'Assists in deep stretches for flexibility.', 400.00, 2, 16, NULL, 50, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(172, 'Yoga Mat', 'Non-slip mat for yoga, pilates, and stretching.', 1200.00, 2, 16, '[\"uploads\\/products\\/68bf20d9d9219_1757356249.jpg\"]', 49, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:36:30', 10),
+(173, 'Whey Protein', 'High-quality whey protein for muscle recovery and growth.', 2200.00, 3, 17, NULL, 40, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(174, 'Casein Protein', 'Slow-digesting protein perfect for nighttime recovery.', 2300.00, 3, 17, NULL, 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(175, 'Plant-Based Protein', 'Vegan protein blend for clean nutrition.', 2400.00, 3, 17, NULL, 30, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(176, 'Isolate Whey', 'Ultra-pure whey isolate with fast absorption.', 2500.00, 3, 17, NULL, 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(177, 'Mass Gainer', 'High-calorie protein blend for bulking.', 2600.00, 3, 17, NULL, 25, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(178, 'Pre-workout Booster', 'Energy and focus enhancer for improved workout performance.', 1500.00, 3, 18, NULL, 50, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(179, 'Caffeine Booster', 'Fast-acting energy formula for intense training.', 1200.00, 3, 18, NULL, 45, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(180, 'Beta-Alanine Formula', 'Improves endurance and reduces fatigue.', 1300.00, 3, 18, NULL, 40, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(181, 'Nitric Oxide Booster', 'Enhances blood flow and pumps during workouts.', 1400.00, 3, 18, NULL, 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(182, 'Creatine Monohydrate', 'Boost strength and power during high-intensity workouts.', 1200.00, 3, 18, NULL, 45, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(183, 'Multivitamins', 'Daily vitamins to support overall health and wellness.', 800.00, 3, 19, NULL, 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(184, 'Vitamin D3', 'Supports bone and immune health.', 500.00, 3, 19, NULL, 70, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(185, 'Vitamin C', 'Boosts immunity and reduces fatigue.', 400.00, 3, 19, NULL, 80, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(186, 'Omega-3 Fish Oil', 'Supports heart and brain health.', 900.00, 3, 19, NULL, 55, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(187, 'B-Complex Vitamins', 'Helps energy production and nervous system health.', 650.00, 3, 19, NULL, 65, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10);
 
 -- --------------------------------------------------------
 
@@ -331,7 +344,8 @@ CREATE TABLE `shipping_addresses` (
 --
 
 INSERT INTO `shipping_addresses` (`address_id`, `user_id`, `full_name`, `phone`, `address_line1`, `address_line2`, `city`, `state`, `postal_code`, `country`, `is_default`, `created_at`, `updated_at`) VALUES
-(1, 8, 'Karl Blackstack', '09765123456', 'Testing St. Brgy Test Angono, Rizal', NULL, 'Angono', 'South Luzon', '1930', 'Philippines', 1, '2025-09-10 19:26:40', '2025-09-10 19:26:40');
+(1, 8, 'Karl Blackstack', '09765123456', 'Testing St. Brgy Test Angono, Rizal', NULL, 'Angono', 'South Luzon', '1930', 'Philippines', 1, '2025-09-10 19:26:40', '2025-09-10 19:26:40'),
+(2, 14, 'Karl Test', '09765700300', 'R. Testing St.', NULL, 'Antipolo', 'South Luzon', '1940', 'Philippines', 1, '2025-09-21 16:12:03', '2025-09-21 16:12:03');
 
 -- --------------------------------------------------------
 
@@ -417,13 +431,15 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`) VALUES
 (1, 'karl', 'blockstockkc@gmail.com', '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00'),
 (2, 'customer', 'customer@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL),
-(4, 'admin', 'admin@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-09-10 20:08:34', '2025-09-10 20:08:34'),
+(4, 'admin', 'admin@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-09-22 13:05:38', '2025-09-22 13:05:38'),
 (8, 'karl2003', 'blockstockkc123@gmail.com', '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34'),
 (9, 'emmanadmin', 'emmanadmin@gmail.com', '$2y$10$FueQzeltWy15uvefERs8Au75iBgbuNAYVTsqxrJE0eH.GV2I6yRSq', NULL, 'admin', 'active', '2025-09-09 04:07:49', '2025-09-10 09:54:31', NULL),
 (10, 'emman', 'emmancutiexd@gmail.com', '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30'),
 (11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-09-10 12:09:52', '2025-09-10 12:09:52'),
 (12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL),
-(13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-09-10 15:05:56', NULL);
+(13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-09-10 15:05:56', NULL),
+(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-09-22 13:03:42', '2025-09-22 13:03:42'),
+(15, 'karlblockstock1', 'karlblockstock27@gmail.com', NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-09-21 16:04:20', NULL);
 
 --
 -- Indexes for dumped tables
@@ -550,13 +566,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `cart_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -574,13 +590,13 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `order_promo_codes`
@@ -610,7 +626,7 @@ ALTER TABLE `promo_codes`
 -- AUTO_INCREMENT for table `shipping_addresses`
 --
 ALTER TABLE `shipping_addresses`
-  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `shipping_fees`
@@ -628,7 +644,7 @@ ALTER TABLE `subcategories`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables

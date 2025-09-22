@@ -408,11 +408,68 @@ $orders = $stm->fetchAll();
 						<td class="p-3"><?php echo htmlspecialchars($o['username']); ?> <span class="text-gray-500 text-xs"><?php echo htmlspecialchars($o['email']); ?></span></td>
 						<td class="p-3"><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($o['created_at']))); ?></td>
 						<td class="p-3">₱<?php echo number_format((float)$o['total_amount'], 2); ?></td>
-						<td class="p-3"><span class="badge border <?php echo $o['status']==='delivered'?'bg-green-100 text-green-800':($o['status']==='processing'?'bg-yellow-100 text-yellow-800':($o['status']==='cancelled'?'bg-red-100 text-red-800':'bg-gray-100 text-gray-800')); ?>"><?php echo ucfirst($o['status']); ?></span></td>
-						<td class="p-3"><?php echo htmlspecialchars(ucfirst($o['payment_status'])); ?><?php if ($o['payment_method']): ?> <span class="text-gray-500">(<?php echo htmlspecialchars($o['payment_method']); ?>)</span><?php endif; ?></td>
+						<td class="p-3">
+							<span class="px-2 py-1 rounded-full text-xs font-semibold <?php 
+								$statusClass = '';
+								switch($o['status']) {
+									case 'delivered':
+										$statusClass = 'bg-green-100 text-green-800 border border-green-200';
+										break;
+									case 'processing':
+										$statusClass = 'bg-blue-100 text-blue-800 border border-blue-200';
+										break;
+									case 'shipped':
+										$statusClass = 'bg-purple-100 text-purple-800 border border-purple-200';
+										break;
+									case 'cancelled':
+										$statusClass = 'bg-red-100 text-red-800 border border-red-200';
+										break;
+									case 'returned':
+										$statusClass = 'bg-orange-100 text-orange-800 border border-orange-200';
+										break;
+									case 'refunded':
+										$statusClass = 'bg-gray-100 text-gray-800 border border-gray-200';
+										break;
+									default:
+										$statusClass = 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+										break;
+								}
+								echo $statusClass;
+							?>">
+								<?php echo ucfirst($o['status']); ?>
+							</span>
+						</td>
+						<td class="p-3">
+							<div class="flex flex-col space-y-1">
+								<span class="px-2 py-1 rounded-full text-xs font-semibold <?php 
+									$paymentStatusClass = '';
+									switch($o['payment_status']) {
+										case 'paid':
+											$paymentStatusClass = 'bg-green-100 text-green-800 border border-green-200';
+											break;
+										case 'pending':
+											$paymentStatusClass = 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+											break;
+										case 'refunded':
+											$paymentStatusClass = 'bg-gray-100 text-gray-800 border border-gray-200';
+											break;
+										default:
+											$paymentStatusClass = 'bg-red-100 text-red-800 border border-red-200';
+											break;
+									}
+									echo $paymentStatusClass;
+								?>">
+									<?php echo ucfirst($o['payment_status']); ?>
+								</span>
+							</div>
+						</td>
 						<td class="p-3"><?php echo $o['estimated_delivery_date'] ? htmlspecialchars($o['estimated_delivery_date']) : '-'; ?></td>
 						<td class="p-3">
 							<div class="flex items-center space-x-2">
+								<a href="view_order.php?id=<?php echo (int)$o['order_id']; ?>" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+									<i class="fas fa-eye mr-1"></i>
+									View Order
+								</a>
 								<button onclick="openOrderModal(<?php echo htmlspecialchars(json_encode($o)); ?>)" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
 									<i class="fas fa-edit mr-1"></i>
 									Edit
@@ -479,7 +536,7 @@ $orders = $stm->fetchAll();
 							<label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
 							<select name="payment_method" id="modalPaymentMethod" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
 								<option value="">Select Method</option>
-								<option value="cash_on_delivery">Cash on Delivery</option>
+								<option value="cod">Cash on Delivery</option>
 								<option value="paypal">PayPal</option>
 							</select>
 						</div>
@@ -585,7 +642,7 @@ $orders = $stm->fetchAll();
 			// Map different payment method formats to dropdown values
 			let selectedValue = '';
 			if (paymentMethod === 'cod') {
-				selectedValue = 'cash_on_delivery';
+				selectedValue = 'cod';
 			} else if (paymentMethod === 'paypal') {
 				selectedValue = 'paypal';
 			}
@@ -651,7 +708,7 @@ $orders = $stm->fetchAll();
 			// Map payment method dropdown value back to database format
 			const paymentMethodValue = document.getElementById('modalPaymentMethod').value;
 			let dbPaymentMethod = '';
-			if (paymentMethodValue === 'cash_on_delivery') {
+			if (paymentMethodValue === 'cod') {
 				dbPaymentMethod = 'cod';
 			} else if (paymentMethodValue === 'paypal') {
 				dbPaymentMethod = 'paypal';
