@@ -1,84 +1,113 @@
 <?php
-// Google OAuth Configuration
-// Get these from Google Cloud Console: https://console.cloud.google.com/
+// config/google_oauth.php
 
-// Replace these with your actual Google OAuth credentials
-define('GOOGLE_CLIENT_ID', '459916634741-qirtjei6934r4tk4b04kevu0kop1u6fb.apps.googleusercontent.com');
-define('GOOGLE_CLIENT_SECRET', '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');
-define('GOOGLE_REDIRECT_URI', 'http://localhost/fitfuel_sia/google_callback.php');
+// ⚠️ Prefer loading these from environment variables or a non-public config file
+define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: 'YOUR_CLIENT_ID');
+define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET') ?: 'YOUR_CLIENT_SECRET');
+define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'http://localhost/fitfuel_sia/google_callback.php');
 
-// Google OAuth URLs
-define('GOOGLE_AUTH_URL', 'https://accounts.google.com/o/oauth2/auth');
+// Endpoints
+define('GOOGLE_AUTH_URL', 'https://accounts.google.com/o/oauth2/v2/auth');
 define('GOOGLE_TOKEN_URL', 'https://oauth2.googleapis.com/token');
-define('GOOGLE_USER_INFO_URL', 'https://www.googleapis.com/oauth2/v2/userinfo');
+// OIDC-compliant userinfo endpoint
+define('GOOGLE_USER_INFO_URL', 'https://openidconnect.googleapis.com/v1/userinfo');
 
-// Scopes for Google OAuth
-define('GOOGLE_SCOPES', 'email profile');
+// Scopes
+define('GOOGLE_SCOPES', 'openid email profile');
 
 /**
- * Generate Google OAuth URL
+ * Generate a cryptographically-random state and return the auth URL.
+ * Also stores state in session for CSRF checking.
  */
-function getGoogleAuthUrl() {
+function getGoogleAuthUrl(): string {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+
+    $state = bin2hex(random_bytes(16));
+    $_SESSION['google_oauth_state'] = $state;
+
     $params = [
         'client_id' => GOOGLE_CLIENT_ID,
         'redirect_uri' => GOOGLE_REDIRECT_URI,
         'scope' => GOOGLE_SCOPES,
         'response_type' => 'code',
-        'access_type' => 'offline',
-        'prompt' => 'consent'
+        'access_type' => 'offline',     // refresh token (web apps may get it only on first consent)
+        'prompt' => 'consent',          // or 'select_account consent'
+        'state' => $state,
     ];
-    
+
     return GOOGLE_AUTH_URL . '?' . http_build_query($params);
 }
 
 /**
- * Exchange authorization code for access token
+ * Exchange authorization code for tokens
  */
-function getGoogleAccessToken($code) {
+function getGoogleAccessToken(string $code): array {
     $data = [
         'client_id' => GOOGLE_CLIENT_ID,
         'client_secret' => GOOGLE_CLIENT_SECRET,
         'redirect_uri' => GOOGLE_REDIRECT_URI,
         'grant_type' => 'authorization_code',
-        'code' => $code
+        'code' => $code,
     ];
-    
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, GOOGLE_TOKEN_URL);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/x-www-form-urlencoded'
+
+    $ch = curl_init(GOOGLE_TOKEN_URL);
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => http_build_query($data),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
+        CURLOPT_TIMEOUT => 15,
     ]);
-    
+
     $response = curl_exec($ch);
+    if ($response === false) {
+        $err = curl_error($ch);
+        curl_close($ch);
+        throw new Exception('cURL error exchanging code for token: ' . $err);
+    }
+
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-    
+
+    $json = json_decode($response, true);
     if ($httpCode !== 200) {
-        throw new Exception('Failed to get access token');
+        $msg = $json['error_description'] ?? $json['error'] ?? 'Unknown error';
+        throw new Exception("Failed to get access token (HTTP $httpCode): $msg");
     }
-    
-    return json_decode($response, true);
+
+    // Returns: access_token, expires_in, refresh_token (maybe), id_token, scope, token_type
+    return $json;
 }
 
 /**
- * Get user info from Google
+ * Get user info using the access token
  */
-function getGoogleUserInfo($accessToken) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, GOOGLE_USER_INFO_URL . '?access_token=' . $accessToken);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    
+function getGoogleUserInfo(string $accessToken): array {
+    $ch = curl_init(GOOGLE_USER_INFO_URL);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $accessToken
+        ],
+        CURLOPT_TIMEOUT => 15,
+    ]);
+
     $response = curl_exec($ch);
+    if ($response === false) {
+        $err = curl_error($ch);
+        curl_close($ch);
+        throw new Exception('cURL error requesting userinfo: ' . $err);
+    }
+
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-    
+
+    $json = json_decode($response, true);
     if ($httpCode !== 200) {
-        throw new Exception('Failed to get user info');
+        $msg = $json['error_description'] ?? $json['error'] ?? 'Unknown error';
+        throw new Exception("Failed to get user info (HTTP $httpCode): $msg");
     }
-    
-    return json_decode($response, true);
+
+    // Typical fields: sub (user id), email, email_verified, name, given_name, family_name, picture
+    return $json;
 }
-?>
