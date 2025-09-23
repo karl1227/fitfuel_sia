@@ -137,3 +137,83 @@
                 });
             }
         });
+
+
+// ===== PSGC address loader =====
+const PSGC = "https://psgc.gitlab.io/api";
+
+function fillSelect(id, items, placeholder) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = `<option value="">${placeholder}</option>`;
+  (items || []).forEach(it => {
+    const opt = document.createElement("option");
+    opt.value = it.code;
+    opt.textContent = it.name;
+    el.appendChild(opt);
+  });
+  el.disabled = false;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const regionSel  = document.getElementById("region");
+  const provSel    = document.getElementById("province");
+  const citySel    = document.getElementById("city");
+  const brgySel    = document.getElementById("barangay");
+  if (!regionSel || !provSel || !citySel || !brgySel) {
+    console.error("[PSGC] Missing selects (region/province/city/barangay).");
+    return;
+  }
+
+  // initial disabled
+  provSel.disabled = citySel.disabled = brgySel.disabled = true;
+
+  try {
+    const r = await fetch(`${PSGC}/regions/`);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const regions = await r.json();
+    fillSelect("region", regions, "Select Region");
+  } catch (e) {
+    console.error("[PSGC] Regions error:", e);
+  }
+
+  regionSel.addEventListener("change", async (e) => {
+    const code = e.target.value;
+    provSel.disabled = citySel.disabled = brgySel.disabled = true;
+    provSel.innerHTML = `<option value="">Loading…</option>`;
+    citySel.innerHTML = `<option value="">Select City/Municipality</option>`;
+    brgySel.innerHTML = `<option value="">Select Barangay</option>`;
+    if (!code) return;
+
+    const res = await fetch(`${PSGC}/regions/${code}/provinces/`);
+    const provs = await res.json();
+    fillSelect("province", provs, "Select Province");
+    citySel.disabled = brgySel.disabled = true;
+  });
+
+  provSel.addEventListener("change", async (e) => {
+    const provCode = e.target.value;
+    citySel.disabled = brgySel.disabled = true;
+    citySel.innerHTML = `<option value="">Loading…</option>`;
+    brgySel.innerHTML = `<option value="">Select Barangay</option>`;
+    if (!provCode) return;
+
+    const [cities, munis] = await Promise.all([
+      fetch(`${PSGC}/provinces/${provCode}/cities/`).then(r => r.ok ? r.json() : [] ).catch(() => []),
+      fetch(`${PSGC}/provinces/${provCode}/municipalities/`).then(r => r.ok ? r.json() : [] ).catch(() => []),
+    ]);
+    fillSelect("city", [...cities, ...munis], "Select City/Municipality");
+  });
+
+  citySel.addEventListener("change", async (e) => {
+    const code = e.target.value;
+    brgySel.disabled = true;
+    brgySel.innerHTML = `<option value="">Loading…</option>`;
+    if (!code) return;
+
+    let brgys = [];
+    try { brgys = await fetch(`${PSGC}/cities/${code}/barangays/`).then(r => r.json()); }
+    catch { brgys = await fetch(`${PSGC}/municipalities/${code}/barangays/`).then(r => r.json()); }
+    fillSelect("barangay", brgys, "Select Barangay");
+  });
+});

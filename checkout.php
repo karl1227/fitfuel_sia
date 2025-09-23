@@ -1,13 +1,32 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
+
+    if (isset($_GET['selected_items'])) {
+        $selected_items = json_decode($_GET['selected_items'], true) ?: [];
+        $selected_items = array_map('intval', $selected_items);
+    }
+    
 }
 
 $user_id = $_SESSION['user_id'];
+
+<p class="text-gray-600">
+  <?php echo htmlspecialchars($default_address['city_muni_name'] ?? $default_address['city'] ?? ''); ?>, 
+  <?php echo htmlspecialchars($default_address['province_name'] ?? $default_address['state'] ?? ''); ?> 
+  <?php echo htmlspecialchars($default_address['postal_code'] ?? ''); ?>
+</p>
+
+<input name="full_name" autocomplete="name" ...>
+<input name="phone" autocomplete="tel" ...>
+<input name="postal_code" autocomplete="postal-code" ...>
+<input name="street_address" autocomplete="address-line1" ...>
+
 
 try {
     $pdo = getDBConnection();
@@ -114,6 +133,135 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/shop.css">
 </head>
+<script>
+// --- Modal open/close ---
+function openAddressModal() {
+  const m = document.getElementById('addressModal');
+  m.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeAddressModal() {
+  const m = document.getElementById('addressModal');
+  m.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// --- Save Address (POST JSON to save_address.php) ---
+function saveAddress(event) {
+  event.preventDefault();
+
+  const pick = (id) => {
+    const el = document.getElementById(id);
+    return { code: el.value, name: el.options[el.selectedIndex]?.text || "" };
+  };
+
+  const region   = pick('region');
+  const province = pick('province');
+  const city     = pick('city');
+  const barangay = pick('barangay');
+
+  const formData = new FormData(event.target);
+  const addressData = {
+    full_name: formData.get('full_name'),
+    phone: formData.get('phone'),
+    postal_code: formData.get('postal_code'),
+    street_address: formData.get('street_address'),
+    is_default: 1,
+    region_name: region.name,   region_code: region.code,
+    province_name: province.name, province_code: province.code,
+    city_muni_name: city.name,  city_muni_code: city.code,
+    barangay_name: barangay.name, barangay_code: barangay.code
+  };
+
+  fetch('save_address.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(addressData)
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) { closeAddressModal(); location.reload(); }
+    else { alert('Error saving address: ' + (d.message || 'Unknown error')); }
+  })
+  .catch(err => { console.error(err); alert('Error saving address'); });
+}
+
+// --- Promo code (stub keeps your UI working) ---
+function applyPromoCode() {
+  const code = document.getElementById('promo_code').value.trim();
+  const msg = document.getElementById('promo_message');
+  if (!code) {
+    msg.textContent = 'Please enter a promo code';
+    msg.className = 'mt-2 text-sm text-red-600';
+    return;
+  }
+  fetch('apply_promo_code.php', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ promo_code: code })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) {
+      msg.textContent = d.message;
+      msg.className = 'mt-2 text-sm text-green-600';
+      document.getElementById('promo_discount').classList.remove('hidden');
+      document.getElementById('discount_amount').textContent = d.discount_amount;
+      const currentTotal = parseFloat(document.getElementById('total_amount').textContent.replace(/,/g,''));
+      const newTotal = currentTotal - parseFloat(d.discount_amount);
+      document.getElementById('total_amount').textContent = newTotal.toFixed(2);
+    } else {
+      msg.textContent = d.message || 'Invalid promo code';
+      msg.className = 'mt-2 text-sm text-red-600';
+    }
+  })
+  .catch(() => {
+    msg.textContent = 'Error applying promo code';
+    msg.className = 'mt-2 text-sm text-red-600';
+  });
+}
+
+// --- Checkout ---
+function processCheckout() {
+  const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
+  if (!paymentMethod) { alert('Please select a payment method'); return; }
+
+  <?php if (!$default_address): ?>
+    alert('Please add a delivery address before proceeding');
+    return;
+  <?php endif; ?>
+
+  if (!confirm('Are you sure you want to complete this order?')) return;
+
+  const checkoutData = {
+    payment_method: paymentMethod,
+    promo_code: document.getElementById('promo_code').value.trim(),
+    selected_items: <?php echo json_encode($selected_items ?? []); ?>
+  };
+
+  fetch('process_checkout.php', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(checkoutData)
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) {
+      if (paymentMethod === 'paypal') {
+        window.location.href = d.paypal_url;
+      } else {
+        const redirectId = d.custom_order_id || d.order_id;
+        window.location.href = 'order_success.php?order_id=' + redirectId;
+      }
+    } else {
+      alert('Error processing order: ' + (d.message || 'Unknown error'));
+    }
+  })
+  .catch(err => { console.error(err); alert('Error processing order'); });
+}
+</script>
+
+
 <body class="font-body bg-white text-slate-600">
     <!-- First Navigation Bar -->
     <nav class="bg-white text-black py-2">
@@ -377,39 +525,26 @@ if (isset($_SESSION['user_id'])) {
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-slate-800 mb-2">Region *</label>
-                            <select name="region" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                <option value="">Select Region</option>
-                                <option value="Metro Manila" <?php echo ($default_address['state'] ?? '') === 'Metro Manila' ? 'selected' : ''; ?>>Metro Manila</option>
-                                <option value="Mindanao" <?php echo ($default_address['state'] ?? '') === 'Mindanao' ? 'selected' : ''; ?>>Mindanao</option>
-                                <option value="North Luzon" <?php echo ($default_address['state'] ?? '') === 'North Luzon' ? 'selected' : ''; ?>>North Luzon</option>
-                                <option value="South Luzon" <?php echo ($default_address['state'] ?? '') === 'South Luzon' ? 'selected' : ''; ?>>South Luzon</option>
-                                <option value="Visayas" <?php echo ($default_address['state'] ?? '') === 'Visayas' ? 'selected' : ''; ?>>Visayas</option>
-                            </select>
-                        </div>
+                        <!-- 1) Replace inputs with selects in your Address Modal form -->
+<div class="mb-4">
+  <label class="block text-sm font-semibold text-slate-800 mb-2">Region *</label>
+  <select id="region" name="region" required class="w-full px-3 py-2 border rounded-lg"></select>
+</div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-800 mb-2">Province *</label>
-                                <input type="text" name="province" required 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                       value="<?php echo $default_address['state'] ?? ''; ?>">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-800 mb-2">City *</label>
-                                <input type="text" name="city" required 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                       value="<?php echo $default_address['city'] ?? ''; ?>">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-800 mb-2">Barangay *</label>
-                                <input type="text" name="barangay" required 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                       value="<?php echo $default_address['city'] ?? ''; ?>">
-                            </div>
-                        </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+  <div>
+    <label class="block text-sm font-semibold text-slate-800 mb-2">Province *</label>
+    <select id="province" name="province" required class="w-full px-3 py-2 border rounded-lg"></select>
+  </div>
+  <div>
+    <label class="block text-sm font-semibold text-slate-800 mb-2">City/Municipality *</label>
+    <select id="city" name="city" required class="w-full px-3 py-2 border rounded-lg"></select>
+  </div>
+  <div>
+    <label class="block text-sm font-semibold text-slate-800 mb-2">Barangay *</label>
+    <select id="barangay" name="barangay" required class="w-full px-3 py-2 border rounded-lg"></select>
+  </div>
+</div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
@@ -492,151 +627,88 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </div>
     </footer>
-
     <script>
-        // Address Modal Functions
-        function openAddressModal() {
-            document.getElementById('addressModal').classList.remove('hidden');
-        }
+// ===== PSGC address loader =====
+const PSGC = "https://psgc.gitlab.io/api";
 
-        function closeAddressModal() {
-            document.getElementById('addressModal').classList.add('hidden');
-        }
+function fillSelect(id, items, placeholder) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = `<option value="">${placeholder}</option>`;
+  (items || []).forEach(it => {
+    const opt = document.createElement("option");
+    opt.value = it.code;
+    opt.textContent = it.name;
+    el.appendChild(opt);
+  });
+  el.disabled = false;
+}
 
-        // Save Address Function
-        function saveAddress(event) {
-            event.preventDefault();
-            
-            const formData = new FormData(event.target);
-            const addressData = {
-                full_name: formData.get('full_name'),
-                phone: formData.get('phone'),
-                region: formData.get('region'),
-                province: formData.get('province'),
-                city: formData.get('city'),
-                barangay: formData.get('barangay'),
-                postal_code: formData.get('postal_code'),
-                street_address: formData.get('street_address'),
-                is_default: 1
-            };
-            
-            fetch('save_address.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(addressData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeAddressModal();
-                    location.reload(); // Reload to show updated address
-                } else {
-                    alert('Error saving address: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error saving address');
-            });
-        }
+document.addEventListener("DOMContentLoaded", async () => {
+  const regionSel  = document.getElementById("region");
+  const provSel    = document.getElementById("province");
+  const citySel    = document.getElementById("city");
+  const brgySel    = document.getElementById("barangay");
+  if (!regionSel || !provSel || !citySel || !brgySel) {
+    console.error("[PSGC] Missing selects (region/province/city/barangay).");
+    return;
+  }
 
-        // Promo Code Functions
-        function applyPromoCode() {
-            const promoCode = document.getElementById('promo_code').value.trim();
-            if (!promoCode) {
-                document.getElementById('promo_message').textContent = 'Please enter a promo code';
-                document.getElementById('promo_message').className = 'mt-2 text-sm text-red-600';
-                return;
-            }
-            
-            fetch('apply_promo_code.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ promo_code: promoCode })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const messageDiv = document.getElementById('promo_message');
-                if (data.success) {
-                    messageDiv.textContent = data.message;
-                    messageDiv.className = 'mt-2 text-sm text-green-600';
-                    
-                    // Show discount
-                    document.getElementById('promo_discount').classList.remove('hidden');
-                    document.getElementById('discount_amount').textContent = data.discount_amount;
-                    
-                    // Update total
-                    const currentTotal = parseFloat(document.getElementById('total_amount').textContent.replace(',', ''));
-                    const newTotal = currentTotal - parseFloat(data.discount_amount);
-                    document.getElementById('total_amount').textContent = newTotal.toFixed(2);
-                } else {
-                    messageDiv.textContent = data.message;
-                    messageDiv.className = 'mt-2 text-sm text-red-600';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('promo_message').textContent = 'Error applying promo code';
-                document.getElementById('promo_message').className = 'mt-2 text-sm text-red-600';
-            });
-        }
+  // initial disabled
+  provSel.disabled = citySel.disabled = brgySel.disabled = true;
 
-        // Checkout Processing
-        function processCheckout() {
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-            
-            if (!paymentMethod) {
-                alert('Please select a payment method');
-                return;
-            }
-            
-            // Check if address exists
-            <?php if (!$default_address): ?>
-                alert('Please add a delivery address before proceeding');
-                return;
-            <?php endif; ?>
-            
-            if (confirm('Are you sure you want to complete this order?')) {
-                const checkoutData = {
-                    payment_method: paymentMethod,
-                    promo_code: document.getElementById('promo_code').value.trim(),
-                    selected_items: <?php echo json_encode($selected_items); ?>
-                };
-                
-                fetch('process_checkout.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(checkoutData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Checkout response:', data);
-                    if (data.success) {
-                        if (paymentMethod === 'paypal') {
-                            // Redirect to PayPal
-                            window.location.href = data.paypal_url;
-           } else {
-               // Redirect to success page
-               // Use custom_order_id if available, otherwise use order_id
-               const redirectId = data.custom_order_id || data.order_id;
-               window.location.href = 'order_success.php?order_id=' + redirectId;
-           }
-                    } else {
-                        alert('Error processing order: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error processing order');
-                });
-            }
-        }
-    </script>
+  try {
+    const r = await fetch(`${PSGC}/regions/`);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const regions = await r.json();
+    fillSelect("region", regions, "Select Region");
+  } catch (e) {
+    console.error("[PSGC] Regions error:", e);
+  }
+
+  regionSel.addEventListener("change", async (e) => {
+    const code = e.target.value;
+    provSel.disabled = citySel.disabled = brgySel.disabled = true;
+    provSel.innerHTML = `<option value="">Loading…</option>`;
+    citySel.innerHTML = `<option value="">Select City/Municipality</option>`;
+    brgySel.innerHTML = `<option value="">Select Barangay</option>`;
+    if (!code) return;
+
+    const res = await fetch(`${PSGC}/regions/${code}/provinces/`);
+    const provs = await res.json();
+    fillSelect("province", provs, "Select Province");
+    citySel.disabled = brgySel.disabled = true;
+  });
+
+  provSel.addEventListener("change", async (e) => {
+    const provCode = e.target.value;
+    citySel.disabled = brgySel.disabled = true;
+    citySel.innerHTML = `<option value="">Loading…</option>`;
+    brgySel.innerHTML = `<option value="">Select Barangay</option>`;
+    if (!provCode) return;
+
+    const [cities, munis] = await Promise.all([
+      fetch(`${PSGC}/provinces/${provCode}/cities/`).then(r => r.ok ? r.json() : [] ).catch(() => []),
+      fetch(`${PSGC}/provinces/${provCode}/municipalities/`).then(r => r.ok ? r.json() : [] ).catch(() => []),
+    ]);
+    fillSelect("city", [...cities, ...munis], "Select City/Municipality");
+  });
+
+  citySel.addEventListener("change", async (e) => {
+    const code = e.target.value;
+    brgySel.disabled = true;
+    brgySel.innerHTML = `<option value="">Loading…</option>`;
+    if (!code) return;
+
+    let brgys = [];
+    try { brgys = await fetch(`${PSGC}/cities/${code}/barangays/`).then(r => r.json()); }
+    catch { brgys = await fetch(`${PSGC}/municipalities/${code}/barangays/`).then(r => r.json()); }
+    fillSelect("barangay", brgys, "Select Barangay");
+  });
+});
+</script>
+
+
+
 </body>
 </html>
