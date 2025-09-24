@@ -36,31 +36,6 @@ try {
 	$addrStmt->execute([$user_id]);
 	$addresses = $addrStmt->fetchAll();
 
-	// If fewer than 3 addresses, auto-insert one placeholder non-default
-	if (count($addresses) < 3) {
-		$fullName = trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''));
-		if ($fullName === '') $fullName = (string)($user['username'] ?? 'User');
-		$phone = $user['phone'] ?? '';
-		if ($phone === '') $phone = '09123456789';
-
-		$ins = $pdo->prepare("INSERT INTO shipping_addresses (user_id, full_name, phone, address_line1, address_line2, address_line3, city, state, postal_code, country, is_default, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,? ,0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
-		$ins->execute([
-			$user_id,
-			$fullName,
-			$phone,
-			'Sample Street 123',
-			'Unit 2B',
-			'Landmark XYZ',
-			'Quezon City',
-			'National Capital Region',
-			'1100',
-			'Philippines'
-		]);
-
-		$addrStmt->execute([$user_id]);
-		$addresses = $addrStmt->fetchAll();
-	}
-
 	// Cart count for header
 	$cart_count = 0;
 	try {
@@ -172,15 +147,25 @@ try {
 				<?php endif; ?>
 
 				<div class="p-6 space-y-4">
+					<?php if (count($addresses) < 3): ?>
 					<div class="flex justify-end">
 						<button onclick="openAddressModal()" class="orange-btn text-white px-4 py-2 rounded shadow-sm"><i class="fa fa-plus mr-2"></i>Add Address</button>
 					</div>
+					<?php elseif (count($addresses) >= 3): ?>
+					<div class="flex justify-end">
+						<div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-lg text-sm">
+							<i class="fas fa-info-circle mr-2"></i>Maximum of 3 addresses reached
+						</div>
+					</div>
+					<?php endif; ?>
 
 					<?php if (empty($addresses)): ?>
 						<div class="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
 							<i class="fas fa-map-marker-alt text-gray-400 text-4xl mb-4"></i>
 							<p class="text-gray-500 mb-4">No addresses found</p>
+							<?php if (count($addresses) < 3): ?>
 							<button onclick="openAddressModal()" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">Add Address</button>
+							<?php endif; ?>
 						</div>
 					<?php else: ?>
 						<div class="space-y-3">
@@ -216,7 +201,15 @@ try {
 												data-city="<?php echo h($a['city']); ?>"
 												data-state="<?php echo h($a['state']); ?>"
 												data-postal="<?php echo h($a['postal_code']); ?>"
-												data-default="<?php echo (int)$a['is_default']; ?>">
+												data-default="<?php echo (int)$a['is_default']; ?>"
+												data-region_name="<?php echo h($a['region_name'] ?? ''); ?>"
+												data-region_code="<?php echo h($a['region_code'] ?? ''); ?>"
+												data-province_name="<?php echo h($a['province_name'] ?? ''); ?>"
+												data-province_code="<?php echo h($a['province_code'] ?? ''); ?>"
+												data-city_muni_name="<?php echo h($a['city_muni_name'] ?? ''); ?>"
+												data-city_muni_code="<?php echo h($a['city_muni_code'] ?? ''); ?>"
+												data-barangay_name="<?php echo h($a['barangay_name'] ?? ''); ?>"
+												data-barangay_code="<?php echo h($a['barangay_code'] ?? ''); ?>">
 												<i class="fa fa-pen mr-1"></i>Edit
 											</button>
 											<?php if ((int)$a['is_default'] !== 1): ?>
@@ -224,6 +217,9 @@ try {
 													<i class="fa fa-check mr-1"></i>Set Default
 												</button>
 											<?php endif; ?>
+											<button class="px-3 py-1 text-sm border rounded text-red-700 border-red-600 hover:bg-red-50" onclick="deleteAddress(<?php echo (int)$a['address_id']; ?>)">
+												<i class="fa fa-trash mr-1"></i>Delete
+											</button>
 										</div>
 									</div>
 								</div>
@@ -249,50 +245,58 @@ try {
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
 						<h3 id="modalTitle" class="text-xl font-semibold text-slate-800">Add Address</h3>
-						<button onclick="closeAddressModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+						<button onclick="closeAddressModal()" class="text-gray-400 hover:text-gray-600">
+							<i class="fas fa-times text-xl"></i>
+						</button>
 					</div>
 
-					<form id="addressForm" onsubmit="submitAddress(event)">
+					<form id="addressForm" onsubmit="saveAddress(event)">
 						<input type="hidden" name="address_id" id="address_id">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 							<div>
 								<label class="block text-sm font-semibold text-slate-800 mb-2">Full Name *</label>
-								<input type="text" name="full_name" id="full_name" required autocomplete="name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+								<input type="text" name="full_name" id="full_name" required autocomplete="name"
+									   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
 							</div>
 							<div>
 								<label class="block text-sm font-semibold text-slate-800 mb-2">Phone Number *</label>
-								<input type="tel" name="phone" id="phone" required autocomplete="tel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+								<input type="tel" name="phone" id="phone" required autocomplete="tel"
+									   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
 							</div>
 						</div>
 
+						<!-- PSGC selects -->
 						<div class="mb-4">
-							<label class="block text-sm font-semibold text-slate-800 mb-2">Street / Address Line 1 *</label>
-							<input type="text" name="address_line1" id="address_line1" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+							<label class="block text-sm font-semibold text-slate-800 mb-2">Region *</label>
+							<select id="region" name="region" required class="w-full px-3 py-2 border rounded-lg"></select>
 						</div>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-							<div>
-								<label class="block text-sm font-semibold text-slate-800 mb-2">Address Line 2</label>
-								<input type="text" name="address_line2" id="address_line2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-							</div>
-							<div>
-								<label class="block text-sm font-semibold text-slate-800 mb-2">Address Line 3</label>
-								<input type="text" name="address_line3" id="address_line3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-							</div>
-						</div>
-
 						<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 							<div>
-								<label class="block text-sm font-semibold text-slate-800 mb-2">City *</label>
-								<input type="text" name="city" id="city" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+								<label class="block text-sm font-semibold text-slate-800 mb-2">Province *</label>
+								<select id="province" name="province" required class="w-full px-3 py-2 border rounded-lg"></select>
 							</div>
 							<div>
-								<label class="block text-sm font-semibold text-slate-800 mb-2">State/Region *</label>
-								<input type="text" name="state" id="state" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+								<label class="block text-sm font-semibold text-slate-800 mb-2">City/Municipality *</label>
+								<select id="city" name="city" required class="w-full px-3 py-2 border rounded-lg"></select>
 							</div>
+							<div>
+								<label class="block text-sm font-semibold text-slate-800 mb-2">Barangay *</label>
+								<select id="barangay" name="barangay" required class="w-full px-3 py-2 border rounded-lg"></select>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 							<div>
 								<label class="block text-sm font-semibold text-slate-800 mb-2">Postal Code *</label>
-								<input type="text" name="postal_code" id="postal_code" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+								<input type="text" name="postal_code" id="postal_code" required autocomplete="postal-code"
+									   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
 							</div>
+						</div>
+
+						<div class="mb-6">
+							<label class="block text-sm font-semibold text-slate-800 mb-2">Street Name, Building, House No. *</label>
+							<input type="text" name="street_address" id="street_address" required autocomplete="address-line1"
+								   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
 						</div>
 
 						<div class="flex items-center justify-between mb-6">
@@ -300,27 +304,164 @@ try {
 								<input type="checkbox" id="is_default" name="is_default" class="w-4 h-4">
 								<label for="is_default" class="text-sm text-slate-700">Set as default</label>
 							</div>
-							<div>
-								<span class="text-sm text-gray-500">Country</span>
-								<div class="text-sm font-medium">Philippines</div>
-							</div>
 						</div>
 
 						<div class="flex justify-end space-x-3">
-							<button type="button" onclick="closeAddressModal()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
-							<button type="submit" class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">Save</button>
+							<button type="button" onclick="closeAddressModal()"
+									class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
+							<button type="submit"
+									class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">Save Address</button>
 						</div>
 					</form>
+
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<script>
+/* ===== PSGC address loader (handles NCR & district-based cities) ===== */
+const PSGC = "https://psgc.gitlab.io/api";
+
+function setOptions(el, items, { placeholder = "Select...", value = "code", label = "name" } = {}) {
+  el.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = ""; opt.textContent = placeholder;
+  el.appendChild(opt);
+  (items || []).forEach(it => {
+    const o = document.createElement("option");
+    o.value = it[value]; o.textContent = it[label];
+    el.appendChild(o);
+  });
+  el.disabled = false;
+}
+function setNA(el, text = "Not applicable") {
+  el.innerHTML = `<option value="">${text}</option>`;
+  el.disabled = true;
+}
+async function jget(url, fallback = []) {
+  try {
+    console.log('[PSGC] Fetching:', url);
+    const r = await fetch(url);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const data = await r.json();
+    console.log('[PSGC] Response:', data.length || 'non-array', 'items');
+    return data;
+  } catch (e) {
+    console.error("[PSGC] Error:", url, e);
+    return fallback;
+  }
+}
+async function loadRegions() {
+  const regions = await jget(`${PSGC}/regions/`);
+  setOptions(document.getElementById("region"), regions, { placeholder: "Select Region" });
+}
+async function loadProvincesOrCities(regionCode) {
+  const provSel = document.getElementById("province");
+  const citySel = document.getElementById("city");
+  const brgySel = document.getElementById("barangay");
+  provSel.disabled = citySel.disabled = brgySel.disabled = true;
+  provSel.innerHTML = `<option value="">Loading…</option>`;
+  citySel.innerHTML = `<option value="">Select City/Municipality</option>`;
+  brgySel.innerHTML = `<option value="">Select Barangay</option>`;
+
+  const provs = await jget(`${PSGC}/regions/${regionCode}/provinces/`, []);
+  if (provs.length > 0) {
+    setOptions(provSel, provs, { placeholder: "Select Province" });
+    provSel.disabled = false;
+  } else {
+    // NCR-like regions without provinces: load cities/municipalities from region
+    setNA(provSel, "Not applicable");
+    const [cities, munis] = await Promise.all([
+      jget(`${PSGC}/regions/${regionCode}/cities/`, []),
+      jget(`${PSGC}/regions/${regionCode}/municipalities/`, []),
+    ]);
+    const merged = [...cities, ...munis];
+    if (merged.length > 0) {
+      setOptions(citySel, merged, { placeholder: "Select City/Municipality" });
+      citySel.disabled = false;
+    } else {
+      setOptions(citySel, [], { placeholder: "No cities/municipalities found" });
+      citySel.disabled = true;
+    }
+  }
+}
+async function loadCitiesFromProvince(provCode) {
+  const citySel = document.getElementById("city");
+  const brgySel = document.getElementById("barangay");
+  citySel.disabled = brgySel.disabled = true;
+  citySel.innerHTML = `<option value="">Loading…</option>`;
+  brgySel.innerHTML = `<option value="">Select Barangay</option>`;
+
+  const [cities, munis] = await Promise.all([
+    jget(`${PSGC}/provinces/${provCode}/cities/`, []),
+    jget(`${PSGC}/provinces/${provCode}/municipalities/`, []),
+  ]);
+  const merged = [...cities, ...munis];
+  if (merged.length > 0) {
+    setOptions(citySel, merged, { placeholder: "Select City/Municipality" });
+    citySel.disabled = false;
+  } else {
+    setOptions(citySel, [], { placeholder: "No cities/municipalities found" });
+    citySel.disabled = true;
+  }
+}
+async function loadBarangays(cityOrMuniCode) {
+  const brgySel = document.getElementById("barangay");
+  brgySel.disabled = true;
+  brgySel.innerHTML = `<option value="">Loading…</option>`;
+
+  try {
+    console.log('Loading barangays for city/muni:', cityOrMuniCode);
+    
+    // Try City → then Municipality → then Districts (e.g., Manila)
+    console.log('Trying cities API...');
+    let brgys = await jget(`${PSGC}/cities/${cityOrMuniCode}/barangays/`, []);
+    console.log('Cities API result:', brgys.length, 'barangays');
+    
+    if (brgys.length === 0) {
+      console.log('Trying municipalities API...');
+      brgys = await jget(`${PSGC}/municipalities/${cityOrMuniCode}/barangays/`, []);
+      console.log('Municipalities API result:', brgys.length, 'barangays');
+    }
+    
+    if (brgys.length === 0) {
+      console.log('Trying districts API...');
+      const districts = await jget(`${PSGC}/cities/${cityOrMuniCode}/districts/`, []);
+      console.log('Districts found:', districts.length);
+      
+      if (districts.length > 0) {
+        console.log('Loading barangays from districts...');
+        const perDistrict = await Promise.all(
+          districts.map(d => jget(`${PSGC}/districts/${d.code}/barangays/`, []))
+        );
+        brgys = perDistrict.flat();
+        console.log('Districts API result:', brgys.length, 'barangays');
+      }
+    }
+    
+    console.log('Final barangays loaded:', brgys.length);
+
+    if (brgys.length > 0) {
+      setOptions(brgySel, brgys, { placeholder: "Select Barangay" });
+      brgySel.disabled = false;
+      console.log('Barangay dropdown enabled with', brgys.length, 'options');
+    } else {
+      setOptions(brgySel, [], { placeholder: "No barangays found" });
+      brgySel.disabled = true;
+      console.log('No barangays found, dropdown disabled');
+    }
+  } catch (error) {
+    console.error('Error loading barangays:', error);
+    setOptions(brgySel, [], { placeholder: "Error loading barangays" });
+    brgySel.disabled = true;
+  }
+}
+
 function openAddressModal(){
 	document.getElementById('modalTitle').textContent = 'Add Address';
 	document.getElementById('address_id').value = '';
-	['full_name','phone','address_line1','address_line2','address_line3','city','state','postal_code'].forEach(id=>document.getElementById(id).value='');
+	['full_name','phone','street_address','postal_code'].forEach(id=>document.getElementById(id).value='');
 	document.getElementById('is_default').checked = false;
 	document.getElementById('addressModal').classList.remove('hidden');
 	document.body.style.overflow='hidden';
@@ -330,49 +471,136 @@ function openEditModal(btn){
 	document.getElementById('address_id').value = btn.dataset.id || '';
 	document.getElementById('full_name').value = btn.dataset.full_name || '';
 	document.getElementById('phone').value = btn.dataset.phone || '';
-	document.getElementById('address_line1').value = btn.dataset.line1 || '';
-	document.getElementById('address_line2').value = btn.dataset.line2 || '';
-	document.getElementById('address_line3').value = btn.dataset.line3 || '';
-	document.getElementById('city').value = btn.dataset.city || '';
-	document.getElementById('state').value = btn.dataset.state || '';
+	document.getElementById('street_address').value = btn.dataset.line1 || '';
 	document.getElementById('postal_code').value = btn.dataset.postal || '';
 	document.getElementById('is_default').checked = (btn.dataset.default === '1');
+	
+	// Store PSGC data for later use
+	window.editPSGCData = {
+		region_name: btn.dataset.region_name || '',
+		region_code: btn.dataset.region_code || '',
+		province_name: btn.dataset.province_name || '',
+		province_code: btn.dataset.province_code || '',
+		city_muni_name: btn.dataset.city_muni_name || '',
+		city_muni_code: btn.dataset.city_muni_code || '',
+		barangay_name: btn.dataset.barangay_name || '',
+		barangay_code: btn.dataset.barangay_code || ''
+	};
+	
 	document.getElementById('addressModal').classList.remove('hidden');
 	document.body.style.overflow='hidden';
+	
+	// Load PSGC data after modal is shown
+	setTimeout(() => {
+		loadEditPSGCData();
+	}, 100);
 }
+function loadEditPSGCData() {
+	if (!window.editPSGCData) return;
+	
+	const data = window.editPSGCData;
+	console.log('Loading edit PSGC data:', data);
+	
+	// Set region
+	if (data.region_code) {
+		console.log('Setting region:', data.region_code);
+		document.getElementById('region').value = data.region_code;
+		document.getElementById('region').dispatchEvent(new Event('change'));
+		
+		// Wait for provinces to load, then set province
+		setTimeout(() => {
+			if (data.province_code) {
+				console.log('Setting province:', data.province_code);
+				document.getElementById('province').value = data.province_code;
+				document.getElementById('province').dispatchEvent(new Event('change'));
+				
+				// Wait for cities to load, then set city
+				setTimeout(() => {
+					if (data.city_muni_code) {
+						console.log('Setting city:', data.city_muni_code);
+						document.getElementById('city').value = data.city_muni_code;
+						document.getElementById('city').dispatchEvent(new Event('change'));
+						
+						// Wait for barangays to load, then set barangay
+						setTimeout(() => {
+							if (data.barangay_code) {
+								console.log('Setting barangay:', data.barangay_code);
+								const barangaySelect = document.getElementById('barangay');
+								console.log('Barangay select element:', barangaySelect);
+								console.log('Barangay select disabled:', barangaySelect.disabled);
+								console.log('Barangay select options:', barangaySelect.options.length);
+								
+								if (barangaySelect.options.length > 1) {
+									barangaySelect.value = data.barangay_code;
+									console.log('Barangay value set to:', data.barangay_code);
+								} else {
+									console.log('Barangay dropdown not loaded yet, trying again...');
+									// Try again after another delay
+									setTimeout(() => {
+										if (barangaySelect.options.length > 1) {
+											barangaySelect.value = data.barangay_code;
+											console.log('Barangay value set to (retry):', data.barangay_code);
+										} else {
+											console.log('Barangay dropdown still not loaded');
+										}
+									}, 1000);
+								}
+							}
+						}, 1000); // Increased timeout for barangays
+					}
+				}, 500); // Increased timeout for cities
+			}
+		}, 500); // Increased timeout for provinces
+	}
+}
+
 function closeAddressModal(){
 	document.getElementById('addressModal').classList.add('hidden');
 	document.body.style.overflow='';
+	// Clear edit data
+	window.editPSGCData = null;
 }
-function submitAddress(e){
-	e.preventDefault();
-	const fd = new FormData(e.target);
-	const addressId = fd.get('address_id');
-	if (addressId) {
-		// Update existing address via update_address.php
-		const payload = Object.fromEntries(fd.entries());
-		payload.is_default = fd.get('is_default') ? 1 : 0;
-		payload.country = 'Philippines';
-		fetch('update_address.php', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) })
-			.then(r=>r.json())
-			.then(d=>{ if(d.success){ closeAddressModal(); location.reload(); } else { alert(d.message||'Error saving address'); } })
-			.catch(()=> alert('Error saving address'));
-	} else {
-		// Create new default/non-default via save_address.php API (expects different keys)
-		const payload = {
-			full_name: fd.get('full_name') || '',
-			phone: fd.get('phone') || '',
-			street_address: fd.get('address_line1') || '',
-			postal_code: fd.get('postal_code') || '',
-			city: fd.get('city') || '',
-			region: fd.get('state') || '',
-			is_default: fd.get('is_default') ? 1 : 0
-		};
-		fetch('save_address.php', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) })
-			.then(r=>r.json())
-			.then(d=>{ if(d.success){ closeAddressModal(); location.reload(); } else { alert(d.message||'Error saving address'); } })
-			.catch(()=> alert('Error saving address'));
-	}
+function saveAddress(event) {
+  event.preventDefault();
+  const pick = (id) => {
+    const el = document.getElementById(id);
+    return { code: el.value, name: el.options[el.selectedIndex]?.text || "" };
+  };
+  const region   = pick('region');
+  const province = pick('province');
+  const city     = pick('city');
+  const barangay = pick('barangay');
+
+  const formData = new FormData(event.target);
+  const addressData = {
+    full_name: formData.get('full_name'),
+    phone: formData.get('phone'),
+    postal_code: formData.get('postal_code'),
+    street_address: formData.get('street_address'),
+    is_default: formData.get('is_default') ? 1 : 0,
+    region_name: region.name,   region_code: region.code,
+    province_name: province.name, province_code: province.code,
+    city_muni_name: city.name,  city_muni_code: city.code,
+    barangay_name: barangay.name, barangay_code: barangay.code
+  };
+
+  // Add address_id for edits
+  const addressId = document.getElementById('address_id').value;
+  if (addressId) {
+    addressData.address_id = addressId;
+  }
+
+  fetch('save_address.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(addressData)
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) { closeAddressModal(); location.reload(); }
+    else { alert('Error saving address: ' + (d.message || 'Unknown error')); }
+  })
+  .catch(() => { alert('Error saving address'); });
 }
 function setDefault(addressId){
 	if (!confirm('Set this address as default?')) return;
@@ -381,6 +609,65 @@ function setDefault(addressId){
 		.then(d=>{ if(d.success){ location.reload(); } else { alert(d.message||'Error updating default address'); } })
 		.catch(()=> alert('Error updating default address'));
 }
+
+function deleteAddress(addressId){
+	if (!confirm('Are you sure you want to delete this address?')) return;
+	fetch('delete_address.php', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ address_id: addressId }) })
+		.then(r=>r.json())
+		.then(d=>{ if(d.success){ location.reload(); } else { alert(d.message||'Error deleting address'); } })
+		.catch(()=> alert('Error deleting address'));
+}
+
+/* ===== Init PSGC ===== */
+document.addEventListener("DOMContentLoaded", async () => {
+  const regionSel = document.getElementById("region");
+  const provSel   = document.getElementById("province");
+  const citySel   = document.getElementById("city");
+  const brgySel   = document.getElementById("barangay");
+
+  if (!regionSel || !provSel || !citySel || !brgySel) {
+    console.error("[PSGC] Missing selects (region/province/city/barangay).");
+    return;
+  }
+
+  // Initial placeholders
+  setOptions(regionSel, [], { placeholder: "Loading Regions…" });
+  setOptions(provSel,   [], { placeholder: "Select Province" });
+  setOptions(citySel,   [], { placeholder: "Select City/Municipality" });
+  setOptions(brgySel,   [], { placeholder: "Select Barangay" });
+  provSel.disabled = citySel.disabled = brgySel.disabled = true;
+
+  await loadRegions();
+
+  // Bind change events
+  regionSel.addEventListener("change", (e) => {
+    const regionCode = e.target.value;
+    if (!regionCode) {
+      setOptions(provSel, [], { placeholder: "Select Province" }); provSel.disabled = true;
+      setOptions(citySel, [], { placeholder: "Select City/Municipality" }); citySel.disabled = true;
+      setOptions(brgySel, [], { placeholder: "Select Barangay" }); brgySel.disabled = true;
+      return;
+    }
+    loadProvincesOrCities(regionCode);
+  });
+  provSel.addEventListener("change", (e) => {
+    const provCode = e.target.value;
+    if (!provCode) {
+      setOptions(citySel, [], { placeholder: "Select City/Municipality" }); citySel.disabled = true;
+      setOptions(brgySel, [], { placeholder: "Select Barangay" }); brgySel.disabled = true;
+      return;
+    }
+    loadCitiesFromProvince(provCode);
+  });
+  citySel.addEventListener("change", (e) => {
+    const code = e.target.value;
+    if (!code) {
+      setOptions(brgySel, [], { placeholder: "Select Barangay" }); brgySel.disabled = true;
+      return;
+    }
+    loadBarangays(code);
+  });
+});
 	</script>
 </body>
 </html>

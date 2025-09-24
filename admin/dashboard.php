@@ -1,5 +1,54 @@
 <?php
 require_once '../admin_auth_check.php';
+require_once '../config/database.php';
+
+// Fetch dashboard metrics and data
+$pdo = getDBConnection();
+
+// Key metrics
+$totalRevenue = (float)($pdo->query("SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE payment_status='paid'")->fetchColumn() ?: 0);
+$ordersCount = (int)($pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn() ?: 0);
+$productsCount = (int)($pdo->query("SELECT COUNT(*) FROM products")->fetchColumn() ?: 0);
+$activeUsersCount = (int)($pdo->query("SELECT COUNT(*) FROM users WHERE status='active'")->fetchColumn() ?: 0);
+
+// Recent orders (latest 5)
+$recentOrdersStmt = $pdo->query("SELECT o.order_id, o.total_amount, o.status, o.payment_status, o.created_at, u.username
+    FROM orders o JOIN users u ON u.user_id = o.user_id
+    ORDER BY o.created_at DESC LIMIT 5");
+$recentOrders = $recentOrdersStmt->fetchAll();
+
+// Low stock alerts (<= 5 units)
+$lowStockStmt = $pdo->query("SELECT product_id, name, stock_quantity, images FROM products WHERE stock_quantity <= 5 ORDER BY stock_quantity ASC LIMIT 5");
+$lowStockItems = $lowStockStmt->fetchAll();
+
+// Top selling products (by quantity)
+$topSellingStmt = $pdo->query("SELECT p.product_id, p.name, p.images, SUM(oi.quantity) AS qty
+    FROM order_items oi JOIN products p ON p.product_id = oi.product_id
+    GROUP BY p.product_id, p.name, p.images
+    ORDER BY qty DESC
+    LIMIT 5");
+$topSelling = $topSellingStmt->fetchAll();
+
+// Sales overview: last 7 days paid revenue
+$salesStmt = $pdo->prepare("SELECT DATE(created_at) d, SUM(total_amount) amt
+    FROM orders
+    WHERE payment_status='paid' AND created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+    GROUP BY DATE(created_at)
+    ORDER BY d");
+$salesStmt->execute();
+$rawSales = $salesStmt->fetchAll();
+
+// Normalize to full 7-day series
+$salesMap = [];
+foreach ($rawSales as $row) { $salesMap[$row['d']] = (float)$row['amt']; }
+$days = [];
+for ($i = 6; $i >= 0; $i--) {
+	$day = date('Y-m-d', strtotime("-{$i} days"));
+	$days[] = [
+		'date' => $day,
+		'amount' => $salesMap[$day] ?? 0.0
+	];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -179,7 +228,7 @@ require_once '../admin_auth_check.php';
                     <div>
                         <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Revenue</h3>
                         <div class="flex items-center mt-2">
-                            <span class="text-2xl font-bold text-gray-900">₱0</span>
+                            <span class="text-2xl font-bold text-gray-900">₱<?php echo number_format($totalRevenue, 2); ?></span>
                             <i class="fas fa-chart-line text-gray-400 ml-2"></i>
                         </div>
                     </div>
@@ -191,7 +240,7 @@ require_once '../admin_auth_check.php';
                     <div>
                         <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Orders</h3>
                         <div class="flex items-center mt-2">
-                            <span class="text-2xl font-bold text-gray-900">0</span>
+                            <span class="text-2xl font-bold text-gray-900"><?php echo $ordersCount; ?></span>
                             <i class="fas fa-shopping-cart text-gray-400 ml-2"></i>
                         </div>
                     </div>
@@ -203,7 +252,7 @@ require_once '../admin_auth_check.php';
                     <div>
                         <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Products</h3>
                         <div class="flex items-center mt-2">
-                            <span class="text-2xl font-bold text-gray-900">0</span>
+                            <span class="text-2xl font-bold text-gray-900"><?php echo $productsCount; ?></span>
                             <i class="fas fa-cube text-gray-400 ml-2"></i>
                         </div>
                     </div>
@@ -215,7 +264,7 @@ require_once '../admin_auth_check.php';
                     <div>
                         <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Active Users</h3>
                         <div class="flex items-center mt-2">
-                            <span class="text-2xl font-bold text-gray-900">0</span>
+                            <span class="text-2xl font-bold text-gray-900"><?php echo $activeUsersCount; ?></span>
                             <i class="fas fa-users text-gray-400 ml-2"></i>
                         </div>
                     </div>
@@ -227,36 +276,89 @@ require_once '../admin_auth_check.php';
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Orders</h3>
-                <div class="text-center py-8 text-gray-500">
-                    <i class="fas fa-shopping-cart text-4xl mb-4"></i>
-                    <p>No recent orders</p>
-                </div>
+                <?php if (empty($recentOrders)): ?>
+                <div class="text-center py-8 text-gray-500"><i class="fas fa-shopping-cart text-4xl mb-4"></i><p>No recent orders</p></div>
+                <?php else: ?>
+                <ul class="divide-y">
+                    <?php foreach ($recentOrders as $ro): ?>
+                    <li class="py-3 flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">#<?php echo (int)$ro['order_id']; ?> • <?php echo htmlspecialchars($ro['username']); ?></div>
+                            <div class="text-xs text-gray-500"><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($ro['created_at']))); ?></div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-semibold">₱<?php echo number_format((float)$ro['total_amount'], 2); ?></div>
+                            <div class="text-xs text-gray-600"><?php echo ucfirst($ro['status']); ?> / <?php echo ucfirst($ro['payment_status']); ?></div>
+                        </div>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+                <div class="pt-3 text-right"><a href="orders.php" class="text-sm text-blue-600 hover:underline">View all</a></div>
+                <?php endif; ?>
             </div>
 
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Low Stock Alerts</h3>
-                <div class="text-center py-8 text-gray-500">
-                    <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                    <p>No low stock items</p>
-                </div>
+                <?php if (empty($lowStockItems)): ?>
+                <div class="text-center py-8 text-gray-500"><i class="fas fa-exclamation-triangle text-4xl mb-4"></i><p>No low stock items</p></div>
+                <?php else: ?>
+                <ul class="divide-y">
+                    <?php foreach ($lowStockItems as $it): ?>
+                    <?php $imgs = json_decode($it['images'] ?: '[]', true); $img = !empty($imgs) ? '../' . $imgs[0] : null; ?>
+                    <li class="py-3 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <?php if ($img): ?><img src="<?php echo htmlspecialchars($img); ?>" class="w-10 h-10 rounded object-cover mr-3"><?php else: ?><div class="w-10 h-10 bg-gray-200 rounded mr-3 flex items-center justify-center"><i class="fas fa-cube text-gray-500"></i></div><?php endif; ?>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($it['name']); ?></div>
+                                <div class="text-xs text-gray-500">Stock: <?php echo (int)$it['stock_quantity']; ?></div>
+                            </div>
+                        </div>
+                        <a href="product.php?search=<?php echo urlencode($it['name']); ?>" class="text-xs text-blue-600 hover:underline">View</a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
             </div>
 
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Selling Products</h3>
-                <div class="text-center py-8 text-gray-500">
-                    <i class="fas fa-trophy text-4xl mb-4"></i>
-                    <p>No sales data available</p>
-                </div>
+                <?php if (empty($topSelling)): ?>
+                <div class="text-center py-8 text-gray-500"><i class="fas fa-trophy text-4xl mb-4"></i><p>No sales data available</p></div>
+                <?php else: ?>
+                <ul class="divide-y">
+                    <?php foreach ($topSelling as $tp): ?>
+                    <?php $imgs = json_decode($tp['images'] ?: '[]', true); $img = !empty($imgs) ? '../' . $imgs[0] : null; ?>
+                    <li class="py-3 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <?php if ($img): ?><img src="<?php echo htmlspecialchars($img); ?>" class="w-10 h-10 rounded object-cover mr-3"><?php else: ?><div class="w-10 h-10 bg-gray-200 rounded mr-3 flex items-center justify-center"><i class="fas fa-cube text-gray-500"></i></div><?php endif; ?>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($tp['name']); ?></div>
+                                <div class="text-xs text-gray-500">Qty sold: <?php echo (int)$tp['qty']; ?></div>
+                            </div>
+                        </div>
+                        <a href="product.php?search=<?php echo urlencode($tp['name']); ?>" class="text-xs text-blue-600 hover:underline">View</a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- Sales Overview Chart -->
         <div class="bg-white rounded-lg border border-gray-200 p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">SALES OVERVIEW</h3>
-            <div class="chart-placeholder h-64 rounded-lg flex items-center justify-center">
-                <div class="text-center text-gray-500">
-                    <i class="fas fa-chart-area text-6xl mb-4"></i>
-                    <p class="text-lg">Sales chart will be displayed here</p>
+            <div class="h-64 rounded-lg flex items-center justify-center bg-white">
+                <div class="w-full">
+                    <div class="grid grid-cols-7 gap-2 px-2">
+                        <?php foreach ($days as $day): ?>
+                        <?php $amt = (float)$day['amount']; $height = min(100, $amt > 0 ? (int)round(($amt / max(1.0, $totalRevenue)) * 100) : 0); ?>
+                        <div class="flex flex-col items-center justify-end">
+                            <div class="w-6 bg-blue-500 rounded" style="height: <?php echo max(4, $height); ?>px" title="<?php echo htmlspecialchars($day['date']); ?>: ₱<?php echo number_format($amt,2); ?>"></div>
+                            <div class="text-[10px] text-gray-500 mt-1"><?php echo date('D', strtotime($day['date'])); ?></div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="text-xs text-gray-500 text-right mt-2">Last 7 days</div>
                 </div>
             </div>
         </div>
