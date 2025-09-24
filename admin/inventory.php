@@ -1,8 +1,10 @@
 <?php
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
+require_once '../config/audit_logger.php';
 
 $pdo = getDBConnection();
+$auditLogger = new AuditLogger();
 $message = '';
 $error = '';
 
@@ -24,6 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($quantity_changed !== 0) {
                 $stmt = $pdo->prepare("INSERT INTO inventory (product_id, change_type, quantity, created_by) VALUES (?, 'adjustment', ?, ?)");
                 $stmt->execute([$product_id, abs($quantity_changed), $_SESSION['user_id']]);
+                
+                // Log inventory adjustment in audit log
+                $reason = $quantity_changed > 0 ? 'Stock increase' : 'Stock decrease';
+                $auditLogger->logInventoryAdjustment($product_id, $current_stock, $new_stock_quantity, $reason);
             }
             $pdo->commit();
             $message = "Inventory updated successfully!";
@@ -256,7 +262,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+                    <a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
                         <i class="fas fa-history text-gray-600"></i>
                         <span>Audit Trail</span>
                     </a>

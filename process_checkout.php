@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'config/stock_control.php';
 
 header('Content-Type: application/json');
 
@@ -196,10 +197,7 @@ try {
             exit();
         }
         
-        // Deduct stock
-        $stock_sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
-        $stock_stmt = $pdo->prepare($stock_sql);
-        $stock_stmt->execute([$item['quantity'], $item['product_id']]);
+        // Stock will be deducted after order creation using proper stock control
     }
     
     // Record promo code usage if applicable
@@ -222,6 +220,9 @@ try {
     $clear_params = array_merge([$user_id], $selected_items);
     $clear_cart_stmt = $pdo->prepare($clear_cart_sql);
     $clear_cart_stmt->execute($clear_params);
+    
+    // Deduct stock using proper stock control system
+    deductStockImmediately($pdo, $cart_items, $order_id, $user_id);
     
     $pdo->commit();
     

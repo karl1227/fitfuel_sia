@@ -1,8 +1,10 @@
 <?php
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
+require_once '../config/audit_logger.php';
 
 $pdo = getDBConnection();
+$auditLogger = new AuditLogger();
 $message = '';
 $error = '';
 
@@ -24,6 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?)");
                 $stmt->execute([$username, $email, $hash, $role, $status]);
+                $newUserId = $pdo->lastInsertId();
+                
+                // Log user creation
+                $auditLogger->logUserCreate($newUserId, [
+                    'username' => $username,
+                    'email' => $email,
+                    'role' => $role,
+                    'status' => $status
+                ]);
+                
                 $message = 'Admin/Staff user created successfully';
                 break;
             case 'edit_user':
@@ -34,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $newPassword = $_POST['new_password'] ?? '';
                 $role = $_POST['role'] ?? '';
 
-                // Fetch existing role to enforce rules
-                $cur = $pdo->prepare('SELECT role FROM users WHERE user_id = ?');
+                // Fetch existing data to enforce rules and for audit logging
+                $cur = $pdo->prepare('SELECT * FROM users WHERE user_id = ?');
                 $cur->execute([$userId]);
                 $existing = $cur->fetch();
                 if (!$existing) { throw new Exception('User not found'); }
@@ -43,23 +55,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $isTargetAdminish = in_array($existing['role'], ['admin','manager','staff']);
                 if ($isTargetAdminish && !$isAdmin) { throw new Exception('Only admin can edit admin/staff'); }
 
+                // Store old data for audit log
+                $oldData = [
+                    'username' => $existing['username'],
+                    'email' => $existing['email'],
+                    'status' => $existing['status'],
+                    'role' => $existing['role']
+                ];
+
                 // Build update
                 $fields = ['username' => $username, 'email' => $email, 'status' => $status];
                 $params = [$username, $email, $status];
                 $setSql = 'username = ?, email = ?, status = ?';
+                $newData = ['username' => $username, 'email' => $email, 'status' => $status];
 
                 if ($isAdmin && $role && in_array($role, ['admin','manager','staff','customer'])) {
                     $setSql .= ', role = ?';
                     $params[] = $role;
+                    $newData['role'] = $role;
                 }
                 if ($isTargetAdminish && $newPassword !== '') {
                     $setSql .= ', password_hash = ?';
                     $params[] = password_hash($newPassword, PASSWORD_DEFAULT);
+                    $newData['password_changed'] = true;
                 }
                 $params[] = $userId;
                 $sql = "UPDATE users SET $setSql WHERE user_id = ?";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute($params);
+                
+                // Log user update
+                $auditLogger->logUserUpdate($userId, $oldData, $newData);
+                
                 $message = 'User updated successfully';
                 break;
             case 'delete_admin':
@@ -67,12 +94,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $userId = intval($_POST['user_id']);
                 if ($userId === intval($_SESSION['user_id'])) { throw new Exception('You cannot delete your own account'); }
                 // Allow delete only for admin/manager/staff accounts
-                $chk = $pdo->prepare('SELECT role FROM users WHERE user_id = ?');
+                $chk = $pdo->prepare('SELECT * FROM users WHERE user_id = ?');
                 $chk->execute([$userId]);
                 $row = $chk->fetch();
                 if (!$row || !in_array($row['role'], ['admin','manager','staff'])) { throw new Exception('Only admin/staff accounts can be deleted'); }
+                
+                // Store user data for audit log before deletion
+                $userData = [
+                    'username' => $row['username'],
+                    'email' => $row['email'],
+                    'role' => $row['role'],
+                    'status' => $row['status']
+                ];
+                
                 $del = $pdo->prepare('DELETE FROM users WHERE user_id = ?');
                 $del->execute([$userId]);
+                
+                // Log user deletion
+                $auditLogger->logUserDelete($userId, $userData);
+                
                 $message = 'Admin/Staff user deleted';
                 break;
             default:
@@ -278,7 +318,7 @@ $customers = $custStmt->fetchAll();
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+                    <a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
                         <i class="fas fa-history text-gray-600"></i>
                         <span>Audit Trail</span>
                     </a>

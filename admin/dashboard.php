@@ -17,8 +17,8 @@ $recentOrdersStmt = $pdo->query("SELECT o.order_id, o.total_amount, o.status, o.
     ORDER BY o.created_at DESC LIMIT 5");
 $recentOrders = $recentOrdersStmt->fetchAll();
 
-// Low stock alerts (<= 5 units)
-$lowStockStmt = $pdo->query("SELECT product_id, name, stock_quantity, images FROM products WHERE stock_quantity <= 5 ORDER BY stock_quantity ASC LIMIT 5");
+// Low stock alerts (stock_quantity <= min_stock_level)
+$lowStockStmt = $pdo->query("SELECT product_id, name, stock_quantity, min_stock_level, images FROM products WHERE stock_quantity <= min_stock_level AND status = 'active' ORDER BY stock_quantity ASC LIMIT 5");
 $lowStockItems = $lowStockStmt->fetchAll();
 
 // Top selling products (by quantity)
@@ -191,7 +191,7 @@ for ($i = 6; $i >= 0; $i--) {
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+                    <a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
                         <i class="fas fa-history text-gray-600"></i>
                         <span>Audit Trail</span>
                     </a>
@@ -310,7 +310,7 @@ for ($i = 6; $i >= 0; $i--) {
                             <?php if ($img): ?><img src="<?php echo htmlspecialchars($img); ?>" class="w-10 h-10 rounded object-cover mr-3"><?php else: ?><div class="w-10 h-10 bg-gray-200 rounded mr-3 flex items-center justify-center"><i class="fas fa-cube text-gray-500"></i></div><?php endif; ?>
                             <div>
                                 <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($it['name']); ?></div>
-                                <div class="text-xs text-gray-500">Stock: <?php echo (int)$it['stock_quantity']; ?></div>
+                                <div class="text-xs text-gray-500">Stock: <?php echo (int)$it['stock_quantity']; ?> / Min: <?php echo (int)$it['min_stock_level']; ?></div>
                             </div>
                         </div>
                         <a href="product.php?search=<?php echo urlencode($it['name']); ?>" class="text-xs text-blue-600 hover:underline">View</a>

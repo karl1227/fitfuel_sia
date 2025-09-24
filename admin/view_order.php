@@ -243,7 +243,7 @@ if ($order['shipping_address']) {
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+                    <a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
                         <i class="fas fa-history text-gray-600"></i>
                         <span>Audit Trail</span>
                     </a>

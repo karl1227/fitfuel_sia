@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'config/audit_logger.php';
 
 $token = $_GET['token'] ?? '';
 $error = '';
@@ -20,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         try {
             $pdo = getDBConnection();
+            $auditLogger = new AuditLogger();
             
             // Verify token
             $stmt = $pdo->prepare("SELECT email FROM password_resets WHERE token = ? AND expires_at > NOW()");
@@ -29,10 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!$resetData) {
                 $error = "Invalid or expired reset token";
             } else {
+                // Get user ID for audit log
+                $userStmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
+                $userStmt->execute([$resetData['email']]);
+                $userData = $userStmt->fetch();
+                
                 // Update password
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE email = ?");
                 $stmt->execute([$passwordHash, $resetData['email']]);
+                
+                // Log password reset completion
+                $auditLogger->logPasswordReset($resetData['email'], true); // true = completion
+                if ($userData) {
+                    $auditLogger->logPasswordChange($userData['user_id'], true);
+                }
                 
                 // Delete used token
                 $stmt = $pdo->prepare("DELETE FROM password_resets WHERE token = ?");

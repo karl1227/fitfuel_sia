@@ -1,6 +1,8 @@
 <?php
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
+require_once '../config/stock_control.php';
+require_once '../config/audit_logger.php';
 
 // -------------------------------
 // Schema bootstrap (idempotent)
@@ -41,42 +43,9 @@ function ensureOrdersSchema(PDO $pdo): void {
 	try { $pdo->exec("ALTER TABLE order_items ADD CONSTRAINT order_items_products_fk FOREIGN KEY (product_id) REFERENCES products(product_id)"); } catch (Throwable $e) {}
 }
 
-/**
- * Deduct stock and log inventory for an order. Idempotent per order via orders.stock_deducted flag.
- */
-function applyStockControl(PDO $pdo, int $orderId, int $adminUserId): void {
-	$pdo->beginTransaction();
-	try {
-		$order = $pdo->prepare("SELECT stock_deducted FROM orders WHERE order_id = ? FOR UPDATE");
-		$order->execute([$orderId]);
-		$row = $order->fetch();
-		if (!$row) { throw new RuntimeException('Order not found'); }
-		if ((int)$row['stock_deducted'] === 1) {
-			$pdo->commit();
-			return; // already applied
-		}
-
-		$items = $pdo->prepare("SELECT product_id, quantity FROM order_items WHERE order_id = ?");
-		$items->execute([$orderId]);
-		$all = $items->fetchAll();
-		foreach ($all as $it) {
-			// Reduce product stock
-			$upd = $pdo->prepare("UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?");
-			$upd->execute([(int)$it['quantity'], (int)$it['product_id']]);
-			// Log inventory movement
-			$inv = $pdo->prepare("INSERT INTO inventory (product_id, change_type, quantity, reference_id, created_by) VALUES (?, 'stock_out', ?, ?, ?)");
-			$inv->execute([(int)$it['product_id'], (int)$it['quantity'], $orderId, $adminUserId]);
-		}
-
-		$pdo->prepare("UPDATE orders SET stock_deducted = 1 WHERE order_id = ?")->execute([$orderId]);
-		$pdo->commit();
-	} catch (Throwable $e) {
-		$pdo->rollBack();
-		throw $e;
-	}
-}
 
 $pdo = getDBConnection();
+$auditLogger = new AuditLogger();
 ensureOrdersSchema($pdo);
 
 // -------------------------------
@@ -98,9 +67,19 @@ try {
 		$allowed = ['pending','processing','shipped','delivered','cancelled','returned','refunded'];
 		if (!in_array($newStatus, $allowed, true)) { throw new InvalidArgumentException('Invalid status'); }
 		
+		// Get old status for audit log
+		$oldOrderStmt = $pdo->prepare("SELECT status, payment_status FROM orders WHERE order_id = ?");
+		$oldOrderStmt->execute([$orderId]);
+		$oldOrder = $oldOrderStmt->fetch();
+		
 		// Update all fields in one query
 		$stmt = $pdo->prepare("UPDATE orders SET status = ?, payment_status = COALESCE(?, payment_status), payment_method = COALESCE(?, payment_method), shipping_address = COALESCE(?, shipping_address), estimated_delivery_date = COALESCE(?, estimated_delivery_date) WHERE order_id = ?");
 		$stmt->execute([$newStatus, $paymentStatus, $paymentMethod, $shippingAddress, $deliveryDate, $orderId]);
+		
+		// Log order status change
+		if ($oldOrder && $oldOrder['status'] !== $newStatus) {
+			$auditLogger->logOrderStatusChange($orderId, $oldOrder['status'], $newStatus);
+		}
 		
 		// Stock control on processing or paid
 		if (in_array($newStatus, ['processing','shipped','delivered'], true)) {
@@ -135,7 +114,11 @@ try {
 		$refund = (float)($_POST['refund_amount'] ?? 0);
 		$stmt = $pdo->prepare("UPDATE orders SET status = 'returned', payment_status = CASE WHEN refund_amount IS NULL OR refund_amount = 0 THEN 'refunded' ELSE payment_status END, return_reason = ?, refund_amount = ? WHERE order_id = ?");
 		$stmt->execute([$reason ?: null, $refund ?: null, $orderId]);
-		$message = 'Return approved.';
+		
+		// Restore stock when return is approved
+		restoreStockControl($pdo, $orderId, (int)($_SESSION['user_id'] ?? 0));
+		
+		$message = 'Return approved and stock restored.';
 	}
 	if ($action === 'reject_return') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
@@ -145,6 +128,8 @@ try {
 	}
 	if ($action === 'cancel_order') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
+		$reason = $_POST['cancel_reason'] ?? '';
+		
 		// Do not cancel if already processing or beyond
 		$st = $pdo->prepare("SELECT status FROM orders WHERE order_id = ?");
 		$st->execute([$orderId]);
@@ -153,7 +138,14 @@ try {
 			throw new RuntimeException('Cannot cancel processed/shipped/delivered orders.');
 		}
 		$pdo->prepare("UPDATE orders SET status = 'cancelled' WHERE order_id = ?")->execute([$orderId]);
-		$message = 'Order cancelled.';
+		
+		// Log order cancellation
+		$auditLogger->logOrderCancel($orderId, $reason);
+		
+		// Restore stock if it was deducted
+		restoreStockControl($pdo, $orderId, (int)($_SESSION['user_id'] ?? 0));
+		
+		$message = 'Order cancelled and stock restored.';
 	}
 	// Optional: endpoint that customer checkout can call to create orders (simple payload for now)
 	if ($action === 'create') {
@@ -324,7 +316,7 @@ $orders = $stm->fetchAll();
 					</a>
 				</li>
 				<li>
-					<a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+					<a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
 						<i class="fas fa-history text-gray-600"></i>
 						<span>Audit Trail</span>
 					</a>

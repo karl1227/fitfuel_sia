@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'config/audit_logger.php';
 
 header('Content-Type: application/json');
 
@@ -22,6 +23,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 try {
     $pdo = getDBConnection();
+    $auditLogger = new AuditLogger();
     
     // Check if user exists with this email
     $stmt = $pdo->prepare("SELECT user_id, username, email FROM users WHERE email = ? AND status = 'active'");
@@ -41,6 +43,9 @@ try {
     // Store reset token in database
     $stmt = $pdo->prepare("INSERT INTO password_resets (email, token, expires_at, created_at) VALUES (?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE token = VALUES(token), expires_at = VALUES(expires_at), created_at = NOW()");
     $stmt->execute([$email, $resetToken, $expiresAt]);
+    
+    // Log password reset request
+    $auditLogger->logPasswordReset($email, false); // false = request, not completion
     
     // Send email with reset link
     $resetLink = "http://localhost/fitfuel_sia/reset_password.php?token=" . $resetToken;

@@ -1,6 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
+require_once 'config/audit_logger.php';
 
 if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit(); }
 $user_id = (int) $_SESSION['user_id'];
@@ -17,6 +18,7 @@ $alert = ['type'=>'','msg'=>''];
 
 try {
   $pdo = getDBConnection();
+  $auditLogger = new AuditLogger();
   // --- Ensure new columns exist (phone, date_of_birth) ---
   try {
     $cols = $pdo->query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users'")
@@ -176,6 +178,16 @@ try {
       $profile_path = 'uploads/profile/' . $fname;
     }
 
+    // Store old data for audit log
+    $oldData = [
+      'email' => $user['email'],
+      'phone' => $user['phone'],
+      'date_of_birth' => $user['date_of_birth'],
+      'first_name' => $user['first_name'],
+      'last_name' => $user['last_name'],
+      'profile_picture' => $user['profile_picture']
+    ];
+    
     // --- Update DB ---
     $upd = $pdo->prepare("
       UPDATE users
@@ -186,6 +198,30 @@ try {
 
     // Check if update was successful
     if ($result && $upd->rowCount() > 0) {
+      // Store new data for audit log
+      $newData = [
+        'email' => $email,
+        'phone' => ($phone !== '' ? $phone : null),
+        'date_of_birth' => $dob,
+        'first_name' => $first_name,
+        'last_name' => $last_name,
+        'profile_picture' => $profile_path
+      ];
+      
+      // Log profile update
+      $auditLogger->log(
+        'profile_update',
+        'users',
+        'User profile updated',
+        $oldData,
+        $newData,
+        $user_id,
+        'user',
+        'medium',
+        'success',
+        $user_id
+      );
+      
       // Reload fresh
       $st->execute([$user_id]);
       $user = $st->fetch(PDO::FETCH_ASSOC);

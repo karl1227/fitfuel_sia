@@ -1,6 +1,7 @@
 <?php
 require_once 'config/database.php';
 require_once 'config/google_config.php';
+require_once 'config/audit_logger.php';
 
 // Handle login form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -12,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         try {
             $pdo = getDBConnection();
+            $auditLogger = new AuditLogger();
             
             // Check if user exists by username or email
             $stmt = $pdo->prepare("SELECT user_id, username, email, password_hash, role, status FROM users WHERE (username = ? OR email = ?) AND status = 'active'");
@@ -29,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $updateStmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
                 $updateStmt->execute([$user['user_id']]);
                 
+                // Log successful login
+                $auditLogger->logLogin($user['username'], true, $user['user_id']);
+                
                 // Redirect based on role
                 if ($user['role'] == 'admin' || $user['role'] == 'manager' || $user['role'] == 'staff') {
                     header('Location: admin/dashboard.php');
@@ -37,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 exit();
             } else {
+                // Log failed login attempt
+                $auditLogger->logLogin($username_email, false);
                 $error = "Invalid username/email or password";
             }
         } catch (PDOException $e) {
