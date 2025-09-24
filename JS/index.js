@@ -217,3 +217,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     fillSelect("barangay", brgys, "Select Barangay");
   });
 });
+
+// --- Profile dropdown toggle ---
+(function () {
+    const btn = document.getElementById('profileBtn');
+    const menu = document.getElementById('profileDropdown');
+    if (!btn || !menu) return;
+  
+    const close = () => {
+      menu.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+    };
+    const open = () => {
+      menu.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    };
+  
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (menu.classList.contains('hidden')) open(); else close();
+    });
+  
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('profileMenu');
+      if (!container) return;
+      if (!container.contains(e.target)) close();
+    });
+  
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  })();
+  

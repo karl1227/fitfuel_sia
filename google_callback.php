@@ -21,11 +21,17 @@ try {
     // Get user info from Google
     $userInfo = getGoogleUserInfo($tokenData['access_token']);
     
-    if (!isset($userInfo['id']) || !isset($userInfo['email'])) {
-        throw new Exception('Invalid user data from Google');
+    // Debug: Log the user info structure (remove in production)
+    error_log('Google User Info: ' . json_encode($userInfo));
+    
+    if (!isset($userInfo['sub']) || !isset($userInfo['email'])) {
+        $missingFields = [];
+        if (!isset($userInfo['sub'])) $missingFields[] = 'sub (user ID)';
+        if (!isset($userInfo['email'])) $missingFields[] = 'email';
+        throw new Exception('Invalid user data from Google. Missing fields: ' . implode(', ', $missingFields));
     }
     
-    $googleId = $userInfo['id'];
+    $googleId = $userInfo['sub'];
     $email = $userInfo['email'];
     $name = $userInfo['name'] ?? '';
     $picture = $userInfo['picture'] ?? '';
@@ -58,7 +64,7 @@ try {
         if (in_array($existingUser['role'], ['admin', 'manager', 'staff'])) {
             header('Location: admin/dashboard.php');
         } else {
-            header('Location: index.html');
+            header('Location: index.php');
         }
         exit();
         
@@ -88,7 +94,7 @@ try {
             if (in_array($emailUser['role'], ['admin', 'manager', 'staff'])) {
                 header('Location: admin/dashboard.php');
             } else {
-                header('Location: index.html');
+                header('Location: index.php');
             }
             exit();
             
@@ -125,7 +131,7 @@ try {
             $_SESSION['role'] = 'customer';
             
             // Redirect to main page
-            header('Location: index.html');
+            header('Location: index.php');
             exit();
         }
     }

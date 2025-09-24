@@ -13,7 +13,7 @@ $order_id_param = isset($_GET['order_id']) ? $_GET['order_id'] : '';
 error_log("Order success page accessed - Order ID: '$order_id_param', User: " . $_SESSION['user_id']);
 
 if (!$order_id_param) {
-    header('Location: index.html');
+    header('Location: index.php');
     exit();
 }
 
@@ -138,14 +138,14 @@ if (isset($_SESSION['user_id'])) {
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="index.html">
+                    <a href="index.php">
                         <img src="img/LOGO-Fitfuel.png" width="75" height="auto" alt="LOGO">
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-white hover:text-emerald-600 transition-colors">Home</a>
+                    <a href="index.php" class="text-white hover:text-emerald-600 transition-colors">Home</a>
                     <a href="shop.php" class="text-white hover:text-emerald-600 transition-colors">Shop</a>
                     <a href="#" class="text-white hover:text-emerald-600 transition-colors">About</a>
                     <a href="#" class="text-white hover:text-emerald-600 transition-colors">Contact</a>
@@ -281,7 +281,7 @@ if (isset($_SESSION['user_id'])) {
                     <a href="shop.php" class="inline-block bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">
                         Continue Shopping
                     </a>
-                    <a href="index.html" class="inline-block bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                    <a href="index.php" class="inline-block bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
                         Back to Home
                     </a>
                 </div>
@@ -328,7 +328,7 @@ if (isset($_SESSION['user_id'])) {
                         <a href="shop.php" class="inline-block bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">
                             Continue Shopping
                         </a>
-                        <a href="index.html" class="inline-block bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                        <a href="index.php" class="inline-block bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
                             Back to Home
                         </a>
                     </div>
@@ -348,7 +348,7 @@ if (isset($_SESSION['user_id'])) {
                 <div>
                     <h3 class="font-semibold mb-4">Quick Links</h3>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="index.php" class="hover:text-white transition-colors">Home</a></li>
                         <li><a href="shop.php" class="hover:text-white transition-colors">Shop</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">About</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>

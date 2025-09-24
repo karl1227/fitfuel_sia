@@ -1,0 +1,409 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+require_once 'config/database.php';
+
+if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit(); }
+$user_id = (int) $_SESSION['user_id'];
+
+function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
+function mask_email($email){
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) return $email;
+  [$u,$d] = explode('@',$email,2);
+  $keep = max(1, min(3, strlen($u)));
+  return substr($u,0,$keep) . str_repeat('*', max(3, strlen($u)-$keep)) . '@' . $d;
+}
+
+$alert = ['type'=>'','msg'=>''];
+
+try {
+  $pdo = getDBConnection();
+  // --- Ensure new columns exist (phone, date_of_birth) ---
+  try {
+    $cols = $pdo->query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users'")
+                ->fetchAll(PDO::FETCH_COLUMN);
+    if (is_array($cols)) {
+      if (!in_array('phone', $cols, true)) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN phone varchar(20) NULL AFTER email");
+      }
+      if (!in_array('date_of_birth', $cols, true)) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN date_of_birth date NULL AFTER phone");
+      }
+    }
+  } catch (Throwable $e) { /* ignore non-fatal */ }
+
+  // --- Ensure upload folder exists & writable ---
+  $uploadDir = __DIR__ . '/uploads/profile';
+  if (!is_dir($uploadDir)) {
+    // Try to create recursively
+    if (!mkdir($uploadDir, 0775, true)) {
+      throw new Exception('Upload folder does not exist and could not be created. Check folder permissions on /uploads.');
+    }
+  }
+  if (!is_writable($uploadDir)) {
+    throw new Exception('Upload folder is not writable. Please run: chmod -R 775 uploads');
+  }
+
+  // --- Fetch user ---
+  $st = $pdo->prepare("
+    SELECT user_id, username, email, phone, date_of_birth, first_name, last_name, profile_picture
+    FROM users WHERE user_id = ?
+  ");
+  $st->execute([$user_id]);
+  $user = $st->fetch(PDO::FETCH_ASSOC);
+  if (!$user) throw new Exception('User not found.');
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Debug: Log the submitted data
+    error_log('Profile Update - POST Data: ' . json_encode($_POST));
+    
+    $first_name = trim($_POST['first_name'] ?? ($user['first_name'] ?? ''));
+    $last_name  = trim($_POST['last_name']  ?? ($user['last_name']  ?? ''));
+    $email      = trim($_POST['email']      ?? $user['email']);
+    $phone      = trim($_POST['phone']      ?? ($user['phone'] ?? ''));
+    $dob        = trim($_POST['date_of_birth'] ?? ($user['date_of_birth'] ?? ''));
+    
+    // Debug: Log the processed data
+    error_log('Profile Update - Processed Data: ' . json_encode([
+      'first_name' => $first_name,
+      'last_name' => $last_name,
+      'email' => $email,
+      'phone' => $phone,
+      'dob' => $dob,
+      'user_id' => $user_id
+    ]));
+
+    if ($first_name === '' && $last_name === '') {
+      throw new Exception('Please enter your first or last name.');
+    }
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      throw new Exception('Please enter a valid email address.');
+    }
+
+    // Unique email check
+    $chk = $pdo->prepare("SELECT user_id FROM users WHERE email = ? AND user_id <> ?");
+    $chk->execute([$email, $user_id]);
+    if ($chk->fetch()) throw new Exception('Email is already in use.');
+
+    // Basic phone validation (optional field)
+    if ($phone !== '' && !preg_match('/^[+0-9][0-9\s\-()]{6,}$/', $phone)) {
+      throw new Exception('Please enter a valid phone number.');
+    }
+
+    // Validate DOB (optional, must be YYYY-MM-DD and not future)
+    if ($dob !== '') {
+      $dt = DateTime::createFromFormat('Y-m-d', $dob);
+      $errors = DateTime::getLastErrors();
+      
+      // Check if DateTime creation failed or has errors
+      if (!$dt || ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0))) {
+        throw new Exception('Please enter a valid date of birth (YYYY-MM-DD).');
+      }
+      
+      // Check if date is in the future
+      if ($dt > new DateTime('today')) {
+        throw new Exception('Date of birth cannot be in the future.');
+      }
+      
+      $dob = $dt->format('Y-m-d');
+    } else {
+      $dob = null;
+    }
+
+    // --- Handle avatar upload (optional) ---
+    $profile_path = $user['profile_picture'] ?? null;
+
+    if (!empty($_FILES['profile_picture']['name'])) {
+
+      // Basic PHP upload errors first
+      $err = $_FILES['profile_picture']['error'];
+      if ($err !== UPLOAD_ERR_OK) {
+        $errMap = [
+          UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds upload_max_filesize.',
+          UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds MAX_FILE_SIZE.',
+          UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded.',
+          UPLOAD_ERR_NO_FILE    => 'No file was uploaded.',
+          UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder.',
+          UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+          UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload.'
+        ];
+        $msg = $errMap[$err] ?? 'File upload error.';
+        throw new Exception('Failed to upload image: ' . $msg);
+      }
+
+      // Size check (1 MB)
+      if ($_FILES['profile_picture']['size'] > 1024 * 1024) {
+        throw new Exception('Image too large. Max 1 MB.');
+      }
+
+      // Validate MIME with finfo (requires fileinfo extension enabled)
+      if (!class_exists('finfo')) {
+        throw new Exception('Server missing fileinfo extension. Enable php_fileinfo.');
+      }
+      $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $mime  = $finfo->file($_FILES['profile_picture']['tmp_name']);
+      $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png'];
+      if (!isset($allowed[$mime])) {
+        throw new Exception('Only JPEG and PNG are allowed.');
+      }
+
+      // Build destination filename
+      $ext   = $allowed[$mime];
+      $fname = 'u' . $user_id . '_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+      $dest  = $uploadDir . '/' . $fname;
+
+      // Extra guard: ensure tmp is truly an uploaded file
+      $tmp = $_FILES['profile_picture']['tmp_name'];
+      if (!is_uploaded_file($tmp)) {
+        throw new Exception('Security check failed: temp file is not an uploaded file.');
+      }
+
+      // Move file
+      if (!move_uploaded_file($tmp, $dest)) {
+        // Give a more helpful message with current permissions
+        $perm = substr(sprintf('%o', fileperms($uploadDir)), -4);
+        throw new Exception('Failed to save uploaded image. Folder perms=' . $perm . ' Path=' . $uploadDir);
+      }
+
+      // Optionally remove old avatar if it was inside our uploads/profile/
+      if (!empty($profile_path)) {
+        $oldAbs = __DIR__ . '/' . $profile_path;
+        if (strpos($profile_path, 'uploads/profile/') === 0 && is_file($oldAbs)) {
+          @unlink($oldAbs);
+        }
+      }
+
+      // Save relative path
+      $profile_path = 'uploads/profile/' . $fname;
+    }
+
+    // --- Update DB ---
+    $upd = $pdo->prepare("
+      UPDATE users
+      SET email = ?, phone = ?, date_of_birth = ?, first_name = ?, last_name = ?, profile_picture = ?
+      WHERE user_id = ?
+    ");
+    $result = $upd->execute([$email, ($phone !== '' ? $phone : null), $dob, $first_name, $last_name, $profile_path, $user_id]);
+
+    // Check if update was successful
+    if ($result && $upd->rowCount() > 0) {
+      // Reload fresh
+      $st->execute([$user_id]);
+      $user = $st->fetch(PDO::FETCH_ASSOC);
+      $alert = ['type'=>'success','msg'=>'Profile updated successfully!'];
+    } else {
+      throw new Exception('Failed to update profile. No changes were made.');
+    }
+  }
+} catch (Exception $e) {
+  $alert = ['type'=>'error','msg'=>$e->getMessage()];
+  if (!isset($user)) {
+    $user = ['username'=>'','email'=>'','phone'=>'','date_of_birth'=>null,'first_name'=>'','last_name'=>'','profile_picture'=>''];
+  }
+}
+
+// cart badge (optional)
+$cart_count = 0;
+try {
+  $cs = $pdo->prepare("SELECT COALESCE(SUM(ci.quantity),0) c
+                       FROM cart c LEFT JOIN cart_items ci ON c.cart_id=ci.cart_id
+                       WHERE c.user_id=?");
+  $cs->execute([$user_id]);
+  $cart_count = (int)($cs->fetch()['c'] ?? 0);
+} catch(Throwable $e){}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile - FitFuel</title>
+  <link rel="icon" href="img/LOGO-Fitfuel.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .form-grid{display:grid;grid-template-columns:200px 1fr;}
+    .label-cell{display:flex;align-items:center;color:#4b5563}
+    .orange-btn{background:#ee4d2d}
+    .orange-btn:hover{background:#d63f20}
+  </style>
+</head>
+<body class="font-body bg-[#f6f6f6] text-slate-700">
+  <!-- top bars -->
+  <nav class="bg-white text-black py-2">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-end space-x-6 text-sm">
+        <a href="#" class="hover:text-emerald-400">Review</a>
+        <a href="#" class="hover:text-emerald-400">Help</a>
+        <a href="logout.php" class="hover:text-emerald-400">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <nav class="bg-black py-4">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between">
+        <a href="index.php" class="flex items-center"><img src="img/LOGO-Fitfuel.png" width="75" alt="LOGO"></a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.php" class="text-white hover:text-emerald-600">Home</a>
+          <a href="shop.php" class="text-white hover:text-emerald-600">Shop</a>
+          <a href="#" class="text-white hover:text-emerald-600">About</a>
+          <a href="#" class="text-white hover:text-emerald-600">Contact</a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="cart.php" class="relative p-2 text-white hover:text-emerald-600">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <?php if ($cart_count>0): ?>
+              <span class="absolute -top-1 -right-1 bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"><?php echo $cart_count; ?></span>
+            <?php endif; ?>
+          </a>
+          <a href="profile.php" class="p-2 text-white hover:text-emerald-600"><i class="fas fa-user text-xl"></i></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <!-- LEFT SIDEBAR -->
+      <aside class="md:col-span-1 bg-white rounded-lg border border-gray-200 p-4">
+        <div class="flex items-center space-x-3 mb-4">
+          <?php $avatar = !empty($user['profile_picture']) ? $user['profile_picture'] : 'img/placeholder.svg'; ?>
+          <img src="<?php echo h($avatar); ?>" class="w-12 h-12 rounded-full object-cover border" alt="">
+          <div>
+            <div class="font-semibold"><?php echo h($user['username']); ?></div>
+            <div class="text-xs text-gray-500"><i class="fa-regular fa-pen-to-square mr-1"></i>Edit Profile</div>
+          </div>
+        </div>
+        <nav class="space-y-4 text-[15px]">
+          <div>
+            <div class="text-gray-400 uppercase text-xs mb-2">My Account</div>
+            <a class="block text-emerald-600 font-medium">Profile</a>
+            <a href="addresses.php" class="block hover:text-emerald-600">Addresses</a>
+            <a href="#" class="block hover:text-emerald-600">Notification Settings</a>
+          </div>
+          <div>
+            <div class="text-gray-400 uppercase text-xs mb-2">My Purchase</div>
+            <a href="my_orders.php" class="block hover:text-emerald-600">My Orders</a>
+          </div>
+          <div>
+            <div class="text-gray-400 uppercase text-xs mb-2">My Wishlist</div>
+            <a href="wishlist.php" class="block hover:text-emerald-600">Wishlist</a>
+          </div>
+          <div>
+            <div class="text-gray-400 uppercase text-xs mb-2">Notifications</div>
+            <a href="#" class="block hover:text-emerald-600">Inbox</a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- MAIN CARD -->
+      <section class="md:col-span-3 bg-white rounded-lg border border-gray-200">
+        <div class="p-6 border-b">
+          <h1 class="text-[20px] font-semibold text-slate-900">My Profile</h1>
+          <p class="text-gray-500 text-sm">Manage and protect your account</p>
+        </div>
+
+        <?php if ($alert['type']==='success'): ?>
+          <div class="mx-6 mt-4 rounded bg-emerald-50 text-emerald-700 px-4 py-3 border border-emerald-200">
+            <i class="fa-solid fa-circle-check mr-2"></i><?php echo h($alert['msg']); ?>
+          </div>
+        <?php elseif ($alert['type']==='error'): ?>
+          <div class="mx-6 mt-4 rounded bg-red-50 text-red-700 px-4 py-3 border border-red-200">
+            <i class="fa-solid fa-triangle-exclamation mr-2"></i><?php echo h($alert['msg']); ?>
+          </div>
+        <?php endif; ?>
+
+        <form class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8" method="post" enctype="multipart/form-data">
+          <!-- center form -->
+          <div class="lg:col-span-2">
+            <div class="form-grid gap-y-5">
+              <!-- username -->
+              <div class="label-cell">Username</div>
+              <div><div class="text-slate-800"><?php echo h($user['username']); ?></div></div>
+
+              <!-- first name -->
+              <div class="label-cell">First Name</div>
+              <div>
+                <input name="first_name" type="text" value="<?php echo h($user['first_name'] ?? ''); ?>" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500" required>
+              </div>
+
+              <!-- last name -->
+              <div class="label-cell">Last Name</div>
+              <div>
+                <input name="last_name" type="text" value="<?php echo h($user['last_name'] ?? ''); ?>" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              </div>
+
+              <!-- email -->
+              <div class="label-cell">Email</div>
+              <div>
+                <div id="emailView" class="flex items-center space-x-3">
+                  <span><?php echo h(mask_email($user['email'])); ?></span>
+                  <button type="button" class="text-emerald-600 hover:underline text-sm" onclick="toggleEmail(true)">Change</button>
+                </div>
+                <div id="emailEdit" class="hidden flex items-center space-x-3">
+                  <input name="email" type="email" value="<?php echo h($user['email']); ?>" class="w-full border rounded px-3 py-2">
+                  <button type="button" class="text-gray-500 hover:underline text-sm" onclick="toggleEmail(false)">Cancel</button>
+                </div>
+              </div>
+
+              <!-- phone -->
+              <div class="label-cell">Phone Number</div>
+              <div>
+                <input name="phone" type="tel" value="<?php echo h($user['phone'] ?? ''); ?>" placeholder="e.g. 09123456789" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              </div>
+
+              <!-- date of birth -->
+              <div class="label-cell">Date of Birth</div>
+              <div>
+                <input name="date_of_birth" type="date" value="<?php echo h($user['date_of_birth'] ?? ''); ?>" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <button type="submit" class="orange-btn text-white px-6 py-2 rounded shadow-sm">Save</button>
+            </div>
+          </div>
+
+          <!-- right avatar -->
+          <div class="lg:col-span-1">
+            <div class="flex flex-col items-center">
+              <div class="w-40 h-40 rounded-full overflow-hidden border border-gray-200">
+                <img id="avatarPreview" src="<?php echo h(!empty($user['profile_picture']) ? $user['profile_picture'] : 'img/placeholder.svg'); ?>" class="w-full h-full object-cover" alt="avatar">
+              </div>
+              <label class="mt-4 inline-block">
+                <span class="px-4 py-2 border rounded text-gray-700 cursor-pointer hover:bg-gray-50">Select Image</span>
+                <input type="file" name="profile_picture" id="profile_picture" class="hidden" accept="image/jpeg,image/png">
+              </label>
+              <div class="text-gray-500 text-sm mt-4 text-center">
+                <div>File size: maximum 1 MB</div>
+                <div>File types: JPEG, PNG</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <footer class="bg-slate-800 text-white py-12 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2024 FitFuel. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleEmail(edit){
+      document.getElementById('emailView').classList.toggle('hidden', edit);
+      document.getElementById('emailEdit').classList.toggle('hidden', !edit);
+    }
+    // Live preview for avatar
+    const input = document.getElementById('profile_picture');
+    const preview = document.getElementById('avatarPreview');
+    if (input && preview) {
+      input.addEventListener('change', e => {
+        const f = e.target.files && e.target.files[0];
+        if (f) preview.src = URL.createObjectURL(f);
+      });
+    }
+  </script>
+</body>
+</html>

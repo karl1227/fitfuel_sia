@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Check if user has admin privileges
 if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'manager', 'staff'])) {
-    header('Location: ../index.html');
+    header('Location: ../index.php');
     exit();
 }
 
