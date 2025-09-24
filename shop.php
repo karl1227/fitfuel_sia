@@ -191,8 +191,6 @@ if (!empty($_SESSION['user_id'])) {
                 <a href="profile.php"   class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Account</a>
                 <a href="my_orders.php" class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Purchase</a>
                 <a href="wishlist.php"  class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Wishlist</a>
-                <div class="my-2 border-t border-gray-200"></div>
-                <a href="logout.php"    class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">Logout</a>
               <?php else: ?>
                 <a href="login.php"         class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">Login</a>
                 <a href="registration.php"  class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">Create Account</a>

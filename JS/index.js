@@ -37,54 +37,65 @@
         // Auto-advance carousel
         setInterval(nextSlide, 5000);
 
-        const popularProducts = [
-            // Page 1
+        // Use dynamic data from PHP if available, otherwise fallback to static data
+        const bestSellingProducts = window.bestSellingProductsData || [
+            // Page 1 - Fallback data
             [
-                { name: "Olympic Barbell Set", price: "$199", image: "olympic barbell with plates", badge: "Best Seller" },
-                { name: "Pre-Workout Energy", price: "$34", image: "pre workout supplement container", badge: "Popular" },
-                { name: "Gym Gloves Pro", price: "$24", image: "professional gym gloves", badge: "" },
-                { name: "Kettlebell 20kg", price: "$89", image: "black kettlebell weight", badge: "New" }
+                { product_id: 1, name: "Olympic Barbell Set", price: "₱199", imagePath: "img/placeholder.svg", badge: "Best Seller" },
+                { product_id: 2, name: "Pre-Workout Energy", price: "₱34", imagePath: "img/placeholder.svg", badge: "Popular" },
+                { product_id: 3, name: "Gym Gloves Pro", price: "₱24", imagePath: "img/placeholder.svg", badge: "" },
+                { product_id: 4, name: "Kettlebell 20kg", price: "₱89", imagePath: "img/placeholder.svg", badge: "New" }
             ],
-            // Page 2
+            // Page 2 - Fallback data
             [
-                { name: "Protein Shaker", price: "$15", image: "protein shaker bottle", badge: "" },
-                { name: "Foam Roller", price: "$45", image: "foam roller for recovery", badge: "Popular" },
-                { name: "Weight Lifting Belt", price: "$59", image: "leather weight lifting belt", badge: "" },
-                { name: "BCAA Powder", price: "$39", image: "bcaa supplement powder", badge: "Sale" }
+                { product_id: 5, name: "Protein Shaker", price: "₱15", imagePath: "img/placeholder.svg", badge: "" },
+                { product_id: 6, name: "Foam Roller", price: "₱45", imagePath: "img/placeholder.svg", badge: "Popular" },
+                { product_id: 7, name: "Weight Lifting Belt", price: "₱59", imagePath: "img/placeholder.svg", badge: "" },
+                { product_id: 8, name: "BCAA Powder", price: "₱39", imagePath: "img/placeholder.svg", badge: "Sale" }
             ],
-            // Page 3
+            // Page 3 - Fallback data
             [
-                { name: "Pull-up Bar", price: "$79", image: "doorway pull up bar", badge: "Best Seller" },
-                { name: "Creatine Monohydrate", price: "$29", image: "creatine supplement container", badge: "" },
-                { name: "Gym Towel Set", price: "$19", image: "microfiber gym towels", badge: "" },
-                { name: "Ab Wheel Roller", price: "$25", image: "ab wheel exercise equipment", badge: "Popular" }
+                { product_id: 9, name: "Pull-up Bar", price: "₱79", imagePath: "img/placeholder.svg", badge: "Best Seller" },
+                { product_id: 10, name: "Creatine Monohydrate", price: "₱29", imagePath: "img/placeholder.svg", badge: "" },
+                { product_id: 11, name: "Gym Towel Set", price: "₱19", imagePath: "img/placeholder.svg", badge: "" },
+                { product_id: 12, name: "Ab Wheel Roller", price: "₱25", imagePath: "img/placeholder.svg", badge: "Popular" }
             ]
         ];
 
         let currentPage = 1;
-        const totalPages = popularProducts.length;
+        const totalPages = bestSellingProducts.length;
 
-        function renderPopularProducts(page) {
-            const container = document.getElementById('popular-products');
-            const products = popularProducts[page - 1];
+        function renderBestSellingProducts(page) {
+            const container = document.getElementById('best-selling-products');
+            const products = bestSellingProducts[page - 1];
+            
+            if (!container) {
+                console.error('Container element not found!');
+                return;
+            }
+            
+            if (!products || products.length === 0) {
+                console.error('No products found for page:', page);
+                return;
+            }
             
             container.innerHTML = products.map(product => `
-                <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                <a href="shop.php" class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow block">
                     <div class="relative">
-                        <img src="/placeholder.svg?height=250&width=300" alt="${product.name}" class="w-full h-64 object-cover">
+                        <img src="${product.imagePath || 'img/placeholder.svg'}" alt="${product.name}" class="w-full h-64 object-cover">
                         ${product.badge ? `<span class="absolute top-4 left-4 bg-emerald-500 text-white px-2 py-1 rounded text-sm font-semibold">${product.badge}</span>` : ''}
                     </div>
                     <div class="p-6">
                         <h3 class="font-semibold text-lg text-slate-800 mb-2">${product.name}</h3>
                         <p class="text-slate-600 mb-4">High-quality fitness product for your workout needs</p>
                         <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold text-emerald-600">${product.price}</span>
-                            <button class="bg-black text-white px-4 py-2 rounded-lg hover:bg-black-200 transition-colors">
+                            <span class="text-2xl font-bold text-emerald-600">₱${product.price}</span>
+                            <button onclick="event.preventDefault(); addToCart(${product.product_id});" class="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
                                 <i class="fas fa-cart-plus"></i>
                             </button>
                         </div>
                     </div>
-                </div>
+                </a>
             `).join('');
         }
 
@@ -99,7 +110,7 @@
 
         function goToPage(page) {
             currentPage = page;
-            renderPopularProducts(currentPage);
+            renderBestSellingProducts(currentPage);
             updatePagination();
         }
 
@@ -109,13 +120,13 @@
             } else if (direction === 'next' && currentPage < totalPages) {
                 currentPage++;
             }
-            renderPopularProducts(currentPage);
+            renderBestSellingProducts(currentPage);
             updatePagination();
         }
 
-        // Initialize popular products
+        // Initialize best selling products
         document.addEventListener('DOMContentLoaded', function() {
-            renderPopularProducts(1);
+            renderBestSellingProducts(1);
             updatePagination();
         });
         
@@ -250,4 +261,67 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (e.key === 'Escape') close();
     });
   })();
+
+  // Add to cart functionality
+  function addToCart(productId) {
+    fetch('add_to_cart.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ product_id: productId, quantity: 1 })
+    })
+    .then(r => r.json())
+    .then(d => {
+      if (d.success) {
+        showNotification('Product added to cart!');
+        updateCartCount();
+      } else {
+        if (d.message && d.message.includes('login')) {
+          window.location.href = 'login.php';
+        } else {
+          showNotification('Error: ' + (d.message || 'Could not add to cart'), 'error');
+        }
+      }
+    })
+    .catch(() => showNotification('Network error adding to cart', 'error'));
+  }
+
+  function showNotification(message, type = 'success') {
+    // Create notification element if it doesn't exist
+    let n = document.getElementById('notification');
+    if (!n) {
+      n = document.createElement('div');
+      n.id = 'notification';
+      n.className = 'fixed top-20 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50 max-w-sm';
+      n.innerHTML = '<div class="flex items-center"><i class="fas fa-check-circle mr-2"></i><span id="notification-message"></span></div>';
+      document.body.appendChild(n);
+    }
+    
+    const m = document.getElementById('notification-message');
+    m.textContent = message;
+    n.classList.remove('bg-emerald-500','bg-red-500');
+    n.classList.add(type === 'error' ? 'bg-red-500' : 'bg-emerald-500');
+    n.style.transform = 'translateX(0)';
+    setTimeout(() => { n.style.transform = 'translateX(100%)'; }, 3000);
+  }
+
+  function updateCartCount() {
+    fetch('get_cart_count.php')
+      .then(r => r.json())
+      .then(d => {
+        if (!d.success) return;
+        const cartIcon = document.querySelector('a[href="cart.php"]');
+        let badge = cartIcon.querySelector('.cart-count-badge');
+        if (d.count > 0) {
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'cart-count-badge bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center';
+            cartIcon.appendChild(badge);
+          }
+          badge.textContent = d.count;
+        } else if (badge) {
+          badge.remove();
+        }
+      })
+      .catch(() => {});
+  }
   
