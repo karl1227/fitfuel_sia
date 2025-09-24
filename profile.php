@@ -12,90 +12,144 @@ function mask_email($email){
   $keep = max(1, min(3, strlen($u)));
   return substr($u,0,$keep) . str_repeat('*', max(3, strlen($u)-$keep)) . '@' . $d;
 }
-function mask_phone($phone){
-  $digits = preg_replace('/\D+/', '', $phone);
-  if ($digits === '') return $phone;
-  $show = substr($digits, -2);
-  return str_repeat('*', max(6, strlen($digits)-2)) . $show;
-}
 
 $alert = ['type'=>'','msg'=>''];
 
 try {
   $pdo = getDBConnection();
 
-  // Load current user
-  $st = $pdo->prepare("SELECT user_id, username, email, first_name, last_name, phone, dob, profile_picture
-                       FROM users WHERE user_id = ?");
+  // --- Ensure upload folder exists & writable ---
+  $uploadDir = __DIR__ . '/uploads/profile';
+  if (!is_dir($uploadDir)) {
+    // Try to create recursively
+    if (!mkdir($uploadDir, 0775, true)) {
+      throw new Exception('Upload folder does not exist and could not be created. Check folder permissions on /uploads.');
+    }
+  }
+  if (!is_writable($uploadDir)) {
+    throw new Exception('Upload folder is not writable. Please run: chmod -R 775 uploads');
+  }
+
+  // --- Fetch user ---
+  $st = $pdo->prepare("
+    SELECT user_id, username, email, first_name, last_name, profile_picture
+    FROM users WHERE user_id = ?
+  ");
   $st->execute([$user_id]);
-  $user = $st->fetch();
+  $user = $st->fetch(PDO::FETCH_ASSOC);
   if (!$user) throw new Exception('User not found.');
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name  = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? $user['email']);
-    $phone = trim($_POST['phone'] ?? $user['phone']);
-    $dob   = trim($_POST['dob'] ?? ($user['dob'] ?? ''));
+    $first_name = trim($_POST['first_name'] ?? ($user['first_name'] ?? ''));
+    $last_name  = trim($_POST['last_name']  ?? ($user['last_name']  ?? ''));
+    $email      = trim($_POST['email']      ?? $user['email']);
 
-    // Validate
+    if ($first_name === '' && $last_name === '') {
+      throw new Exception('Please enter your first or last name.');
+    }
     if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
       throw new Exception('Please enter a valid email address.');
     }
-    // Email must be unique
+
+    // Unique email check
     $chk = $pdo->prepare("SELECT user_id FROM users WHERE email = ? AND user_id <> ?");
     $chk->execute([$email, $user_id]);
     if ($chk->fetch()) throw new Exception('Email is already in use.');
 
-    // Handle avatar (max 1MB)
-    $profile_path = $user['profile_picture'];
+    // --- Handle avatar upload (optional) ---
+    $profile_path = $user['profile_picture'] ?? null;
+
     if (!empty($_FILES['profile_picture']['name'])) {
-      $allowed = ['image/jpeg'=>'jpg','image/png'=>'png'];
-      $f = $_FILES['profile_picture'];
-      if ($f['error'] !== UPLOAD_ERR_OK) throw new Exception('Failed to upload image.');
-      if (!isset($allowed[$f['type']])) throw new Exception('Only JPEG and PNG are allowed.');
-      if ($f['size'] > 1024*1024) throw new Exception('Image is too large (max 1MB).');
 
-      $dir = __DIR__ . '/uploads/profile';
-      if (!is_dir($dir)) { if (!mkdir($dir, 0775, true) && !is_dir($dir)) throw new Exception('Cannot create upload folder.'); }
-      $ext = $allowed[$f['type']];
-      $fname = 'u'.$user_id.'_'.time().'.'.$ext;
-      $dest = $dir.'/'.$fname;
-      if (!move_uploaded_file($f['tmp_name'], $dest)) throw new Exception('Failed to save uploaded image.');
-      $profile_path = 'uploads/profile/'.$fname;
+      // Basic PHP upload errors first
+      $err = $_FILES['profile_picture']['error'];
+      if ($err !== UPLOAD_ERR_OK) {
+        $errMap = [
+          UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds upload_max_filesize.',
+          UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds MAX_FILE_SIZE.',
+          UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded.',
+          UPLOAD_ERR_NO_FILE    => 'No file was uploaded.',
+          UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder.',
+          UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+          UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload.'
+        ];
+        $msg = $errMap[$err] ?? 'File upload error.';
+        throw new Exception('Failed to upload image: ' . $msg);
+      }
+
+      // Size check (1 MB)
+      if ($_FILES['profile_picture']['size'] > 1024 * 1024) {
+        throw new Exception('Image too large. Max 1 MB.');
+      }
+
+      // Validate MIME with finfo (requires fileinfo extension enabled)
+      if (!class_exists('finfo')) {
+        throw new Exception('Server missing fileinfo extension. Enable php_fileinfo.');
+      }
+      $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $mime  = $finfo->file($_FILES['profile_picture']['tmp_name']);
+      $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png'];
+      if (!isset($allowed[$mime])) {
+        throw new Exception('Only JPEG and PNG are allowed.');
+      }
+
+      // Build destination filename
+      $ext   = $allowed[$mime];
+      $fname = 'u' . $user_id . '_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+      $dest  = $uploadDir . '/' . $fname;
+
+      // Extra guard: ensure tmp is truly an uploaded file
+      $tmp = $_FILES['profile_picture']['tmp_name'];
+      if (!is_uploaded_file($tmp)) {
+        throw new Exception('Security check failed: temp file is not an uploaded file.');
+      }
+
+      // Move file
+      if (!move_uploaded_file($tmp, $dest)) {
+        // Give a more helpful message with current permissions
+        $perm = substr(sprintf('%o', fileperms($uploadDir)), -4);
+        throw new Exception('Failed to save uploaded image. Folder perms=' . $perm . ' Path=' . $uploadDir);
+      }
+
+      // Optionally remove old avatar if it was inside our uploads/profile/
+      if (!empty($profile_path)) {
+        $oldAbs = __DIR__ . '/' . $profile_path;
+        if (strpos($profile_path, 'uploads/profile/') === 0 && is_file($oldAbs)) {
+          @unlink($oldAbs);
+        }
+      }
+
+      // Save relative path
+      $profile_path = 'uploads/profile/' . $fname;
     }
 
-    // Parse DOB (optional)
-    $dobSql = null;
-    if ($dob !== '') {
-      $ts = strtotime($dob);
-      if ($ts === false) throw new Exception('Invalid date of birth.');
-      $dobSql = date('Y-m-d', $ts);
-    }
+    // --- Update DB ---
+    $upd = $pdo->prepare("
+      UPDATE users
+      SET email = ?, first_name = ?, last_name = ?, profile_picture = ?
+      WHERE user_id = ?
+    ");
+    $upd->execute([$email, $first_name, $last_name, $profile_path, $user_id]);
 
-    // One-name style -> store as first_name
-    $first_name = $name;
-    $last_name  = '';
-
-    $upd = $pdo->prepare("UPDATE users SET email=?, first_name=?, last_name=?, phone=?, dob=?, profile_picture=? WHERE user_id=?");
-    $upd->execute([$email, $first_name, $last_name, $phone, $dobSql, $profile_path, $user_id]);
-
-    // Reload
+    // Reload fresh
     $st->execute([$user_id]);
-    $user = $st->fetch();
+    $user = $st->fetch(PDO::FETCH_ASSOC);
 
     $alert = ['type'=>'success','msg'=>'Saved successfully.'];
   }
 } catch (Exception $e) {
   $alert = ['type'=>'error','msg'=>$e->getMessage()];
   if (!isset($user)) {
-    $user = ['username'=>'','email'=>'','first_name'=>'','last_name'=>'','phone'=>'','dob'=>null,'profile_picture'=>''];
+    $user = ['username'=>'','email'=>'','first_name'=>'','last_name'=>'','profile_picture'=>''];
   }
 }
 
-// Cart count for header badge
+// cart badge (optional)
 $cart_count = 0;
 try {
-  $cs = $pdo->prepare("SELECT COALESCE(SUM(ci.quantity),0) c FROM cart c LEFT JOIN cart_items ci ON c.cart_id=ci.cart_id WHERE c.user_id=?");
+  $cs = $pdo->prepare("SELECT COALESCE(SUM(ci.quantity),0) c
+                       FROM cart c LEFT JOIN cart_items ci ON c.cart_id=ci.cart_id
+                       WHERE c.user_id=?");
   $cs->execute([$user_id]);
   $cart_count = (int)($cs->fetch()['c'] ?? 0);
 } catch(Throwable $e){}
@@ -110,7 +164,6 @@ try {
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-    /* center card look like screenshot */
     .form-grid{display:grid;grid-template-columns:200px 1fr;}
     .label-cell{display:flex;align-items:center;color:#4b5563}
     .orange-btn{background:#ee4d2d}
@@ -156,7 +209,8 @@ try {
       <!-- LEFT SIDEBAR -->
       <aside class="md:col-span-1 bg-white rounded-lg border border-gray-200 p-4">
         <div class="flex items-center space-x-3 mb-4">
-          <img src="<?php echo $user['profile_picture'] ? h($user['profile_picture']) : 'img/placeholder.svg'; ?>" class="w-12 h-12 rounded-full object-cover border">
+          <?php $avatar = !empty($user['profile_picture']) ? $user['profile_picture'] : 'img/placeholder.svg'; ?>
+          <img src="<?php echo h($avatar); ?>" class="w-12 h-12 rounded-full object-cover border" alt="">
           <div>
             <div class="font-semibold"><?php echo h($user['username']); ?></div>
             <div class="text-xs text-gray-500"><i class="fa-regular fa-pen-to-square mr-1"></i>Edit Profile</div>
@@ -184,7 +238,7 @@ try {
         </nav>
       </aside>
 
-      <!-- MAIN CARD (center) -->
+      <!-- MAIN CARD -->
       <section class="md:col-span-3 bg-white rounded-lg border border-gray-200">
         <div class="p-6 border-b">
           <h1 class="text-[20px] font-semibold text-slate-900">My Profile</h1>
@@ -202,20 +256,26 @@ try {
         <?php endif; ?>
 
         <form class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8" method="post" enctype="multipart/form-data">
-          <!-- center two-column form -->
+          <!-- center form -->
           <div class="lg:col-span-2">
             <div class="form-grid gap-y-5">
               <!-- username -->
               <div class="label-cell">Username</div>
               <div><div class="text-slate-800"><?php echo h($user['username']); ?></div></div>
 
-              <!-- name -->
-              <div class="label-cell">Name</div>
+              <!-- first name -->
+              <div class="label-cell">First Name</div>
               <div>
-                <input name="name" type="text" value="<?php echo h($user['first_name'] ?? ''); ?>" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <input name="first_name" type="text" value="<?php echo h($user['first_name'] ?? ''); ?>" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500" required>
               </div>
 
-              <!-- email masked + change -->
+              <!-- last name -->
+              <div class="label-cell">Last Name</div>
+              <div>
+                <input name="last_name" type="text" value="<?php echo h($user['last_name'] ?? ''); ?>" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              </div>
+
+              <!-- email -->
               <div class="label-cell">Email</div>
               <div>
                 <div id="emailView" class="flex items-center space-x-3">
@@ -227,25 +287,6 @@ try {
                   <button type="button" class="text-gray-500 hover:underline text-sm" onclick="toggleEmail(false)">Cancel</button>
                 </div>
               </div>
-
-              <!-- phone masked + change -->
-              <div class="label-cell">Phone Number</div>
-              <div>
-                <div id="phoneView" class="flex items-center space-x-3">
-                  <span><?php echo $user['phone'] ? h(mask_phone($user['phone'])) : '—'; ?></span>
-                  <button type="button" class="text-emerald-600 hover:underline text-sm" onclick="togglePhone(true)">Change</button>
-                </div>
-                <div id="phoneEdit" class="hidden flex items-center space-x-3">
-                  <input name="phone" type="text" value="<?php echo h($user['phone']); ?>" class="w-full border rounded px-3 py-2" placeholder="e.g. 09XXXXXXXXX">
-                  <button type="button" class="text-gray-500 hover:underline text-sm" onclick="togglePhone(false)">Cancel</button>
-                </div>
-              </div>
-
-              <!-- dob -->
-              <div class="label-cell">Date of birth <i class="fa-regular fa-circle-question ml-2 text-gray-400"></i></div>
-              <div>
-                <input name="dob" type="date" value="<?php echo $user['dob'] ? h($user['dob']) : ''; ?>" class="w-60 border rounded px-3 py-2">
-              </div>
             </div>
 
             <div class="mt-8">
@@ -253,19 +294,19 @@ try {
             </div>
           </div>
 
-          <!-- right avatar column -->
+          <!-- right avatar -->
           <div class="lg:col-span-1">
             <div class="flex flex-col items-center">
               <div class="w-40 h-40 rounded-full overflow-hidden border border-gray-200">
-                <img id="avatarPreview" src="<?php echo $user['profile_picture'] ? h($user['profile_picture']) : 'img/placeholder.svg'; ?>" class="w-full h-full object-cover" alt="avatar">
+                <img id="avatarPreview" src="<?php echo h(!empty($user['profile_picture']) ? $user['profile_picture'] : 'img/placeholder.svg'); ?>" class="w-full h-full object-cover" alt="avatar">
               </div>
               <label class="mt-4 inline-block">
                 <span class="px-4 py-2 border rounded text-gray-700 cursor-pointer hover:bg-gray-50">Select Image</span>
                 <input type="file" name="profile_picture" id="profile_picture" class="hidden" accept="image/jpeg,image/png">
               </label>
-              <div class="text-gray-500 text-sm mt-4">
+              <div class="text-gray-500 text-sm mt-4 text-center">
                 <div>File size: maximum 1 MB</div>
-                <div>File extension: .JPEG, .PNG</div>
+                <div>File types: JPEG, PNG</div>
               </div>
             </div>
           </div>
@@ -281,22 +322,16 @@ try {
   </footer>
 
   <script>
-    // Show/hide email edit
     function toggleEmail(edit){
       document.getElementById('emailView').classList.toggle('hidden', edit);
       document.getElementById('emailEdit').classList.toggle('hidden', !edit);
     }
-    // Show/hide phone edit
-    function togglePhone(edit){
-      document.getElementById('phoneView').classList.toggle('hidden', edit);
-      document.getElementById('phoneEdit').classList.toggle('hidden', !edit);
-    }
-    // Avatar preview
-    const fileInput = document.getElementById('profile_picture');
+    // Live preview for avatar
+    const input = document.getElementById('profile_picture');
     const preview = document.getElementById('avatarPreview');
-    if (fileInput) {
-      fileInput.addEventListener('change', e => {
-        const f = e.target.files?.[0];
+    if (input && preview) {
+      input.addEventListener('change', e => {
+        const f = e.target.files && e.target.files[0];
         if (f) preview.src = URL.createObjectURL(f);
       });
     }
