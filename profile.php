@@ -17,6 +17,19 @@ $alert = ['type'=>'','msg'=>''];
 
 try {
   $pdo = getDBConnection();
+  // --- Ensure new columns exist (phone, date_of_birth) ---
+  try {
+    $cols = $pdo->query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users'")
+                ->fetchAll(PDO::FETCH_COLUMN);
+    if (is_array($cols)) {
+      if (!in_array('phone', $cols, true)) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN phone varchar(20) NULL AFTER email");
+      }
+      if (!in_array('date_of_birth', $cols, true)) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN date_of_birth date NULL AFTER phone");
+      }
+    }
+  } catch (Throwable $e) { /* ignore non-fatal */ }
 
   // --- Ensure upload folder exists & writable ---
   $uploadDir = __DIR__ . '/uploads/profile';
@@ -32,7 +45,7 @@ try {
 
   // --- Fetch user ---
   $st = $pdo->prepare("
-    SELECT user_id, username, email, first_name, last_name, profile_picture
+    SELECT user_id, username, email, phone, date_of_birth, first_name, last_name, profile_picture
     FROM users WHERE user_id = ?
   ");
   $st->execute([$user_id]);
@@ -43,6 +56,8 @@ try {
     $first_name = trim($_POST['first_name'] ?? ($user['first_name'] ?? ''));
     $last_name  = trim($_POST['last_name']  ?? ($user['last_name']  ?? ''));
     $email      = trim($_POST['email']      ?? $user['email']);
+    $phone      = trim($_POST['phone']      ?? ($user['phone'] ?? ''));
+    $dob        = trim($_POST['date_of_birth'] ?? ($user['date_of_birth'] ?? ''));
 
     if ($first_name === '' && $last_name === '') {
       throw new Exception('Please enter your first or last name.');
@@ -55,6 +70,26 @@ try {
     $chk = $pdo->prepare("SELECT user_id FROM users WHERE email = ? AND user_id <> ?");
     $chk->execute([$email, $user_id]);
     if ($chk->fetch()) throw new Exception('Email is already in use.');
+
+    // Basic phone validation (optional field)
+    if ($phone !== '' && !preg_match('/^[+0-9][0-9\s\-()]{6,}$/', $phone)) {
+      throw new Exception('Please enter a valid phone number.');
+    }
+
+    // Validate DOB (optional, must be YYYY-MM-DD and not future)
+    if ($dob !== '') {
+      $dt = DateTime::createFromFormat('Y-m-d', $dob);
+      $errors = DateTime::getLastErrors();
+      if (!$dt || $errors['warning_count'] || $errors['error_count']) {
+        throw new Exception('Please enter a valid date of birth (YYYY-MM-DD).');
+      }
+      if ($dt > new DateTime('today')) {
+        throw new Exception('Date of birth cannot be in the future.');
+      }
+      $dob = $dt->format('Y-m-d');
+    } else {
+      $dob = null;
+    }
 
     // --- Handle avatar upload (optional) ---
     $profile_path = $user['profile_picture'] ?? null;
@@ -126,10 +161,10 @@ try {
     // --- Update DB ---
     $upd = $pdo->prepare("
       UPDATE users
-      SET email = ?, first_name = ?, last_name = ?, profile_picture = ?
+      SET email = ?, phone = ?, date_of_birth = ?, first_name = ?, last_name = ?, profile_picture = ?
       WHERE user_id = ?
     ");
-    $upd->execute([$email, $first_name, $last_name, $profile_path, $user_id]);
+    $upd->execute([$email, ($phone !== '' ? $phone : null), $dob, $first_name, $last_name, $profile_path, $user_id]);
 
     // Reload fresh
     $st->execute([$user_id]);
@@ -140,7 +175,7 @@ try {
 } catch (Exception $e) {
   $alert = ['type'=>'error','msg'=>$e->getMessage()];
   if (!isset($user)) {
-    $user = ['username'=>'','email'=>'','first_name'=>'','last_name'=>'','profile_picture'=>''];
+    $user = ['username'=>'','email'=>'','phone'=>'','date_of_birth'=>null,'first_name'=>'','last_name'=>'','profile_picture'=>''];
   }
 }
 
@@ -286,6 +321,18 @@ try {
                   <input name="email" type="email" value="<?php echo h($user['email']); ?>" class="w-full border rounded px-3 py-2">
                   <button type="button" class="text-gray-500 hover:underline text-sm" onclick="toggleEmail(false)">Cancel</button>
                 </div>
+              </div>
+
+              <!-- phone -->
+              <div class="label-cell">Phone Number</div>
+              <div>
+                <input name="phone" type="tel" value="<?php echo h($user['phone'] ?? ''); ?>" placeholder="e.g. 09123456789" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              </div>
+
+              <!-- date of birth -->
+              <div class="label-cell">Date of Birth</div>
+              <div>
+                <input name="date_of_birth" type="date" value="<?php echo h($user['date_of_birth'] ?? ''); ?>" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               </div>
             </div>
 
