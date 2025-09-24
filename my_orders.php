@@ -8,16 +8,27 @@ if (!isset($_SESSION['user_id'])) {
 }
 $user_id = $_SESSION['user_id'];
 
-/* ---------- helpers ---------- */
+/* ---------- simple flash helpers ---------- */
+function set_flash($key, $msg) { $_SESSION['flash_'.$key] = $msg; }
+function get_flash($key) {
+    if (!empty($_SESSION['flash_'.$key])) {
+        $m = $_SESSION['flash_'.$key];
+        unset($_SESSION['flash_'.$key]);
+        return $m;
+    }
+    return null;
+}
+
+/* ---------- helpers (UI) ---------- */
 function status_pill($status) {
     $status = strtolower(trim($status));
     switch ($status) {
-        case 'pending':    return ['To Pay',    'bg-yellow-100 text-yellow-800'];
-        case 'processing': return ['To Ship',   'bg-amber-100 text-amber-800'];
-        case 'shipped':    return ['To Ship',   'bg-amber-100 text-amber-800'];
-        case 'delivered':  return ['Completed', 'bg-emerald-100 text-emerald-800'];
-        case 'cancelled':  return ['Cancelled', 'bg-red-100 text-red-800'];
-        case 'returned':   return ['Return',    'bg-slate-200 text-slate-700'];
+        case 'pending':    return ['To Pay',      'bg-yellow-100 text-yellow-800'];
+        case 'processing': return ['To Ship',     'bg-amber-100 text-amber-800'];
+        case 'shipped':    return ['To Receive',  'bg-sky-100 text-sky-800'];
+        case 'delivered':  return ['Completed',   'bg-emerald-100 text-emerald-800'];
+        case 'cancelled':  return ['Cancelled',   'bg-red-100 text-red-800'];
+        case 'returned':   return ['Return',      'bg-slate-200 text-slate-700'];
         default:           return [ucfirst($status),'bg-slate-100 text-slate-700'];
     }
 }
@@ -31,11 +42,10 @@ function first_image($images, $fallback = 'img/placeholder-product.png') {
     $images = trim($images);
 
     // Try JSON
-    if ($images[0] === '[' || $images[0] === '{') {
+    if ($images !== '' && ($images[0] === '[' || $images[0] === '{')) {
         $decoded = json_decode($images, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             if (is_array($decoded)) {
-                // JSON array of strings or objects with 'url'/'path'
                 foreach ($decoded as $item) {
                     if (is_string($item) && $item !== '') return $item;
                     if (is_array($item)) {
@@ -74,31 +84,39 @@ try {
     $error = "Database error: " . $e->getMessage();
 }
 
-/* ---------- prepare data ---------- */
+/* ---------- prepare data for tabs & cards ---------- */
+/* Tabs:
+   - to_pay: pending
+   - to_ship: processing
+   - to_receive: shipped
+   - completed: delivered
+*/
 $tabMap = [
-    'all'       => [],
-    'to_pay'    => ['pending'],
-    'to_ship'   => ['processing','shipped'],
-    'completed' => ['delivered'],
-    'cancelled' => ['cancelled'],
-    'return'    => ['returned'],
+    'all'        => [],
+    'to_pay'     => ['pending'],
+    'to_ship'    => ['processing'],
+    'to_receive' => ['shipped'],
+    'completed'  => ['delivered'],
+    'cancelled'  => ['cancelled'],
+    'return'     => ['returned'],
 ];
 $counts = array_fill_keys(array_keys($tabMap), 0);
 
 $cards = [];
 foreach ($rows as $r) {
     $statusKey = strtolower($r['status']);
-    if (in_array($statusKey, ['processing','shipped'])) $tabKey = 'to_ship';
-    elseif ($statusKey === 'pending') $tabKey = 'to_pay';
-    elseif ($statusKey === 'delivered') $tabKey = 'completed';
-    elseif ($statusKey === 'cancelled') $tabKey = 'cancelled';
-    elseif ($statusKey === 'returned') $tabKey = 'return';
-    else $tabKey = 'all';
+    if ($statusKey === 'processing')       $tabKey = 'to_ship';
+    elseif ($statusKey === 'shipped')       $tabKey = 'to_receive';
+    elseif ($statusKey === 'pending')       $tabKey = 'to_pay';
+    elseif ($statusKey === 'delivered')     $tabKey = 'completed';
+    elseif ($statusKey === 'cancelled')     $tabKey = 'cancelled';
+    elseif ($statusKey === 'returned')      $tabKey = 'return';
+    else                                    $tabKey = 'all';
 
     $img = first_image($r['product_images']);
 
     $cards[] = [
-        'order_id'        => $r['order_id'],
+        'order_id'        => (int)$r['order_id'],
         'custom_order_id' => $r['custom_order_id'],
         'status'          => $r['status'],
         'tabKey'          => $tabKey,
@@ -132,14 +150,34 @@ foreach ($rows as $r) {
   <div class="max-w-4xl mx-auto px-4 py-8">
     <div class="flex items-center mb-6">
       <a href="profile.php" class="flex items-center text-emerald-600 hover:text-emerald-800">
-        <i class="fas fa-arrow-left mr-2"></i> Back
+        <i class="fas fa-arrow-left mr-2"></i>
       </a>
       <h1 class="text-2xl font-bold text-slate-900 ml-4">My Orders</h1>
     </div>
 
+    <!-- Flash messages -->
+    <?php if ($msg = get_flash('success')): ?>
+      <div class="mb-4 p-4 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <?= htmlspecialchars($msg) ?>
+      </div>
+    <?php endif; ?>
+    <?php if ($msg = get_flash('error')): ?>
+      <div class="mb-4 p-4 rounded-lg bg-red-50 text-red-700 border border-red-200">
+        <?= htmlspecialchars($msg) ?>
+      </div>
+    <?php endif; ?>
+
     <div class="bg-white rounded-xl shadow-sm border p-3 flex gap-2 overflow-x-auto">
       <?php
-        $tabLabels = ['all'=>'All','to_pay'=>'To Pay','to_ship'=>'To Ship','completed'=>'Completed','cancelled'=>'Cancelled','return'=>'Return'];
+        $tabLabels = [
+          'all'        => 'All',
+          'to_pay'     => 'To Pay',
+          'to_ship'    => 'To Ship',
+          'to_receive' => 'To Receive',
+          'completed'  => 'Completed',
+          'cancelled'  => 'Cancelled',
+          'return'     => 'Return'
+        ];
         foreach ($tabLabels as $key=>$label): ?>
         <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 whitespace-nowrap"
                 data-tab="<?= htmlspecialchars($key) ?>">
@@ -164,6 +202,7 @@ foreach ($rows as $r) {
             <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
               <img src="<?= htmlspecialchars($c['product_image']) ?>" alt="<?= htmlspecialchars($c['product_name']) ?>" class="w-full h-full object-cover">
             </div>
+
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-2">
                 <div class="min-w-0">
@@ -172,16 +211,15 @@ foreach ($rows as $r) {
                     <?= htmlspecialchars($c['product_name']) ?>
                   </a>
                   <p class="text-sm text-slate-500 mt-0.5 line-clamp-1"><?= htmlspecialchars($c['product_desc']) ?></p>
+                  <!-- Keep ONLY the date (removed Order: ... and Qty) -->
                   <div class="mt-2 text-xs text-slate-500">
-                    <span>Order: <span class="font-medium text-slate-700"><?= htmlspecialchars($c['custom_order_id']) ?></span></span>
-                    <span class="mx-2">•</span>
                     <span><?= date("M d, Y", strtotime($c['created_at'])) ?></span>
-                    <?php if ($c['qty']>1): ?><span class="mx-2">•</span><span>Qty: <?= (int)$c['qty'] ?></span><?php endif; ?>
                   </div>
                 </div>
                 <span class="px-3 py-1 rounded-full text-xs font-semibold <?= $pillClass ?> whitespace-nowrap"><?= htmlspecialchars($pillText) ?></span>
               </div>
             </div>
+
             <div class="text-right">
               <div class="text-emerald-600 font-bold">₱<?= number_format($c['line_total'], 2) ?></div>
               <a href="order_details.php?order_id=<?= urlencode($c['custom_order_id']) ?>" class="text-emerald-600 text-sm hover:underline">View Details</a>
@@ -195,6 +233,7 @@ foreach ($rows as $r) {
   <script>
     const tabs=[...document.querySelectorAll('.tab-btn')];
     const cards=[...document.querySelectorAll('.order-card')];
+
     function setActiveTab(key){
       tabs.forEach(t=>t.classList.toggle('tab-active',t.dataset.tab===key));
       cards.forEach(c=>{
@@ -203,7 +242,9 @@ foreach ($rows as $r) {
       });
       localStorage.setItem('orders_active_tab',key);
     }
+
     tabs.forEach(btn=>btn.addEventListener('click',()=>setActiveTab(btn.dataset.tab)));
+
     const saved=localStorage.getItem('orders_active_tab')||'all';
     setActiveTab(tabs.find(t=>t.dataset.tab===saved)?saved:'all');
   </script>
