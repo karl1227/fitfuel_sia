@@ -1,12 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
+require_once 'customer_auth_check.php';
 require_once 'config/database.php';
-
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit();
-}
 $user_id = (int)$_SESSION['user_id'];
 
 $cart_items = [];

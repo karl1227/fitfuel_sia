@@ -1,8 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
+require_once 'customer_auth_check.php';
 require_once 'config/database.php';
-
-if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit(); }
 $user_id = (int) $_SESSION['user_id'];
 
 function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }

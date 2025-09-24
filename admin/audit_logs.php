@@ -14,7 +14,7 @@ $filters = [
     'user_id' => $_GET['user_id'] ?? '',
     'action_type' => $_GET['action_type'] ?? '',
     'module' => $_GET['module'] ?? '',
-    'status' => $_GET['status'] ?? '',
+    'severity' => $_GET['severity'] ?? '',
     'date_from' => $_GET['date_from'] ?? '',
     'date_to' => $_GET['date_to'] ?? '',
     'search' => $_GET['search'] ?? ''
@@ -52,9 +52,9 @@ if (!empty($filters)) {
         $whereConditions[] = "module = ?";
         $countParams[] = $filters['module'];
     }
-    if (!empty($filters['status'])) {
-        $whereConditions[] = "status = ?";
-        $countParams[] = $filters['status'];
+    if (!empty($filters['severity'])) {
+        $whereConditions[] = "severity = ?";
+        $countParams[] = $filters['severity'];
     }
     if (!empty($filters['date_from'])) {
         $whereConditions[] = "created_at >= ?";
@@ -97,13 +97,14 @@ $actionTypes = [
 ];
 
 $modules = ['authentication', 'users', 'products', 'inventory', 'orders', 'payments', 'promo_codes', 'categories', 'system', 'admin', 'data_management'];
-$statuses = ['success', 'failed', 'warning'];
+$severities = ['low', 'medium', 'high', 'critical'];
 
-function getStatusBadgeClass($status) {
-    switch($status) {
-        case 'success': return 'bg-green-100 text-green-800 border-green-200';
-        case 'failed': return 'bg-red-100 text-red-800 border-red-200';
-        case 'warning': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+function getSeverityBadgeClass($severity) {
+    switch($severity) {
+        case 'critical': return 'bg-red-100 text-red-800 border-red-200';
+        case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
+        case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        case 'low': return 'bg-green-100 text-green-800 border-green-200';
         default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
 }
@@ -438,12 +439,12 @@ function getActionTypeIcon($actionType) {
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                            <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">All Statuses</option>
-                                <?php foreach ($statuses as $status): ?>
-                                    <option value="<?php echo $status; ?>" <?php echo ($filters['status'] ?? '') == $status ? 'selected' : ''; ?>>
-                                        <?php echo ucfirst($status); ?>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Severity</label>
+                            <select name="severity" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">All Severities</option>
+                                <?php foreach ($severities as $severity): ?>
+                                    <option value="<?php echo $severity; ?>" <?php echo ($filters['severity'] ?? '') == $severity ? 'selected' : ''; ?>>
+                                        <?php echo ucfirst($severity); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -505,7 +506,7 @@ function getActionTypeIcon($actionType) {
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Module</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Severity</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -545,8 +546,8 @@ function getActionTypeIcon($actionType) {
                                         <?php echo htmlspecialchars($log['description']); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border <?php echo getStatusBadgeClass($log['status']); ?>">
-                                            <?php echo ucfirst($log['status']); ?>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border <?php echo getSeverityBadgeClass($log['severity']); ?>">
+                                            <?php echo ucfirst($log['severity']); ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

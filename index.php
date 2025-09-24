@@ -1,6 +1,13 @@
 <?php
 // ---- top: session + (optional) cart count ----
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+// Check if admin is trying to access customer homepage
+if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'manager', 'staff'])) {
+    header('Location: admin/dashboard.php');
+    exit();
+}
+
 $logged_in = isset($_SESSION['user_id']);
 $user_id = $logged_in ? (int)$_SESSION['user_id'] : 0;
 
