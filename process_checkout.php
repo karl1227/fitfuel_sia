@@ -155,10 +155,13 @@ try {
     $shipping_address_text = json_encode([
         'full_name' => $shipping_address['full_name'],
         'phone' => $shipping_address['phone'],
-        'address' => $shipping_address['address_line1'],
-        'city' => $shipping_address['city'],
-        'state' => $shipping_address['state'],
-        'postal_code' => $shipping_address['postal_code']
+        'address_line1' => $shipping_address['address_line1'],
+        'address_line2' => $shipping_address['address_line2'] ?? '',
+        'address_line3' => $shipping_address['address_line3'] ?? '',
+        'city' => $shipping_address['city_muni_name'] ?? $shipping_address['city'] ?? '',
+        'state' => $shipping_address['province_name'] ?? $shipping_address['state'] ?? '',
+        'postal_code' => $shipping_address['postal_code'],
+        'country' => $shipping_address['country'] ?? 'Philippines'
     ]);
     
     $order_stmt = $pdo->prepare($order_sql);
@@ -230,15 +233,50 @@ try {
     
     // Handle payment method
     if ($payment_method === 'paypal') {
-        // For PayPal integration, you would typically redirect to PayPal
-        // For now, we'll just return success with a PayPal URL placeholder
-        echo json_encode([
-            'success' => true, 
-            'message' => 'Order created successfully',
-            'order_id' => $order_id,
-            'custom_order_id' => $custom_order_id,
-            'paypal_url' => 'https://paypal.com/checkout?order_id=' . $order_id
-        ]);
+        try {
+            // Include PayPal service
+            require_once 'config/paypal_service.php';
+            
+            // Create PayPal order
+            $paypalService = new PayPalService();
+            $paypalOrder = $paypalService->createOrder([
+                'order_id' => $order_id,
+                'total_amount' => $total_amount,
+                'subtotal' => $subtotal,
+                'shipping_fee' => $shipping_fee,
+                'discount_amount' => $discount_amount,
+                'items' => $cart_items,
+                'shipping_address' => $shipping_address
+            ]);
+            
+            // Store PayPal order ID in database
+            $paypalStmt = $pdo->prepare("UPDATE orders SET payment_reference = ? WHERE order_id = ?");
+            $paypalStmt->execute([$paypalOrder['id'], $order_id]);
+            
+            // Return PayPal approval URL
+            $approvalUrl = '';
+            foreach ($paypalOrder['links'] as $link) {
+                if ($link['rel'] === 'approve') {
+                    $approvalUrl = $link['href'];
+                    break;
+                }
+            }
+            
+            echo json_encode([
+                'success' => true, 
+                'message' => 'PayPal order created successfully',
+                'order_id' => $order_id,
+                'custom_order_id' => $custom_order_id,
+                'paypal_url' => $approvalUrl
+            ]);
+            
+        } catch (Exception $e) {
+            error_log("PayPal error: " . $e->getMessage());
+            echo json_encode([
+                'success' => false, 
+                'message' => 'PayPal payment failed: ' . $e->getMessage()
+            ]);
+        }
     } else {
         // Cash on Delivery - order is created and pending
         echo json_encode([

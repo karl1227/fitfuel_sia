@@ -1,6 +1,4 @@
 
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap');
-        
         :root {
             --primary: #059669;
             --secondary: #10b981;
@@ -10,8 +8,27 @@
             --border: #e5e7eb;
         }
         
-        .font-heading { font-family: 'Space Grotesk', sans-serif; }
-        .font-body { font-family: 'DM Sans', sans-serif; }
+        /* Font families with proper fallbacks */
+        .font-heading { 
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+        }
+        .font-body { 
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+        }
+        
+        /* Global font fallback to prevent Times New Roman */
+        body, html {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* Ensure all text elements use proper fonts */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        p, span, div, a, button, input, textarea, select {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
         
         .carousel-container {
             position: relative;

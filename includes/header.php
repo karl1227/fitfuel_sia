@@ -8,6 +8,10 @@
 	<link rel="icon" href="/img/LOGO-Fitfuel.png" type="image/png">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<!-- Google Fonts - Load before CSS for better performance -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="font-body bg-white text-slate-600">

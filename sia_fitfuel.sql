@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2025 at 09:41 PM
+-- Generation Time: Sep 25, 2025 at 06:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,7 +55,10 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (3, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-09-24 19:38:51'),
 (4, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-09-24 19:39:07'),
 (5, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-24 19:39:12'),
-(6, 14, 'karlblockstock', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-09-24 19:39:39');
+(6, 14, 'karlblockstock', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-09-24 19:39:39'),
+(7, 15, 'karlblockstock1', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 15, 'user', 'low', 'success', '2025-09-25 04:02:23'),
+(8, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-25 04:02:27'),
+(9, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-09-25 04:03:29');
 
 -- --------------------------------------------------------
 
@@ -106,10 +109,6 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (8, 6, 144, 3, '2025-09-10 14:56:44'),
 (85, 6, 161, 2, '2025-09-10 19:46:42'),
 (86, 7, 161, 3, '2025-09-10 19:56:09'),
-(92, 15, 143, 4, '2025-09-21 16:04:25'),
-(93, 15, 144, 1, '2025-09-21 16:04:41'),
-(94, 15, 146, 1, '2025-09-21 16:04:42'),
-(95, 15, 147, 1, '2025-09-21 16:04:43'),
 (118, 23, 143, 2, '2025-09-24 07:37:19'),
 (119, 23, 161, 2, '2025-09-24 07:37:22'),
 (120, 23, 158, 1, '2025-09-24 07:37:25'),
@@ -208,7 +207,11 @@ INSERT INTO `inventory` (`inventory_id`, `product_id`, `change_type`, `quantity`
 (10, 166, 'adjustment', 20, NULL, 4, '2025-09-08 11:30:56'),
 (11, 143, 'stock_out', 8, 3, 4, '2025-09-10 19:29:26'),
 (12, 165, 'adjustment', 10, NULL, 4, '2025-09-24 17:46:06'),
-(13, 154, 'adjustment', 30, NULL, 4, '2025-09-24 17:46:24');
+(13, 154, 'adjustment', 30, NULL, 4, '2025-09-24 17:46:24'),
+(14, 146, 'stock_out', 1, 21, 15, '2025-09-25 03:57:15'),
+(15, 147, 'stock_out', 1, 21, 15, '2025-09-25 03:57:15'),
+(16, 144, 'stock_out', 1, 22, 15, '2025-09-25 04:00:07'),
+(17, 143, 'stock_out', 4, 23, 15, '2025-09-25 04:01:38');
 
 -- --------------------------------------------------------
 
@@ -223,6 +226,7 @@ CREATE TABLE `orders` (
   `status` enum('pending','processing','shipped','delivered','cancelled','returned','refunded') NOT NULL DEFAULT 'pending',
   `payment_method` varchar(50) DEFAULT NULL,
   `payment_status` enum('pending','paid','refunded','failed') NOT NULL DEFAULT 'pending',
+  `payment_reference` varchar(255) DEFAULT NULL,
   `shipping_address` text DEFAULT NULL,
   `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
   `estimated_delivery_date` date DEFAULT NULL,
@@ -237,15 +241,18 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payment_method`, `payment_status`, `shipping_address`, `total_amount`, `estimated_delivery_date`, `return_reason`, `refund_amount`, `stock_deducted`, `created_at`, `updated_at`) VALUES
-(12, 'FF-20250910-SD5JR', 8, 'pending', 'cod', 'pending', '{\"full_name\":\"Karl Blackstack\",\"phone\":\"09765123456\",\"address\":\"Testing St. Brgy Test Angono, Rizal\",\"city\":\"Angono\",\"state\":\"South Luzon\",\"postal_code\":\"1930\"}', 2050.00, '2025-09-14', NULL, NULL, 0, '2025-09-10 20:05:43', '2025-09-10 20:05:43'),
-(13, 'FF-20250921-IPUQ6', 14, 'pending', 'cod', 'pending', '{\"full_name\":\"Karl Test\",\"phone\":\"09765700300\",\"address\":\"R. Testing St.\",\"city\":\"Antipolo\",\"state\":\"South Luzon\",\"postal_code\":\"1940\"}', 6680.00, '2025-09-25', NULL, NULL, 0, '2025-09-21 16:12:06', '2025-09-22 14:10:53'),
-(14, 'FF-20250923-HR4JB', 16, 'pending', 'cod', 'pending', '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 Bulubok\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1740.00, '2025-09-26', NULL, NULL, 0, '2025-09-23 10:55:07', '2025-09-23 10:55:07'),
-(16, 'FF-20250923-HCTQN', 17, 'pending', 'cod', 'pending', '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:51:24', '2025-09-23 16:51:24'),
-(17, 'FF-20250923-9VBF9', 17, 'pending', 'cod', 'pending', '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2390.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:52:08', '2025-09-23 16:52:08'),
-(18, 'FF-20250923-4ICC6', 17, 'pending', 'cod', 'pending', '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:53:20', '2025-09-23 16:53:20'),
-(19, 'FF-20250923-QM7MC', 17, 'pending', 'paypal', 'pending', '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:05', '2025-09-23 18:25:05'),
-(20, 'FF-20250923-OFCAR', 17, 'pending', 'cod', 'pending', '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1200.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:36', '2025-09-23 18:25:36');
+INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payment_method`, `payment_status`, `payment_reference`, `shipping_address`, `total_amount`, `estimated_delivery_date`, `return_reason`, `refund_amount`, `stock_deducted`, `created_at`, `updated_at`) VALUES
+(12, 'FF-20250910-SD5JR', 8, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Karl Blackstack\",\"phone\":\"09765123456\",\"address\":\"Testing St. Brgy Test Angono, Rizal\",\"city\":\"Angono\",\"state\":\"South Luzon\",\"postal_code\":\"1930\"}', 2050.00, '2025-09-14', NULL, NULL, 0, '2025-09-10 20:05:43', '2025-09-10 20:05:43'),
+(13, 'FF-20250921-IPUQ6', 14, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Karl Test\",\"phone\":\"09765700300\",\"address\":\"R. Testing St.\",\"city\":\"Antipolo\",\"state\":\"South Luzon\",\"postal_code\":\"1940\"}', 6680.00, '2025-09-25', NULL, NULL, 0, '2025-09-21 16:12:06', '2025-09-22 14:10:53'),
+(14, 'FF-20250923-HR4JB', 16, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 Bulubok\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1740.00, '2025-09-26', NULL, NULL, 0, '2025-09-23 10:55:07', '2025-09-23 10:55:07'),
+(16, 'FF-20250923-HCTQN', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:51:24', '2025-09-23 16:51:24'),
+(17, 'FF-20250923-9VBF9', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2390.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:52:08', '2025-09-23 16:52:08'),
+(18, 'FF-20250923-4ICC6', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:53:20', '2025-09-23 16:53:20'),
+(19, 'FF-20250923-QM7MC', 17, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:05', '2025-09-23 18:25:05'),
+(20, 'FF-20250923-OFCAR', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1200.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:36', '2025-09-23 18:25:36'),
+(21, 'FF-20250925-T7KZK', 15, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address\":\"Testing St. Hehe\",\"city\":\"City of Manila\",\"state\":\"NCR\",\"postal_code\":\"1012\"}', 1040.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 03:57:15', '2025-09-25 03:57:15'),
+(22, 'FF-20250925-WCLQR', 15, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 750.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:00:07', '2025-09-25 04:00:07'),
+(23, 'FF-20250925-A0EVR', 15, 'pending', 'paypal', 'pending', '5JG15145VU699244U', '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 4060.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:01:38', '2025-09-25 04:01:49');
 
 -- --------------------------------------------------------
 
@@ -281,7 +288,11 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`
 (31, 18, 161, 1, 2800.00),
 (32, 19, 161, 1, 2800.00),
 (33, 20, 144, 1, 650.00),
-(34, 20, 149, 1, 450.00);
+(34, 20, 149, 1, 450.00),
+(35, 21, 146, 1, 190.00),
+(36, 21, 147, 1, 750.00),
+(37, 22, 144, 1, 650.00),
+(38, 23, 143, 4, 990.00);
 
 -- --------------------------------------------------------
 
@@ -340,11 +351,11 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category_id`, `subcategory_id`, `images`, `stock_quantity`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`) VALUES
-(143, 'Weightlifting Gloves', 'Padded gloves for better grip and hand protection during heavy lifts.', 990.00, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 25, 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-09-23 16:52:08', 10),
-(144, 'Wrist Straps', 'Durable straps to support your wrists during intense workouts.', 650.00, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 27, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-23 18:25:36', 10),
+(143, 'Weightlifting Gloves', 'Padded gloves for better grip and hand protection during heavy lifts.', 990.00, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 21, 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-09-25 04:01:38', 10),
+(144, 'Wrist Straps', 'Durable straps to support your wrists during intense workouts.', 650.00, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 26, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-25 04:00:07', 10),
 (145, 'Weightlifting Belt', 'Provides back support for heavy lifting and powerlifting.', 1200.00, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 23, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
-(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 96, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
-(147, 'Barbell Pads', 'Protect your joints during intense workouts with padded barbell support.', 750.00, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 44, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
+(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 95, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-25 03:57:15', 10),
+(147, 'Barbell Pads', 'Protect your joints during intense workouts with padded barbell support.', 750.00, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 43, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-25 03:57:15', 10),
 (148, 'Massage Gun', 'Deep tissue massage tool for faster muscle recovery.', 3500.00, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 18, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:47:24', 10),
 (149, 'Gel Pack', 'Hot and cold gel pack for muscle relief.', 450.00, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 47, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-23 18:25:36', 10),
 (150, 'Compression Sleeves', 'Enhances blood flow and reduces soreness.', 700.00, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:26:43', 10),
@@ -461,7 +472,10 @@ INSERT INTO `shipping_addresses` (`address_id`, `user_id`, `full_name`, `phone`,
 (6, 17, 'Michelle Angeles', '09123456789', 'Sample Street 123', 'Unit 2B', 'Landmark XYZ', 'Quezon City', 'National Capital Region', '1100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 0, '2025-09-24 09:20:07', '2025-09-24 09:20:14'),
 (11, 14, 'Karl Test', '09765700300', 'R. Testing St.', NULL, NULL, 'Angono', 'CALABARZON', '1940', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-24 17:33:45', '2025-09-24 17:35:33'),
 (12, 14, 'Emman Cutie', '09123456789', 'R. Tolentino', NULL, NULL, 'Angono', 'CALABARZON', '1940', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 1, '2025-09-24 17:35:30', '2025-09-24 17:44:03'),
-(13, 14, 'Karl Cutie', '09123456789', 'R. Tolentino St', NULL, NULL, 'Angono', 'CALABARZON', '1930', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-24 17:42:10', '2025-09-24 17:44:03');
+(13, 14, 'Karl Cutie', '09123456789', 'R. Tolentino St', NULL, NULL, 'Angono', 'CALABARZON', '1930', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-24 17:42:10', '2025-09-24 17:44:03'),
+(14, 15, 'Karl Blockstock', '09765725123', 'R. Tolentino St. Brgy San Isidro', NULL, NULL, 'Angono', 'CALABARZON', '1930', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-25 03:53:20', '2025-09-25 03:53:20'),
+(15, 15, 'Emman Cutie', '09123456789', 'Testing St. Hahahaha', NULL, NULL, 'City of Legazpi', 'Bicol Region', '0122', '050506033', 'Bgy. 34 - Oro Site-Magallanes St. (Pob.)', '050506000', 'City of Legazpi', '050500000', 'Albay', '050000000', 'Bicol Region', 'Philippines', 0, '2025-09-25 03:55:37', '2025-09-25 03:57:01'),
+(16, 15, 'Nina Landicho', '09123456789', 'Testing St. Hehe', NULL, NULL, 'City of Manila', 'NCR', '1012', '133901106', 'Barangay 106', '133900000', 'City of Manila', '', 'Not applicable', '130000000', 'NCR', 'Philippines', 1, '2025-09-25 03:56:45', '2025-09-25 03:57:01');
 
 -- --------------------------------------------------------
 
@@ -552,7 +566,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`) VALUES
 (1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL),
 (2, 'customer', 'customer@gmail.com', NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-09-24 19:35:09', '2025-09-24 19:35:09', NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-09-25 04:02:27', '2025-09-25 04:02:27', NULL, NULL, NULL),
 (8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL),
 (9, 'emmanadmin', 'emmanadmin@gmail.com', NULL, NULL, '$2y$10$FueQzeltWy15uvefERs8Au75iBgbuNAYVTsqxrJE0eH.GV2I6yRSq', NULL, 'admin', 'active', '2025-09-09 04:07:49', '2025-09-10 09:54:31', NULL, NULL, NULL, NULL),
 (10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL),
@@ -560,7 +574,7 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `
 (12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL),
 (13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-09-10 15:05:56', NULL, NULL, NULL, NULL),
 (14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-09-24 19:39:25', '2025-09-24 19:39:25', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg'),
-(15, 'karlblockstock1', 'karlblockstock27@gmail.com', NULL, NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-09-21 16:04:20', NULL, NULL, NULL, NULL),
+(15, 'karlblockstock1', 'karlblockstock27@gmail.com', NULL, NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-09-25 03:52:17', '2025-09-25 03:52:17', NULL, NULL, NULL),
 (16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL),
 (17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', '$2y$10$t2.GNMloV5cZ9NQIiQfAJ.KMMBrTNcr.3dxPl9WwOnJ5Aqi9BaNqG', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-24 09:02:09', '2025-09-24 08:47:32', 'Michelle', 'Angeles', 'uploads/profile/u17_1758702327_45104a57.jpg');
 
@@ -711,7 +725,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -741,19 +755,19 @@ ALTER TABLE `contents`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `order_promo_codes`
@@ -783,7 +797,7 @@ ALTER TABLE `promo_codes`
 -- AUTO_INCREMENT for table `shipping_addresses`
 --
 ALTER TABLE `shipping_addresses`
-  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `shipping_fees`
