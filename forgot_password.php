@@ -1,4 +1,6 @@
-<?php
+<?php 
+ 
+
 require_once 'config/database.php';
 require_once 'config/audit_logger.php';
 
