@@ -321,12 +321,12 @@ $orders = $stm->fetchAll();
 						<span>Users</span>
 					</a>
 				</li>
-				<li>
-					<a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-						<i class="fas fa-chart-line text-gray-600"></i>
-						<span>Analytics</span>
-					</a>
-				</li>
+                <li>
+                    <a href="analytics.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
+                        <i class="fas fa-chart-line text-gray-600"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
 				<li>
 					<a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
 						<i class="fas fa-file-alt text-gray-600"></i>
