@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 25, 2025 at 06:07 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Sep 30, 2025 at 01:05 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,7 +58,69 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (6, 14, 'karlblockstock', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-09-24 19:39:39'),
 (7, 15, 'karlblockstock1', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 15, 'user', 'low', 'success', '2025-09-25 04:02:23'),
 (8, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-25 04:02:27'),
-(9, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-09-25 04:03:29');
+(9, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-09-25 04:03:29'),
+(10, 17, 'mich0303', 'profile_update', 'users', 'User profile updated', '{\"email\":\"qmasamar@tip.edu.ph\",\"phone\":\"09123456789\",\"date_of_birth\":\"2003-12-27\",\"first_name\":\"Michelle\",\"last_name\":\"Angeles\",\"profile_picture\":\"uploads\\/profile\\/u17_1758702327_45104a57.jpg\"}', '{\"email\":\"qmasamar@tip.edu.ph\",\"phone\":\"09123456789\",\"date_of_birth\":\"2003-12-27\",\"first_name\":\"Michelle\",\"last_name\":\"Angeles\",\"profile_picture\":\"uploads\\/profile\\/u17_1758814312_435ed3e9.png\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'medium', 'success', '2025-09-25 15:31:52'),
+(11, 17, 'mich0303', 'profile_update', 'users', 'User profile updated', '{\"email\":\"qmasamar@tip.edu.ph\",\"phone\":\"09123456789\",\"date_of_birth\":\"2003-12-27\",\"first_name\":\"Michelle\",\"last_name\":\"Angeles\",\"profile_picture\":\"uploads\\/profile\\/u17_1758814312_435ed3e9.png\"}', '{\"email\":\"qmasamar@tip.edu.ph\",\"phone\":\"09123456789\",\"date_of_birth\":\"2003-12-27\",\"first_name\":\"Michelle\",\"last_name\":\"Angeles\",\"profile_picture\":\"uploads\\/profile\\/u17_1758814465_7d18d537.jpg\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'medium', 'success', '2025-09-25 15:34:25'),
+(12, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-25 15:52:52'),
+(13, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-25 15:52:54'),
+(14, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-26 19:13:42'),
+(15, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-26 19:14:51'),
+(16, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-26 19:14:53'),
+(17, 17, 'mich0303', 'profile_update', 'users', 'User profile updated', '{\"email\":\"qmasamar@tip.edu.ph\",\"phone\":\"09123456789\",\"date_of_birth\":\"2003-12-27\",\"first_name\":\"Michelle\",\"last_name\":\"Angeles\",\"profile_picture\":\"uploads\\/profile\\/u17_1758814465_7d18d537.jpg\"}', '{\"email\":\"qmasamar@tip.edu.ph\",\"phone\":\"09123456789\",\"date_of_birth\":\"2003-12-27\",\"first_name\":\"Michelle\",\"last_name\":\"Angeles\",\"profile_picture\":\"uploads\\/profile\\/u17_1758814465_7d18d537.jpg\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'medium', 'success', '2025-09-26 21:27:16'),
+(18, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-26 22:30:13'),
+(19, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-26 22:30:15'),
+(20, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-27 17:17:47'),
+(21, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-27 17:17:52'),
+(22, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-27 17:18:05'),
+(23, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-27 17:18:06'),
+(24, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-27 17:18:51'),
+(25, 17, 'mich0303', 'order_create', 'profile_update', 'User updated profile.', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, NULL, 'low', 'success', '2025-09-27 18:23:58'),
+(26, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 05:48:21'),
+(27, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 05:48:25'),
+(28, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 05:49:03'),
+(29, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 05:49:12'),
+(30, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 05:49:56'),
+(31, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 05:50:01'),
+(32, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 17:29:08'),
+(33, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 17:29:17'),
+(34, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-09-28 17:31:14'),
+(35, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 17:33:20'),
+(36, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-28 17:33:26'),
+(37, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-28 17:33:35'),
+(38, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-28 17:33:42'),
+(39, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 17:33:48'),
+(40, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 19:01:03'),
+(41, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:01:09'),
+(42, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:03:18'),
+(43, 4, 'admin', 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-28 19:03:34'),
+(44, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 19:03:39'),
+(45, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 19:03:47'),
+(46, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"mich_admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-09-28 19:03:53'),
+(47, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:03:58'),
+(48, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:11:27'),
+(49, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-09-28 19:18:29'),
+(50, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:25:39'),
+(51, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:25:42'),
+(52, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:25:47'),
+(53, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 19:25:58'),
+(54, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 19:31:52'),
+(55, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:31:57'),
+(56, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 100 (Stock increase)', '{\"stock\":0}', '{\"stock\":100}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 167, 'product', 'medium', 'success', '2025-09-28 19:35:46'),
+(57, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:56:00'),
+(58, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 19:56:04'),
+(59, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-28 19:57:27'),
+(60, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-28 19:57:33'),
+(61, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-30 10:51:21'),
+(62, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-30 10:51:27'),
+(63, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-30 10:53:41'),
+(64, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-30 10:53:50'),
+(65, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-30 10:54:27'),
+(66, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-30 10:54:32'),
+(67, 17, 'mich0303', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-30 10:55:25'),
+(68, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-30 10:55:30'),
+(69, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 93 → 43 (Stock decrease)', '{\"stock\":93}', '{\"stock\":43}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-09-30 10:55:57'),
+(70, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-30 10:56:03'),
+(71, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-30 10:56:09');
 
 -- --------------------------------------------------------
 
@@ -109,13 +171,12 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (8, 6, 144, 3, '2025-09-10 14:56:44'),
 (85, 6, 161, 2, '2025-09-10 19:46:42'),
 (86, 7, 161, 3, '2025-09-10 19:56:09'),
-(118, 23, 143, 2, '2025-09-24 07:37:19'),
-(119, 23, 161, 2, '2025-09-24 07:37:22'),
 (120, 23, 158, 1, '2025-09-24 07:37:25'),
 (121, 23, 144, 1, '2025-09-24 08:28:11'),
 (122, 14, 161, 3, '2025-09-24 17:10:56'),
 (123, 14, 143, 1, '2025-09-24 19:33:56'),
-(124, 14, 145, 1, '2025-09-24 19:33:58');
+(124, 14, 145, 1, '2025-09-24 19:33:58'),
+(125, 23, 145, 1, '2025-09-27 19:01:11');
 
 -- --------------------------------------------------------
 
@@ -211,7 +272,11 @@ INSERT INTO `inventory` (`inventory_id`, `product_id`, `change_type`, `quantity`
 (14, 146, 'stock_out', 1, 21, 15, '2025-09-25 03:57:15'),
 (15, 147, 'stock_out', 1, 21, 15, '2025-09-25 03:57:15'),
 (16, 144, 'stock_out', 1, 22, 15, '2025-09-25 04:00:07'),
-(17, 143, 'stock_out', 4, 23, 15, '2025-09-25 04:01:38');
+(17, 143, 'stock_out', 4, 23, 15, '2025-09-25 04:01:38'),
+(18, 161, 'stock_out', 100, 24, 17, '2025-09-28 19:26:44'),
+(19, 167, 'adjustment', 100, NULL, 4, '2025-09-28 19:35:46'),
+(20, 143, 'stock_out', 7, 25, 17, '2025-09-30 10:53:31'),
+(21, 143, 'adjustment', 50, NULL, 4, '2025-09-30 10:55:57');
 
 -- --------------------------------------------------------
 
@@ -245,14 +310,16 @@ INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payme
 (12, 'FF-20250910-SD5JR', 8, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Karl Blackstack\",\"phone\":\"09765123456\",\"address\":\"Testing St. Brgy Test Angono, Rizal\",\"city\":\"Angono\",\"state\":\"South Luzon\",\"postal_code\":\"1930\"}', 2050.00, '2025-09-14', NULL, NULL, 0, '2025-09-10 20:05:43', '2025-09-10 20:05:43'),
 (13, 'FF-20250921-IPUQ6', 14, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Karl Test\",\"phone\":\"09765700300\",\"address\":\"R. Testing St.\",\"city\":\"Antipolo\",\"state\":\"South Luzon\",\"postal_code\":\"1940\"}', 6680.00, '2025-09-25', NULL, NULL, 0, '2025-09-21 16:12:06', '2025-09-22 14:10:53'),
 (14, 'FF-20250923-HR4JB', 16, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 Bulubok\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1740.00, '2025-09-26', NULL, NULL, 0, '2025-09-23 10:55:07', '2025-09-23 10:55:07'),
-(16, 'FF-20250923-HCTQN', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:51:24', '2025-09-23 16:51:24'),
-(17, 'FF-20250923-9VBF9', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2390.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:52:08', '2025-09-23 16:52:08'),
-(18, 'FF-20250923-4ICC6', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:53:20', '2025-09-23 16:53:20'),
-(19, 'FF-20250923-QM7MC', 17, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:05', '2025-09-23 18:25:05'),
-(20, 'FF-20250923-OFCAR', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1200.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:36', '2025-09-23 18:25:36'),
+(16, 'FF-20250923-HCTQN', 17, 'shipped', 'cod', 'paid', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:51:24', '2025-09-28 05:49:44'),
+(17, 'FF-20250923-9VBF9', 17, 'cancelled', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2390.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:52:08', '2025-09-28 05:47:27'),
+(18, 'FF-20250923-4ICC6', 17, 'cancelled', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:53:20', '2025-09-28 05:47:20'),
+(19, 'FF-20250923-QM7MC', 17, 'cancelled', 'paypal', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:05', '2025-09-25 15:41:55'),
+(20, 'FF-20250923-OFCAR', 17, 'cancelled', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1200.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:36', '2025-09-25 15:41:37'),
 (21, 'FF-20250925-T7KZK', 15, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address\":\"Testing St. Hehe\",\"city\":\"City of Manila\",\"state\":\"NCR\",\"postal_code\":\"1012\"}', 1040.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 03:57:15', '2025-09-25 03:57:15'),
 (22, 'FF-20250925-WCLQR', 15, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 750.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:00:07', '2025-09-25 04:00:07'),
-(23, 'FF-20250925-A0EVR', 15, 'pending', 'paypal', 'pending', '5JG15145VU699244U', '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 4060.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:01:38', '2025-09-25 04:01:49');
+(23, 'FF-20250925-A0EVR', 15, 'pending', 'paypal', 'pending', '5JG15145VU699244U', '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 4060.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:01:38', '2025-09-25 04:01:49'),
+(24, 'FF-20250928-U0SM3', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address_line1\":\"225 bulubok st.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"\",\"state\":\"\",\"postal_code\":\"1860\",\"country\":\"Philippines\"}', 280100.00, '2025-10-02', NULL, NULL, 1, '2025-09-28 19:26:44', '2025-09-28 19:26:44'),
+(25, 'FF-20250930-UJFM9', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address_line1\":\"225 bulubok st.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"\",\"state\":\"\",\"postal_code\":\"1860\",\"country\":\"Philippines\"}', 7030.00, '2025-10-03', NULL, NULL, 1, '2025-09-30 10:53:31', '2025-09-30 10:53:31');
 
 -- --------------------------------------------------------
 
@@ -292,7 +359,9 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`
 (35, 21, 146, 1, 190.00),
 (36, 21, 147, 1, 750.00),
 (37, 22, 144, 1, 650.00),
-(38, 23, 143, 4, 990.00);
+(38, 23, 143, 4, 990.00),
+(39, 24, 161, 100, 2800.00),
+(40, 25, 143, 7, 990.00);
 
 -- --------------------------------------------------------
 
@@ -333,10 +402,10 @@ CREATE TABLE `products` (
   `name` varchar(150) NOT NULL,
   `description` text DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
+  `stock` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `subcategory_id` bigint(20) UNSIGNED DEFAULT NULL,
   `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`images`)),
-  `stock_quantity` int(11) NOT NULL DEFAULT 0,
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `is_popular` tinyint(1) NOT NULL DEFAULT 0,
   `is_best_seller` tinyint(1) NOT NULL DEFAULT 0,
@@ -350,52 +419,52 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category_id`, `subcategory_id`, `images`, `stock_quantity`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`) VALUES
-(143, 'Weightlifting Gloves', 'Padded gloves for better grip and hand protection during heavy lifts.', 990.00, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 21, 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-09-25 04:01:38', 10),
-(144, 'Wrist Straps', 'Durable straps to support your wrists during intense workouts.', 650.00, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 26, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-25 04:00:07', 10),
-(145, 'Weightlifting Belt', 'Provides back support for heavy lifting and powerlifting.', 1200.00, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 23, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-21 16:12:06', 10),
-(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 95, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-25 03:57:15', 10),
-(147, 'Barbell Pads', 'Protect your joints during intense workouts with padded barbell support.', 750.00, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 43, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-25 03:57:15', 10),
-(148, 'Massage Gun', 'Deep tissue massage tool for faster muscle recovery.', 3500.00, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 18, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:47:24', 10),
-(149, 'Gel Pack', 'Hot and cold gel pack for muscle relief.', 450.00, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 47, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-23 18:25:36', 10),
-(150, 'Compression Sleeves', 'Enhances blood flow and reduces soreness.', 700.00, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:26:43', 10),
-(151, 'Stretching Strap', 'Assists in improving flexibility and stretching.', 400.00, 1, 12, NULL, 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(152, 'Resistance Band', 'Multi-purpose band for rehab and warm-up routines.', 300.00, 1, 12, NULL, 80, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(153, 'Shaker Bottle', 'Durable shaker for protein shakes and supplements.', 350.00, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 100, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:15', 10),
-(154, 'Duffle Bag', 'Spacious gym bag for gear and clothes.', 1500.00, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 10, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-24 17:46:24', 10),
-(155, 'Meal Prep Box', 'Keeps meals fresh and organized for fitness diets.', 800.00, 1, 13, '[\"uploads\\/products\\/68bf201c32d80_1757356060.jpg\"]', 50, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:40', 10),
-(156, 'Cooling Towel', 'Stay cool during intense workouts with this quick-dry towel.', 450.00, 1, 13, '[\"uploads\\/products\\/68bf20859727c_1757356165.jpg\"]', 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:29:25', 10),
-(157, 'Electrolyte Tablets', 'Replenishes lost minerals during heavy sweating.', 300.00, 1, 13, '[\"uploads\\/products\\/68bf207c0a68a_1757356156.jpg\"]', 70, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:29:16', 10),
-(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is ideal for strength, toning, and full-body workouts.', 3500.00, 2, 14, '[\"uploads\\/products\\/68bf202ba629f_1757356075.jpg\"]', 25, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:27:55', 10),
-(159, 'Kettlebell', 'Durable kettlebell for swings, squats, and functional training.', 1750.00, 2, 14, '[\"uploads\\/products\\/68bf20353a176_1757356085.jpg\"]', 30, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:05', 10),
-(160, 'Barbell', 'Olympic and standard barbells for heavy lifting.', 2200.00, 2, 14, '[\"uploads\\/products\\/68bf2047c35f2_1757356103.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:23', 10),
-(161, 'Weight Plates', 'Plates for Olympic and standard barbells.', 2800.00, 2, 14, '[\"uploads\\/products\\/68bf2055b3c7e_1757356117.jpg\"]', 27, 'active', 0, 1, 0, '2025-09-06 14:37:21', '2025-09-23 18:25:05', 10),
-(162, 'Medicine Ball', 'Perfect for strength and core training exercises.', 1200.00, 2, 14, '[\"uploads\\/products\\/68bf206938a61_1757356137.jpg\"]', 30, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:28:57', 10),
-(163, 'Jump Rope', 'Adjustable speed rope for cardio and endurance.', 400.00, 2, 15, '[\"uploads\\/products\\/68bf214535d73_1757356357.jpg\"]', 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:32:37', 10),
-(164, 'Parallette Bars', 'Perfect for calisthenics and bodyweight training.', 2200.00, 2, 15, '[\"uploads\\/products\\/68bf20ee48d21_1757356270.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:10', 10),
-(165, 'Dip Belts', 'Adds extra weight for dips and pull-ups.', 1500.00, 2, 15, '[\"uploads\\/products\\/68bf21a0ddab8_1757356448.jpg\"]', 10, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-24 17:46:06', 10),
-(166, 'Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:34', 10),
-(167, 'Gymnastic Rings', 'Adjustable rings for advanced bodyweight exercises.', 1800.00, 2, 15, '[\"uploads\\/products\\/68bf20ba61d06_1757356218.jpg\"]', 20, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:18', 10),
-(168, 'Foam Roller', 'Helps relieve muscle tension and improve mobility.', 900.00, 2, 16, '[\"uploads\\/products\\/68bf215a4ddd2_1757356378.jpg\"]', 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:32:58', 10),
-(169, 'Massage Stick', 'Portable tool for deep tissue massage.', 600.00, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 40, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:44', 10),
-(170, 'Mobility Ball', 'Small ball for targeted muscle release.', 300.00, 2, 16, '[\"uploads\\/products\\/68bf212524638_1757356325.jpg\"]', 69, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:36:30', 10),
-(171, 'Stretching Strap', 'Assists in deep stretches for flexibility.', 400.00, 2, 16, NULL, 50, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(172, 'Yoga Mat', 'Non-slip mat for yoga, pilates, and stretching.', 1200.00, 2, 16, '[\"uploads\\/products\\/68bf20d9d9219_1757356249.jpg\"]', 49, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-10 19:36:30', 10),
-(173, 'Whey Protein', 'High-quality whey protein for muscle recovery and growth.', 2200.00, 3, 17, NULL, 40, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(174, 'Casein Protein', 'Slow-digesting protein perfect for nighttime recovery.', 2300.00, 3, 17, NULL, 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(175, 'Plant-Based Protein', 'Vegan protein blend for clean nutrition.', 2400.00, 3, 17, NULL, 30, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(176, 'Isolate Whey', 'Ultra-pure whey isolate with fast absorption.', 2500.00, 3, 17, NULL, 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(177, 'Mass Gainer', 'High-calorie protein blend for bulking.', 2600.00, 3, 17, NULL, 25, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(178, 'Pre-workout Booster', 'Energy and focus enhancer for improved workout performance.', 1500.00, 3, 18, NULL, 50, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(179, 'Caffeine Booster', 'Fast-acting energy formula for intense training.', 1200.00, 3, 18, NULL, 45, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(180, 'Beta-Alanine Formula', 'Improves endurance and reduces fatigue.', 1300.00, 3, 18, NULL, 40, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(181, 'Nitric Oxide Booster', 'Enhances blood flow and pumps during workouts.', 1400.00, 3, 18, NULL, 35, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(182, 'Creatine Monohydrate', 'Boost strength and power during high-intensity workouts.', 1200.00, 3, 18, NULL, 45, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(183, 'Multivitamins', 'Daily vitamins to support overall health and wellness.', 800.00, 3, 19, NULL, 60, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(184, 'Vitamin D3', 'Supports bone and immune health.', 500.00, 3, 19, NULL, 70, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(185, 'Vitamin C', 'Boosts immunity and reduces fatigue.', 400.00, 3, 19, NULL, 80, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(186, 'Omega-3 Fish Oil', 'Supports heart and brain health.', 900.00, 3, 19, NULL, 55, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
-(187, 'B-Complex Vitamins', 'Helps energy production and nervous system health.', 650.00, 3, 19, NULL, 65, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10);
+INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `category_id`, `subcategory_id`, `images`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`) VALUES
+(143, 'Weightlifting Gloves', 'Padded gloves for better grip and hand protection during heavy lifts.', 990.00, 43, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-09-30 10:55:57', 10),
+(144, 'Wrist Straps', 'Durable straps to support your wrists during intense workouts.', 650.00, 100, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:44:51', 10),
+(145, 'Weightlifting Belt', 'Provides back support for heavy lifting and powerlifting.', 1200.00, 100, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:44:57', 10),
+(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 100, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:45:01', 10),
+(147, 'Barbell Pads', 'Protect your joints during intense workouts with padded barbell support.', 750.00, 100, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:13', 10),
+(148, 'Massage Gun', 'Deep tissue massage tool for faster muscle recovery.', 3500.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:17', 10),
+(149, 'Gel Pack', 'Hot and cold gel pack for muscle relief.', 450.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:25', 10),
+(150, 'Compression Sleeves', 'Enhances blood flow and reduces soreness.', 700.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:32', 10),
+(151, 'Stretching Strap', 'Assists in improving flexibility and stretching.', 400.00, 199, 1, 12, '[\"uploads\\/products\\/68d98e8b997ae_1759088267.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:37:47', 10),
+(152, 'Resistance Band', 'Multi-purpose band for rehab and warm-up routines.', 300.00, 100, 1, 12, '[\"uploads\\/products\\/68d98eed29421_1759088365.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:39:25', 10),
+(153, 'Shaker Bottle', 'Durable shaker for protein shakes and supplements.', 350.00, 100, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:44', 10),
+(154, 'Duffle Bag', 'Spacious gym bag for gear and clothes.', 1500.00, 100, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:47', 10),
+(155, 'Meal Prep Box', 'Keeps meals fresh and organized for fitness diets.', 800.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f0aa7b9a_1759088394.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:39:54', 10),
+(156, 'Cooling Towel', 'Stay cool during intense workouts with this quick-dry towel.', 450.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f3104011_1759088433.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:40:33', 10),
+(157, 'Electrolyte Tablets', 'Replenishes lost minerals during heavy sweating.', 300.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f49ec6c2_1759088457.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:40:57', 10),
+(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is ideal for strength, toning, and full-body workouts.', 3500.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f6e1bc23_1759088494.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:41:34', 10),
+(159, 'Kettlebell', 'Durable kettlebell for swings, squats, and functional training.', 1750.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f8d4b0b3_1759088525.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:42:05', 10),
+(160, 'Barbell', 'Olympic and standard barbells for heavy lifting.', 2200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fa68c938_1759088550.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:42:30', 10),
+(161, 'Weight Plates', 'Plates for Olympic and standard barbells.', 2800.00, 0, 2, 14, '[\"uploads\\/products\\/68d98d6c7d2ba_1759087980.png\"]', 'active', 0, 1, 0, '2025-09-06 14:37:21', '2025-09-28 19:33:00', 10),
+(162, 'Medicine Ball', 'Perfect for strength and core training exercises.', 1200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fbd84c72_1759088573.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:42:53', 10),
+(163, 'Jump Rope', 'Adjustable speed rope for cardio and endurance.', 400.00, 0, 2, 15, '[\"uploads\\/products\\/68d98fdbd6626_1759088603.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:43:23', 10),
+(164, 'Parallette Bars', 'Perfect for calisthenics and bodyweight training.', 2200.00, 0, 2, 15, '[\"uploads\\/products\\/68d98ffa13dda_1759088634.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:43:54', 10),
+(165, 'Dip Belts', 'Adds extra weight for dips and pull-ups.', 1500.00, 0, 2, 15, '[\"uploads\\/products\\/68d990133959e_1759088659.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:44:19', 10),
+(166, 'Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 0, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:34', 10),
+(167, 'Gymnastic Rings', 'Adjustable rings for advanced bodyweight exercises.', 1800.00, 100, 2, 15, '[\"uploads\\/products\\/68d99029daa51_1759088681.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:44:41', 10),
+(168, 'Foam Roller', 'Helps relieve muscle tension and improve mobility.', 900.00, 0, 2, 16, '[\"uploads\\/products\\/68d9904dd8a36_1759088717.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:45:17', 10),
+(169, 'Massage Stick', 'Portable tool for deep tissue massage.', 600.00, 0, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:44', 10),
+(170, 'Mobility Ball', 'Small ball for targeted muscle release.', 300.00, 0, 2, 16, '[\"uploads\\/products\\/68d990723b22e_1759088754.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:45:54', 10),
+(171, 'Stretching Strap', 'Assists in deep stretches for flexibility.', 400.00, 0, 2, 16, '[\"uploads\\/products\\/68d990da48353_1759088858.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:47:38', 10),
+(172, 'Yoga Mat', 'Non-slip mat for yoga, pilates, and stretching.', 1200.00, 0, 2, 16, '[\"uploads\\/products\\/68d990f0cb86c_1759088880.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:48:00', 10),
+(173, 'Whey Protein', 'High-quality whey protein for muscle recovery and growth.', 2200.00, 0, 3, 17, '[\"uploads\\/products\\/68d99115e0d6c_1759088917.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:48:37', 10),
+(174, 'Casein Protein', 'Slow-digesting protein perfect for nighttime recovery.', 2300.00, 0, 3, 17, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(175, 'Plant-Based Protein', 'Vegan protein blend for clean nutrition.', 2400.00, 0, 3, 17, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(176, 'Isolate Whey', 'Ultra-pure whey isolate with fast absorption.', 2500.00, 0, 3, 17, '[\"uploads\\/products\\/68d991d7e13a9_1759089111.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:51:51', 10),
+(177, 'Mass Gainer', 'High-calorie protein blend for bulking.', 2600.00, 0, 3, 17, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(178, 'Pre-workout Booster', 'Energy and focus enhancer for improved workout performance.', 1500.00, 0, 3, 18, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(179, 'Caffeine Booster', 'Fast-acting energy formula for intense training.', 1200.00, 0, 3, 18, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(180, 'Beta-Alanine Formula', 'Improves endurance and reduces fatigue.', 1300.00, 0, 3, 18, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(181, 'Nitric Oxide Booster', 'Enhances blood flow and pumps during workouts.', 1400.00, 0, 3, 18, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(182, 'Creatine Monohydrate', 'Boost strength and power during high-intensity workouts.', 1200.00, 0, 3, 18, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(183, 'Multivitamins', 'Daily vitamins to support overall health and wellness.', 800.00, 0, 3, 19, '[\"uploads\\/products\\/68d9927dc4ea2_1759089277.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:54:37', 10),
+(184, 'Vitamin D3', 'Supports bone and immune health.', 500.00, 0, 3, 19, '[\"uploads\\/products\\/68d992980d0d0_1759089304.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:55:04', 10),
+(185, 'Vitamin C', 'Boosts immunity and reduces fatigue.', 400.00, 0, 3, 19, '[\"uploads\\/products\\/68d9920c15598_1759089164.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:52:44', 10),
+(186, 'Omega-3 Fish Oil', 'Supports heart and brain health.', 900.00, 0, 3, 19, NULL, 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-06 14:37:21', 10),
+(187, 'B-Complex Vitamins', 'Helps energy production and nervous system health.', 650.00, 0, 3, 19, '[\"uploads\\/products\\/68d9924560834_1759089221.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:53:41', 10);
 
 -- --------------------------------------------------------
 
@@ -467,9 +536,9 @@ CREATE TABLE `shipping_addresses` (
 INSERT INTO `shipping_addresses` (`address_id`, `user_id`, `full_name`, `phone`, `address_line1`, `address_line2`, `address_line3`, `city`, `state`, `postal_code`, `barangay_code`, `barangay_name`, `city_muni_code`, `city_muni_name`, `province_code`, `province_name`, `region_code`, `region_name`, `country`, `is_default`, `created_at`, `updated_at`) VALUES
 (1, 8, 'Karl Blackstack', '09765123456', 'Testing St. Brgy Test Angono, Rizal', NULL, NULL, 'Angono', 'South Luzon', '1930', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 1, '2025-09-10 19:26:40', '2025-09-10 19:26:40'),
 (3, 16, 'Michelle Angeles', '09084742498', '55 Farmers 1', NULL, NULL, NULL, NULL, '1800', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 1, '2025-09-23 10:54:58', '2025-09-23 11:24:31'),
-(4, 17, 'Michelle Angeles', '09084742498', '225 bulubok st.', NULL, NULL, NULL, NULL, '1860', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 1, '2025-09-23 16:51:18', '2025-09-24 09:20:14'),
-(5, 17, 'Michelle Angeles', '09123456789', 'Sample Street 123', NULL, NULL, 'Quezon City', 'National Capital Region', '1100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 0, '2025-09-24 09:11:17', '2025-09-24 09:11:17'),
-(6, 17, 'Michelle Angeles', '09123456789', 'Sample Street 123', 'Unit 2B', 'Landmark XYZ', 'Quezon City', 'National Capital Region', '1100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 0, '2025-09-24 09:20:07', '2025-09-24 09:20:14'),
+(4, 17, 'Michelle Angeles', '09084742498', '225 bulubok st.', NULL, NULL, NULL, NULL, '1860', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 1, '2025-09-23 16:51:18', '2025-09-27 17:27:47'),
+(5, 17, 'Michelle Angeles', '09123456789', 'Sample Street 123', NULL, NULL, 'Quezon City', 'National Capital Region', '1100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 0, '2025-09-24 09:11:17', '2025-09-27 17:27:47'),
+(6, 17, 'Michelle Angeles', '09123456789', 'Sample Street 123', 'Unit 2B', 'Landmark XYZ', 'Quezon City', 'National Capital Region', '1100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 0, '2025-09-24 09:20:07', '2025-09-26 20:58:17'),
 (11, 14, 'Karl Test', '09765700300', 'R. Testing St.', NULL, NULL, 'Angono', 'CALABARZON', '1940', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-24 17:33:45', '2025-09-24 17:35:33'),
 (12, 14, 'Emman Cutie', '09123456789', 'R. Tolentino', NULL, NULL, 'Angono', 'CALABARZON', '1940', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 1, '2025-09-24 17:35:30', '2025-09-24 17:44:03'),
 (13, 14, 'Karl Cutie', '09123456789', 'R. Tolentino St', NULL, NULL, 'Angono', 'CALABARZON', '1930', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-24 17:42:10', '2025-09-24 17:44:03'),
@@ -547,6 +616,7 @@ CREATE TABLE `users` (
   `email` varchar(150) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
   `password_hash` varchar(255) DEFAULT NULL,
   `google_id` varchar(255) DEFAULT NULL,
   `role` enum('admin','manager','staff','customer') NOT NULL DEFAULT 'customer',
@@ -563,20 +633,114 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`) VALUES
-(1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL),
-(2, 'customer', 'customer@gmail.com', NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-09-25 04:02:27', '2025-09-25 04:02:27', NULL, NULL, NULL),
-(8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL),
-(9, 'emmanadmin', 'emmanadmin@gmail.com', NULL, NULL, '$2y$10$FueQzeltWy15uvefERs8Au75iBgbuNAYVTsqxrJE0eH.GV2I6yRSq', NULL, 'admin', 'active', '2025-09-09 04:07:49', '2025-09-10 09:54:31', NULL, NULL, NULL, NULL),
-(10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL),
-(11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-09-10 12:09:52', '2025-09-10 12:09:52', NULL, NULL, NULL),
-(12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL),
-(13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-09-10 15:05:56', NULL, NULL, NULL, NULL),
-(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-09-24 19:39:25', '2025-09-24 19:39:25', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg'),
-(15, 'karlblockstock1', 'karlblockstock27@gmail.com', NULL, NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-09-25 03:52:17', '2025-09-25 03:52:17', NULL, NULL, NULL),
-(16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL),
-(17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', '$2y$10$t2.GNMloV5cZ9NQIiQfAJ.KMMBrTNcr.3dxPl9WwOnJ5Aqi9BaNqG', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-24 09:02:09', '2025-09-24 08:47:32', 'Michelle', 'Angeles', 'uploads/profile/u17_1758702327_45104a57.jpg');
+INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`) VALUES
+(1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL),
+(2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-09-30 10:55:30', '2025-09-30 10:55:30', NULL, NULL, NULL),
+(8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL),
+(9, 'emmanadmin', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$FueQzeltWy15uvefERs8Au75iBgbuNAYVTsqxrJE0eH.GV2I6yRSq', NULL, 'admin', 'active', '2025-09-09 04:07:49', '2025-09-10 09:54:31', NULL, NULL, NULL, NULL),
+(10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, NULL, NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-28 19:09:11', '2025-09-10 11:45:30', NULL, NULL, NULL),
+(11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-09-10 12:09:52', '2025-09-10 12:09:52', NULL, NULL, NULL),
+(12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL),
+(13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-09-10 15:05:56', NULL, NULL, NULL, NULL),
+(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-09-24 19:39:25', '2025-09-24 19:39:25', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg'),
+(15, 'karlblockstock1', 'karlblockstock27@gmail.com', NULL, NULL, NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-09-25 03:52:17', '2025-09-25 03:52:17', NULL, NULL, NULL),
+(16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL),
+(17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', NULL, '$2y$10$ChOPozWcWfkcpWaG7cgLZebfhwOMRO/a/z0LCcsqI8skXYU.cuM42', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-30 10:56:09', '2025-09-30 10:56:09', 'Michelle', 'Angeles', 'uploads/profile/u17_1758814465_7d18d537.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_inbox`
+--
+
+CREATE TABLE `user_inbox` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `from_name` varchar(100) DEFAULT 'FitFuel',
+  `subject` varchar(200) NOT NULL,
+  `body` text NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_inbox`
+--
+
+INSERT INTO `user_inbox` (`id`, `user_id`, `from_name`, `subject`, `body`, `is_read`, `created_at`) VALUES
+(1, 17, 'FitFuel', 'Welcome to FitFuel 🎉', 'Hi mich0303! Thanks for joining FitFuel. We’ll use this inbox for order updates, promos, and account notices.', 0, '2025-09-26 21:02:51');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_notifications`
+--
+
+CREATE TABLE `user_notifications` (
+  `user_id` int(11) NOT NULL,
+  `email_enabled` tinyint(1) NOT NULL DEFAULT 1,
+  `sms_enabled` tinyint(1) NOT NULL DEFAULT 0,
+  `push_enabled` tinyint(1) NOT NULL DEFAULT 1,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_notifications`
+--
+
+INSERT INTO `user_notifications` (`user_id`, `email_enabled`, `sms_enabled`, `push_enabled`, `updated_at`) VALUES
+(17, 0, 1, 0, '2025-09-26 20:56:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_payment_methods`
+--
+
+CREATE TABLE `user_payment_methods` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `type` enum('card','bank') NOT NULL DEFAULT 'card',
+  `brand` varchar(50) DEFAULT NULL,
+  `last4` varchar(4) DEFAULT NULL,
+  `name_on_card` varchar(100) DEFAULT NULL,
+  `exp_month` tinyint(4) DEFAULT NULL,
+  `exp_year` smallint(6) DEFAULT NULL,
+  `bank_name` varchar(100) DEFAULT NULL,
+  `account_last4` varchar(4) DEFAULT NULL,
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_payment_methods`
+--
+
+INSERT INTO `user_payment_methods` (`id`, `user_id`, `type`, `brand`, `last4`, `name_on_card`, `exp_month`, `exp_year`, `bank_name`, `account_last4`, `is_default`, `created_at`, `updated_at`) VALUES
+(1, 17, 'card', '2323', '9210', 'michieeee', 12, 2033, NULL, NULL, 1, '2025-09-26 22:23:58', '2025-09-26 22:23:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_privacy_settings`
+--
+
+CREATE TABLE `user_privacy_settings` (
+  `user_id` int(11) NOT NULL,
+  `profile_visibility` enum('public','friends','private') NOT NULL DEFAULT 'public',
+  `show_email` tinyint(1) NOT NULL DEFAULT 1,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_privacy_settings`
+--
+
+INSERT INTO `user_privacy_settings` (`user_id`, `profile_visibility`, `show_email`, `show_phone`, `updated_at`) VALUES
+(17, 'private', 0, 0, '2025-09-26 22:30:48');
 
 --
 -- Indexes for dumped tables
@@ -718,6 +882,34 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `username` (`username`) USING BTREE;
 
 --
+-- Indexes for table `user_inbox`
+--
+ALTER TABLE `user_inbox`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `is_read` (`is_read`),
+  ADD KEY `created_at` (`created_at`);
+
+--
+-- Indexes for table `user_notifications`
+--
+ALTER TABLE `user_notifications`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `user_payment_methods`
+--
+ALTER TABLE `user_payment_methods`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `user_privacy_settings`
+--
+ALTER TABLE `user_privacy_settings`
+  ADD PRIMARY KEY (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -725,7 +917,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -737,7 +929,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -755,19 +947,19 @@ ALTER TABLE `contents`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `order_promo_codes`
@@ -815,7 +1007,19 @@ ALTER TABLE `subcategories`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `user_inbox`
+--
+ALTER TABLE `user_inbox`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `user_payment_methods`
+--
+ALTER TABLE `user_payment_methods`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables

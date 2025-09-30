@@ -29,7 +29,7 @@ try {
     $pdo = getDBConnection();
     
     // Verify the cart item belongs to the user
-    $verify_sql = "SELECT ci.*, p.stock_quantity 
+    $verify_sql = "SELECT ci.*, p.stock 
                    FROM cart_items ci 
                    JOIN cart c ON ci.cart_id = c.cart_id 
                    JOIN products p ON ci.product_id = p.product_id 
@@ -45,8 +45,8 @@ try {
     }
     
     // Check stock availability
-    if ($quantity > $cart_item['stock_quantity']) {
-        echo json_encode(['success' => false, 'message' => 'Insufficient stock. Available: ' . $cart_item['stock_quantity']]);
+    if ($quantity > $cart_item['stock']) {
+        echo json_encode(['success' => false, 'message' => 'Insufficient stock. Available: ' . $cart_item['stock']]);
         exit();
     }
     

@@ -1,51 +1,80 @@
 <?php
-// sidebar.php
-// Uses $user (username, profile_picture), h(), and active_link() from the parent page.
+/* =========================================================================
+   path: sidebar.php
+   purpose: Account sidebar with improved active highlight (no green fill)
+   notes: Safe to include on any page; does not require globals.
+   ========================================================================= */
 
+if (!isset($user)) {
+    // fallback when including on pages that didn't load $user
+    $user = ['username' => 'User', 'profile_picture' => null];
+}
 if (!function_exists('h')) {
-  function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
-}
-if (!function_exists('active_link')) {
-  function active_link($file){
-    $curr = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-    return $curr === $file ? 'text-emerald-600 font-semibold' : 'hover:text-emerald-600';
-  }
+    function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 }
 
-$avatar = !empty($user['profile_picture']) ? $user['profile_picture'] : 'img/placeholder.svg';
+$current = basename(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '');
+
+/** Menu definition (labels, href, Font Awesome icon) */
+$sections = [
+    'MY ACCOUNT' => [
+        ['label' => 'Profile',               'href' => 'profile.php',          'icon' => 'fa-user'],
+        ['label' => 'Banks & Cards',         'href' => 'bank_cards.php',            'icon' => 'fa-credit-card'],
+        ['label' => 'Addresses',             'href' => 'addresses.php',        'icon' => 'fa-location-dot'],
+        ['label' => 'Change Password',       'href' => 'change_password.php',  'icon' => 'fa-key'],
+        ['label' => 'Privacy Settings',      'href' => 'privacy_settings.php',          'icon' => 'fa-shield-halved'],
+        ['label' => 'Notification Settings', 'href' => 'notifications_settings.php',    'icon' => 'fa-bell'],
+    ],
+    'MY PURCHASE' => [
+        ['label' => 'My Orders',             'href' => 'my_orders.php',           'icon' => 'fa-box'],
+    ],
+    'MY WISHLIST' => [
+        ['label' => 'Wishlist',              'href' => 'wishlist.php',         'icon' => 'fa-heart'],
+    ],
+    'NOTIFICATIONS' => [
+        ['label' => 'Inbox',                 'href' => 'inbox.php',            'icon' => 'fa-inbox'],
+    ],
+];
+
+/** Styles */
+$baseLink = 'flex items-center px-4 py-2 rounded-lg mb-1 transition-colors';
+$inactive = 'text-slate-700 hover:bg-gray-50';
+$active   = 'pl-3 border-l-4 border-emerald-600 bg-gray-100 text-slate-900 font-medium'; // why: consistent, subtle active state
 ?>
-<aside class="md:col-span-1 bg-white rounded-lg border border-gray-200 p-4">
-  <div class="flex items-center space-x-3 mb-4">
-    <img src="<?php echo h($avatar); ?>" class="w-12 h-12 rounded-full object-cover border" alt="">
-    <div>
-      <div class="font-semibold"><?php echo h($user['username'] ?? ''); ?></div>
-      <div class="text-xs text-gray-500">
-        <i class="fa-regular fa-pen-to-square mr-1"></i>Edit Profile
+<aside class="bg-white rounded-lg border border-gray-200">
+  <div class="p-6 border-b">
+    <div class="flex items-center space-x-3">
+      <div class="w-12 h-12 rounded-full overflow-hidden border">
+        <img
+          src="<?php echo h(!empty($user['profile_picture']) ? $user['profile_picture'] : 'img/placeholder.svg'); ?>"
+          class="w-full h-full object-cover"
+          alt="avatar"
+        >
+      </div>
+      <div>
+        <div class="text-slate-900 font-semibold"><?php echo h($user['username']); ?></div>
+        <a href="profile_edit.php" class="text-emerald-700 hover:underline text-sm inline-flex items-center gap-1">
+          <i class="fa-solid fa-pen"></i> Edit Profile
+        </a>
       </div>
     </div>
   </div>
 
-  <div class="text-gray-400 uppercase text-xs mb-2">My Account</div>
-  <nav class="text-[15px]">
-    <a href="profile.php"               class="block mb-2 <?php echo active_link('profile.php'); ?>">Profile</a>
-    <a href="banks_cards.php"           class="block mb-2 <?php echo active_link('banks_cards.php'); ?>">Banks &amp; Cards</a>
-    <a href="addresses.php"             class="block mb-2 <?php echo active_link('addresses.php'); ?>">Addresses</a>
-    <a href="change_password.php"       class="block mb-2 <?php echo active_link('change_password.php'); ?>">Change Password</a>
-    <a href="notification_settings.php" class="block mb-2 <?php echo active_link('notification_settings.php'); ?>">Notification Settings</a>
-  </nav>
+  <nav class="p-4">
+    <?php foreach ($sections as $title => $links): ?>
+      <div class="text-xs text-gray-400 font-semibold tracking-wide px-2 mt-3 mb-2">
+        <?php echo h($title); ?>
+      </div>
 
-  <div class="text-gray-400 uppercase text-xs mt-6 mb-2">My Purchase</div>
-  <nav class="text-[15px]">
-    <a href="my_orders.php" class="block mb-2 <?php echo active_link('my_orders.php'); ?>">My Orders</a>
-  </nav>
-
-  <div class="text-gray-400 uppercase text-xs mt-6 mb-2">My Wishlist</div>
-  <nav class="text-[15px]">
-    <a href="wishlist.php" class="block mb-2 <?php echo active_link('wishlist.php'); ?>">Wishlist</a>
-  </nav>
-
-  <div class="text-gray-400 uppercase text-xs mt-6 mb-2">Notifications</div>
-  <nav class="text-[15px]">
-    <a href="inbox.php" class="block mb-2 <?php echo active_link('inbox.php'); ?>">Inbox</a>
+      <?php foreach ($links as $item):
+        $isActive = ($current === basename($item['href']));
+        $classes = $baseLink . ' ' . ($isActive ? $active : $inactive);
+      ?>
+        <a href="<?php echo h($item['href']); ?>" class="<?php echo $classes; ?>">
+          <i class="fa-solid <?php echo h($item['icon']); ?> w-5 mr-3"></i>
+          <span class="text-sm"><?php echo h($item['label']); ?></span>
+        </a>
+      <?php endforeach; ?>
+    <?php endforeach; ?>
   </nav>
 </aside>

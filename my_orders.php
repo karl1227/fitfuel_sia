@@ -85,12 +85,6 @@ try {
 }
 
 /* ---------- prepare data for tabs & cards ---------- */
-/* Tabs:
-   - to_pay: pending
-   - to_ship: processing
-   - to_receive: shipped
-   - completed: delivered
-*/
 $tabMap = [
     'all'        => [],
     'to_pay'     => ['pending'],
@@ -146,89 +140,98 @@ foreach ($rows as $r) {
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
   <style>.tab-active{background-color:rgb(16 185 129 / 0.15);color:#065f46}</style>
 </head>
-<body class="bg-gray-50 font-body text-slate-700">
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <div class="flex items-center mb-6">
-      <a href="profile.php" class="flex items-center text-emerald-600 hover:text-emerald-800">
-        <i class="fas fa-arrow-left mr-2"></i>
-      </a>
-      <h1 class="text-2xl font-bold text-slate-900 ml-4">My Orders</h1>
-    </div>
-
-    <!-- Flash messages -->
-    <?php if ($msg = get_flash('success')): ?>
-      <div class="mb-4 p-4 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
-        <?= htmlspecialchars($msg) ?>
+<body class="bg-gray-50 font-body text-slate-700 min-h-screen flex flex-col">
+  <main class="flex-1">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <div class="flex items-center mb-6">
+        <a href="profile.php" class="flex items-center text-emerald-600 hover:text-emerald-800">
+          <i class="fas fa-arrow-left mr-2"></i>
+        </a>
+        <h1 class="text-2xl font-bold text-slate-900 ml-4">My Orders</h1>
       </div>
-    <?php endif; ?>
-    <?php if ($msg = get_flash('error')): ?>
-      <div class="mb-4 p-4 rounded-lg bg-red-50 text-red-700 border border-red-200">
-        <?= htmlspecialchars($msg) ?>
-      </div>
-    <?php endif; ?>
 
-    <div class="bg-white rounded-xl shadow-sm border p-3 flex gap-2 overflow-x-auto">
-      <?php
-        $tabLabels = [
-          'all'        => 'All',
-          'to_pay'     => 'To Pay',
-          'to_ship'    => 'To Ship',
-          'to_receive' => 'To Receive',
-          'completed'  => 'Completed',
-          'cancelled'  => 'Cancelled',
-          'return'     => 'Return'
-        ];
-        foreach ($tabLabels as $key=>$label): ?>
-        <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 whitespace-nowrap"
-                data-tab="<?= htmlspecialchars($key) ?>">
-          <?= $label ?> <span class="ml-1 text-xs text-slate-500">(<?= (int)($counts[$key] ?? 0) ?>)</span>
-        </button>
-      <?php endforeach; ?>
-    </div>
-
-    <div id="orderList" class="mt-5 space-y-4">
-      <?php if (isset($error)): ?>
-        <div class="p-4 rounded-lg bg-red-50 text-red-700 border border-red-200"><?= htmlspecialchars($error) ?></div>
+      <!-- Flash messages -->
+      <?php if ($msg = get_flash('success')): ?>
+        <div class="mb-4 p-4 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <?= htmlspecialchars($msg) ?>
+        </div>
+      <?php endif; ?>
+      <?php if ($msg = get_flash('error')): ?>
+        <div class="mb-4 p-4 rounded-lg bg-red-50 text-red-700 border border-red-200">
+          <?= htmlspecialchars($msg) ?>
+        </div>
       <?php endif; ?>
 
-      <?php if (empty($cards)): ?>
-        <div class="p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border">
-          You don’t have any orders yet.
-        </div>
-      <?php else: ?>
-        <?php foreach ($cards as $c): [$pillText,$pillClass]=status_pill($c['status']); ?>
-          <div class="order-card bg-white rounded-2xl shadow-sm border p-4 flex items-center gap-4"
-               data-status="<?= htmlspecialchars($c['tabKey']) ?>">
-            <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
-              <img src="<?= htmlspecialchars($c['product_image']) ?>" alt="<?= htmlspecialchars($c['product_name']) ?>" class="w-full h-full object-cover">
-            </div>
+      <div class="bg-white rounded-xl shadow-sm border p-3 flex gap-2 overflow-x-auto">
+        <?php
+          $tabLabels = [
+            'all'        => 'All',
+            'to_pay'     => 'To Pay',
+            'to_ship'    => 'To Ship',
+            'to_receive' => 'To Receive',
+            'completed'  => 'Completed',
+            'cancelled'  => 'Cancelled',
+            'return'     => 'Return'
+          ];
+          foreach ($tabLabels as $key=>$label): ?>
+          <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+                  data-tab="<?= htmlspecialchars($key) ?>">
+            <?= $label ?> <span class="ml-1 text-xs text-slate-500">(<?= (int)($counts[$key] ?? 0) ?>)</span>
+          </button>
+        <?php endforeach; ?>
+      </div>
 
-            <div class="flex-1 min-w-0">
-              <div class="flex items-start justify-between gap-2">
-                <div class="min-w-0">
-                  <a href="order_details.php?order_id=<?= urlencode($c['custom_order_id']) ?>"
-                     class="text-slate-900 font-semibold line-clamp-1 hover:underline">
-                    <?= htmlspecialchars($c['product_name']) ?>
-                  </a>
-                  <p class="text-sm text-slate-500 mt-0.5 line-clamp-1"><?= htmlspecialchars($c['product_desc']) ?></p>
-                  <!-- Keep ONLY the date (removed Order: ... and Qty) -->
-                  <div class="mt-2 text-xs text-slate-500">
-                    <span><?= date("M d, Y", strtotime($c['created_at'])) ?></span>
+      <div id="orderList" class="mt-5 space-y-4">
+        <?php if (isset($error)): ?>
+          <div class="p-4 rounded-lg bg-red-50 text-red-700 border border-red-200"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <?php if (empty($cards)): ?>
+          <div class="p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border">
+            You don’t have any orders yet.
+          </div>
+        <?php else: ?>
+          <?php foreach ($cards as $c): [$pillText,$pillClass]=status_pill($c['status']); ?>
+            <div class="order-card bg-white rounded-2xl shadow-sm border p-4 flex items-center gap-4"
+                 data-status="<?= htmlspecialchars($c['tabKey']) ?>">
+              <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                <img src="<?= htmlspecialchars($c['product_image']) ?>" alt="<?= htmlspecialchars($c['product_name']) ?>" class="w-full h-full object-cover">
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0">
+                    <a href="order_details.php?order_id=<?= urlencode($c['custom_order_id']) ?>"
+                       class="text-slate-900 font-semibold line-clamp-1 hover:underline">
+                      <?= htmlspecialchars($c['product_name']) ?>
+                    </a>
+                    <p class="text-sm text-slate-500 mt-0.5 line-clamp-1"><?= htmlspecialchars($c['product_desc']) ?></p>
+                    <div class="mt-2 text-xs text-slate-500">
+                      <span><?= date("M d, Y", strtotime($c['created_at'])) ?></span>
+                    </div>
                   </div>
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold <?= $pillClass ?> whitespace-nowrap"><?= htmlspecialchars($pillText) ?></span>
                 </div>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold <?= $pillClass ?> whitespace-nowrap"><?= htmlspecialchars($pillText) ?></span>
+              </div>
+
+              <div class="text-right">
+                <div class="text-emerald-600 font-bold">₱<?= number_format($c['line_total'], 2) ?></div>
+                <a href="order_details.php?order_id=<?= urlencode($c['custom_order_id']) ?>" class="text-emerald-600 text-sm hover:underline">View Details</a>
               </div>
             </div>
-
-            <div class="text-right">
-              <div class="text-emerald-600 font-bold">₱<?= number_format($c['line_total'], 2) ?></div>
-              <a href="order_details.php?order_id=<?= urlencode($c['custom_order_id']) ?>" class="text-emerald-600 text-sm hover:underline">View Details</a>
-            </div>
-          </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
     </div>
+  </main>
+
+  <?php // partials/footer.php ?>
+<footer class="bg-slate-800 text-white py-12 mt-auto">
+  <div class="container mx-auto px-4 text-center">
+    <p>&copy; 2024 FitFuel. All rights reserved.</p>
   </div>
+</footer>
+
 
   <script>
     const tabs=[...document.querySelectorAll('.tab-btn')];

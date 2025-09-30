@@ -1,10 +1,13 @@
 <?php
+/* ============================================================================
+   File: shop.php
+ 
+   ============================================================================ */
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 
-/* -------- Debug while building -------- */
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 /* -------- Inputs -------- */
@@ -15,10 +18,9 @@ $price_range = isset($_GET['price_range']) ? $_GET['price_range'] : '';
 $sort        = isset($_GET['sort']) ? $_GET['sort'] : 'featured';
 
 /* -------- WHERE builder -------- */
-$where  = ["1=1"]; // keep valid even with no filters
+$where  = ["1=1"];
 $params = [];
 
-/* If you DO have a visibility flag, uncomment this line and set the column name */
 // $where[] = "p.is_active = 1";
 
 if ($search !== '') {
@@ -316,35 +318,42 @@ if (!empty($_SESSION['user_id'])) {
               $on_sale = ((float)$product['sale_percentage'] > 0);
               $price   = (float)$product['price'];
               $final   = $on_sale ? ($price * (1 - $product['sale_percentage']/100)) : $price;
+              $pid     = (int)$product['product_id'];
+              $detailUrl = "product.php?id={$pid}";
             ?>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow flex flex-col h-full">
+            <div class="relative bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow flex flex-col h-full">
+              <!-- Stretched-link overlay (makes whole card clickable) -->
+              <a href="<?php echo $detailUrl; ?>" class="absolute inset-0 z-10" aria-label="Open product details"></a>
+
               <div class="relative">
                 <img src="<?php echo htmlspecialchars($image_url); ?>"
                      alt="<?php echo htmlspecialchars($product['name']); ?>"
                      class="w-full h-64 object-cover">
                 <?php if ($on_sale): ?>
-                  <span class="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
+                  <span class="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold z-20">
                     <?php echo (int)$product['sale_percentage']; ?>% OFF
                   </span>
                 <?php endif; ?>
               </div>
 
               <div class="p-6 flex flex-col flex-grow">
-                <h3 class="font-semibold text-lg text-slate-800 mb-2"><?php echo htmlspecialchars($product['name']); ?></h3>
+                <h3 class="font-semibold text-lg text-slate-800 mb-2">
+                  <?php echo htmlspecialchars($product['name']); ?>
+                </h3>
                 <p class="text-slate-600 mb-4 flex-grow line-clamp-3"><?php echo htmlspecialchars($product['description']); ?></p>
 
                 <div class="flex items-end justify-between mt-auto">
                   <?php if ($on_sale): ?>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col z-20">
                       <span class="text-2xl font-bold text-red-600">₱<?php echo number_format($final, 2); ?></span>
                       <span class="text-sm text-gray-500 line-through">₱<?php echo number_format($price, 2); ?></span>
                     </div>
                   <?php else: ?>
-                    <span class="text-2xl font-bold text-emerald-600">₱<?php echo number_format($price, 2); ?></span>
+                    <span class="text-2xl font-bold text-emerald-600 z-20">₱<?php echo number_format($price, 2); ?></span>
                   <?php endif; ?>
 
-                  <button onclick="addToCart(<?php echo (int)$product['product_id']; ?>)"
-                          class="bg-black text-white p-3 rounded-lg hover:bg-gray-800 transition-colors flex-shrink-0">
+                  <button onclick="addToCart(<?php echo $pid; ?>)"
+                          class="relative z-20 bg-black text-white p-3 rounded-lg hover:bg-gray-800 transition-colors flex-shrink-0">
                     <i class="fas fa-shopping-cart"></i>
                   </button>
                 </div>
@@ -388,9 +397,7 @@ if (!empty($_SESSION['user_id'])) {
       if (catSel && catSel.value) url.searchParams.set('category', catSel.value); else url.searchParams.delete('category');
       if (price) url.searchParams.set('price_range', price.value); else url.searchParams.delete('price_range');
 
-      // drop subcategory if category changed
       url.searchParams.delete('subcategory');
-
       window.location.href = url.toString();
     }
 

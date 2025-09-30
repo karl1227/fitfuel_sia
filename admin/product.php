@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $price = floatval($_POST['price']);
             $category_id = intval($_POST['category_id']);
             $subcategory_id = intval($_POST['subcategory_id']);
-            $stock_quantity = intval($_POST['stock_quantity'] ?? 0);
+            $stock = intval($_POST['stock'] ?? 0);
             $status = $_POST['status'];
             $sale_percentage = intval($_POST['sale_percentage'] ?? 0);
             
@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             try {
                 $images_json = json_encode($image_path ? [$image_path] : []);
-                $stmt = $pdo->prepare("INSERT INTO products (name, description, price, category_id, subcategory_id, stock_quantity, status, sale_percentage, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $sale_percentage, $images_json]);
+                $stmt = $pdo->prepare("INSERT INTO products (name, description, price, category_id, subcategory_id, stock, status, sale_percentage, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock, $status, $sale_percentage, $images_json]);
                 $message = "Product added successfully!";
             } catch (PDOException $e) {
                 $error = "Failed to add product: " . $e->getMessage();
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $price = floatval($_POST['price']);
             $category_id = intval($_POST['category_id']);
             $subcategory_id = intval($_POST['subcategory_id']);
-            $stock_quantity = intval($_POST['stock_quantity'] ?? 0);
+            $stock = intval($_POST['stock'] ?? 0);
             $status = $_POST['status'];
             $sale_percentage = intval($_POST['sale_percentage'] ?? 0);
             
@@ -95,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             try {
                 $images_json = json_encode($final_image ? [$final_image] : []);
-                $stmt = $pdo->prepare("UPDATE products SET name=?, description=?, price=?, category_id=?, subcategory_id=?, stock_quantity=?, status=?, sale_percentage=?, images=? WHERE product_id=?");
-                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $sale_percentage, $images_json, $product_id]);
+                $stmt = $pdo->prepare("UPDATE products SET name=?, description=?, price=?, category_id=?, subcategory_id=?, stock=?, status=?, sale_percentage=?, images=? WHERE product_id=?");
+                $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock, $status, $sale_percentage, $images_json, $product_id]);
                 $message = "Product updated successfully!";
             } catch (PDOException $e) {
                 $error = "Failed to update product: " . $e->getMessage();
@@ -491,7 +491,7 @@ if (isset($_GET['edit'])) {
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <?php echo $product['stock_quantity']; ?>
+                                        <?php echo $product['stock']; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo $product['status'] == 'active' ? 'status-active' : 'status-inactive'; ?>">
@@ -583,7 +583,7 @@ if (isset($_GET['edit'])) {
                                 <div class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-700" id="productStockDisplay">
                                     <span id="stockValue">0</span> units
                                 </div>
-                                <input type="hidden" name="stock_quantity" id="productStock" value="0">
+                                <input type="hidden" name="stock" id="productStock" value="0">
                                 <p class="text-xs text-gray-500 mt-1">Stock managed through Inventory Management</p>
                             </div>
                             
@@ -825,8 +825,8 @@ if (isset($_GET['edit'])) {
                 document.getElementById('productName').value = '<?php echo htmlspecialchars($edit_product['name']); ?>';
                 document.getElementById('productDescription').value = '<?php echo htmlspecialchars($edit_product['description']); ?>';
                 document.getElementById('productPrice').value = <?php echo $edit_product['price']; ?>;
-                document.getElementById('stockValue').textContent = <?php echo $edit_product['stock_quantity']; ?>;
-                document.getElementById('productStock').value = <?php echo $edit_product['stock_quantity']; ?>;
+                document.getElementById('stockValue').textContent = <?php echo $edit_product['stock']; ?>;
+                document.getElementById('productStock').value = <?php echo $edit_product['stock']; ?>;
                 document.getElementById('productCategory').value = <?php echo $edit_product['category_id'] ?? '""'; ?>;
                 document.getElementById('productStatus').value = '<?php echo $edit_product['status']; ?>';
                 document.getElementById('productSalePercentage').value = <?php echo $edit_product['sale_percentage'] ?? 0; ?>;
