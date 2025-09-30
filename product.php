@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $status = $_POST['status'];
             $sale_percentage = intval($_POST['sale_percentage'] ?? 0);
             
-            // Handle image upload
+            // Handle main image upload
             $image_path = '';
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $upload_dir = '../uploads/products/';
@@ -43,12 +43,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
             
+            // Handle additional images upload
+            $additional_images = [];
+            if (isset($_FILES['additional_images'])) {
+                $upload_dir = '../uploads/products/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                $max_images = 3;
+                $uploaded_count = 0;
+                
+                for ($i = 0; $i < count($_FILES['additional_images']['name']) && $uploaded_count < $max_images; $i++) {
+                    if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
+                        $file_extension = strtolower(pathinfo($_FILES['additional_images']['name'][$i], PATHINFO_EXTENSION));
+                        
+                        if (in_array($file_extension, $allowed_extensions)) {
+                            $file_size = $_FILES['additional_images']['size'][$i];
+                            if ($file_size <= 2 * 1024 * 1024) { // 2MB limit
+                                $file_name = uniqid() . '_' . time() . '_' . $i . '.' . $file_extension;
+                                $file_path = $upload_dir . $file_name;
+                                
+                                if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $file_path)) {
+                                    $additional_images[] = 'uploads/products/' . $file_name;
+                                    $uploaded_count++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
             try {
                 $images_json = json_encode($image_path ? [$image_path] : []);
                 $stmt = $pdo->prepare("INSERT INTO products (name, description, price, category_id, subcategory_id, stock_quantity, status, sale_percentage, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $sale_percentage, $images_json]);
-                $message = "Product added successfully!";
-                audit_log('products', 'add', 'success', [], ['name'=>$name, 'price'=>$price, 'category_id'=>$category_id, 'status'=>$status]);
+                $product_id = $pdo->lastInsertId();
+                
+                // Insert additional images
+                if (!empty($additional_images)) {
+                    $stmt = $pdo->prepare("INSERT INTO product_images (product_id, image_path) VALUES (?, ?)");
+                    foreach ($additional_images as $img_path) {
+                        $stmt->execute([$product_id, $img_path]);
+                    }
+                }
+                
+                $message = "Product added successfully!" . (!empty($additional_images) ? " (" . count($additional_images) . " additional images uploaded)" : "");
+                audit_log('products', 'add', 'success', ['product_id' => $product_id], ['name'=>$name, 'price'=>$price, 'category_id'=>$category_id, 'status'=>$status, 'additional_images_count' => count($additional_images)]);
             } catch (PDOException $e) {
                 $error = "Failed to add product: " . $e->getMessage();
                 audit_log('products', 'add', 'failure', [], ['error'=>$e->getMessage(), 'name'=>$name]);
@@ -66,13 +108,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $status = $_POST['status'];
             $sale_percentage = intval($_POST['sale_percentage'] ?? 0);
             
-            // Get existing image
+            // Get existing images
             $stmt = $pdo->prepare("SELECT images FROM products WHERE product_id = ?");
             $stmt->execute([$product_id]);
             $existing_images = json_decode($stmt->fetchColumn() ?: '[]', true);
             $existing_image = !empty($existing_images) ? $existing_images[0] : '';
             
-            // Handle new image upload
+            // Get existing additional images
+            $stmt = $pdo->prepare("SELECT id, image_path FROM product_images WHERE product_id = ? ORDER BY created_at");
+            $stmt->execute([$product_id]);
+            $existing_additional_images = $stmt->fetchAll();
+            
+            // Handle new main image upload
             $new_image = '';
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $upload_dir = '../uploads/products/';
@@ -93,6 +140,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
             
+            // Handle additional images upload
+            $new_additional_images = [];
+            if (isset($_FILES['additional_images'])) {
+                $upload_dir = '../uploads/products/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                $max_images = 3;
+                $uploaded_count = 0;
+                
+                for ($i = 0; $i < count($_FILES['additional_images']['name']) && $uploaded_count < $max_images; $i++) {
+                    if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
+                        $file_extension = strtolower(pathinfo($_FILES['additional_images']['name'][$i], PATHINFO_EXTENSION));
+                        
+                        if (in_array($file_extension, $allowed_extensions)) {
+                            $file_size = $_FILES['additional_images']['size'][$i];
+                            if ($file_size <= 2 * 1024 * 1024) { // 2MB limit
+                                $file_name = uniqid() . '_' . time() . '_' . $i . '.' . $file_extension;
+                                $file_path = $upload_dir . $file_name;
+                                
+                                if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $file_path)) {
+                                    $new_additional_images[] = 'uploads/products/' . $file_name;
+                                    $uploaded_count++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Handle image deletions
+            $deleted_images = $_POST['deleted_images'] ?? [];
+            if (!empty($deleted_images)) {
+                foreach ($deleted_images as $img_id) {
+                    // Get image path for deletion
+                    $stmt = $pdo->prepare("SELECT image_path FROM product_images WHERE id = ? AND product_id = ?");
+                    $stmt->execute([$img_id, $product_id]);
+                    $img_path = $stmt->fetchColumn();
+                    
+                    if ($img_path && file_exists('../' . $img_path)) {
+                        unlink('../' . $img_path);
+                    }
+                    
+                    // Delete from database
+                    $stmt = $pdo->prepare("DELETE FROM product_images WHERE id = ? AND product_id = ?");
+                    $stmt->execute([$img_id, $product_id]);
+                }
+            }
+            
             // Use new image if uploaded, otherwise keep existing
             $final_image = $new_image ?: $existing_image;
             
@@ -100,8 +198,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $images_json = json_encode($final_image ? [$final_image] : []);
                 $stmt = $pdo->prepare("UPDATE products SET name=?, description=?, price=?, category_id=?, subcategory_id=?, stock_quantity=?, status=?, sale_percentage=?, images=? WHERE product_id=?");
                 $stmt->execute([$name, $description, $price, $category_id, $subcategory_id, $stock_quantity, $status, $sale_percentage, $images_json, $product_id]);
-                $message = "Product updated successfully!";
-                audit_log('products', 'edit', 'success', ['product_id'=>$product_id], ['name'=>$name, 'price'=>$price, 'status'=>$status]);
+                
+                // Insert new additional images
+                if (!empty($new_additional_images)) {
+                    $stmt = $pdo->prepare("INSERT INTO product_images (product_id, image_path) VALUES (?, ?)");
+                    foreach ($new_additional_images as $img_path) {
+                        $stmt->execute([$product_id, $img_path]);
+                    }
+                }
+                
+                $message = "Product updated successfully!" . (!empty($new_additional_images) ? " (" . count($new_additional_images) . " additional images uploaded)" : "") . (!empty($deleted_images) ? " (" . count($deleted_images) . " images deleted)" : "");
+                audit_log('products', 'edit', 'success', ['product_id'=>$product_id], ['name'=>$name, 'price'=>$price, 'status'=>$status, 'additional_images_added' => count($new_additional_images), 'images_deleted' => count($deleted_images)]);
             } catch (PDOException $e) {
                 $error = "Failed to update product: " . $e->getMessage();
                 audit_log('products', 'edit', 'failure', ['product_id'=>$product_id], ['error'=>$e->getMessage()]);
@@ -178,11 +285,17 @@ $products = $stmt->fetchAll();
 
 // Get product for editing
 $edit_product = null;
+$edit_additional_images = [];
 if (isset($_GET['edit'])) {
     $edit_id = intval($_GET['edit']);
     $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id = ?");
     $stmt->execute([$edit_id]);
     $edit_product = $stmt->fetch();
+    
+    // Get additional images for editing
+    $stmt = $pdo->prepare("SELECT id, image_path FROM product_images WHERE product_id = ? ORDER BY created_at");
+    $stmt->execute([$edit_id]);
+    $edit_additional_images = $stmt->fetchAll();
 }
 ?>
 <!DOCTYPE html>
@@ -565,6 +678,7 @@ if (isset($_GET['edit'])) {
                     <form id="productForm" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="action" id="formAction" value="add">
                         <input type="hidden" name="product_id" id="productId">
+                        <input type="hidden" name="deleted_images" id="deletedImages" value="">
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="md:col-span-2">
@@ -636,14 +750,27 @@ if (isset($_GET['edit'])) {
                             </div>
                             
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Main Product Image</label>
                                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                                     <input type="file" name="image" id="productImage" accept="image/*" class="hidden" onchange="previewImage(this)">
                                     <div id="imagePreview" class="mb-4"></div>
                                     <button type="button" onclick="document.getElementById('productImage').click()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors">
-                                        <i class="fas fa-upload mr-2"></i>Choose Image
+                                        <i class="fas fa-upload mr-2"></i>Choose Main Image
                                     </button>
-                                    <p class="text-sm text-gray-500 mt-2">Upload one image (JPG, PNG, GIF, WebP)</p>
+                                    <p class="text-sm text-gray-500 mt-2">Upload main product image (JPG, PNG, GIF, WebP)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Additional Product Images (Up to 3)</label>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center" id="additionalImagesDropZone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                                    <input type="file" name="additional_images[]" id="additionalImages" accept="image/*" multiple class="hidden" onchange="previewAdditionalImages(this)">
+                                    <div id="additionalImagesPreview" class="mb-4 grid grid-cols-3 gap-4"></div>
+                                    <button type="button" onclick="document.getElementById('additionalImages').click()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors">
+                                        <i class="fas fa-upload mr-2"></i>Choose Additional Images
+                                    </button>
+                                    <p class="text-sm text-gray-500 mt-2">Upload up to 3 additional images (JPG, PNG, GIF, WebP) - Max 2MB each</p>
+                                    <p class="text-xs text-gray-400 mt-1">Drag and drop files here or click to browse</p>
                                 </div>
                             </div>
                         </div>
@@ -699,6 +826,8 @@ if (isset($_GET['edit'])) {
             document.getElementById('formAction').value = 'add';
             document.getElementById('productForm').reset();
             document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('additionalImagesPreview').innerHTML = '';
+            document.getElementById('deletedImages').value = '';
             document.getElementById('stockValue').textContent = '0';
             document.getElementById('productStock').value = '0';
             document.getElementById('productModal').classList.remove('hidden');
@@ -729,6 +858,120 @@ if (isset($_GET['edit'])) {
             document.getElementById('productImage').value = '';
         }
         
+        // Additional Images Functions
+        let additionalImages = [];
+        let deletedImageIds = [];
+        
+        function previewAdditionalImages(input) {
+            const preview = document.getElementById('additionalImagesPreview');
+            const files = Array.from(input.files);
+            
+            // Limit to 3 images
+            if (additionalImages.length + files.length > 3) {
+                alert('Maximum 3 additional images allowed');
+                return;
+            }
+            
+            files.forEach((file, index) => {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Maximum size is 2MB.`);
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageId = 'temp_' + Date.now() + '_' + index;
+                    additionalImages.push({
+                        id: imageId,
+                        file: file,
+                        preview: e.target.result
+                    });
+                    updateAdditionalImagesPreview();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function updateAdditionalImagesPreview() {
+            const preview = document.getElementById('additionalImagesPreview');
+            preview.innerHTML = '';
+            
+            additionalImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'relative';
+                div.innerHTML = `
+                    <img src="${img.preview}" class="w-full h-24 object-cover rounded-lg border">
+                    <button type="button" onclick="removeAdditionalImage('${img.id}')" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                preview.appendChild(div);
+            });
+        }
+        
+        function removeAdditionalImage(imageId) {
+            additionalImages = additionalImages.filter(img => img.id !== imageId);
+            updateAdditionalImagesPreview();
+        }
+        
+        function removeExistingAdditionalImage(imageId, imagePath) {
+            deletedImageIds.push(imageId);
+            document.getElementById('deletedImages').value = JSON.stringify(deletedImageIds);
+            
+            // Remove from DOM
+            const element = document.getElementById('existing-img-' + imageId);
+            if (element) {
+                element.remove();
+            }
+        }
+        
+        // Drag and Drop Functions
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('border-blue-400', 'bg-blue-50');
+        }
+        
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+            
+            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+            
+            if (files.length === 0) {
+                alert('Please drop image files only');
+                return;
+            }
+            
+            if (additionalImages.length + files.length > 3) {
+                alert('Maximum 3 additional images allowed');
+                return;
+            }
+            
+            files.forEach((file, index) => {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Maximum size is 2MB.`);
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageId = 'temp_' + Date.now() + '_' + index;
+                    additionalImages.push({
+                        id: imageId,
+                        file: file,
+                        preview: e.target.result
+                    });
+                    updateAdditionalImagesPreview();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
         function editProduct(productId) {
             // This would typically fetch product data via AJAX
             // For now, redirect to edit mode
@@ -744,8 +987,11 @@ if (isset($_GET['edit'])) {
         function closeModal() {
             document.getElementById('productModal').classList.add('hidden');
             document.getElementById('productForm').reset();
-            document.getElementById('productImagePreview').style.display = 'none';
-            document.getElementById('productImagePreview').src = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('additionalImagesPreview').innerHTML = '';
+            document.getElementById('deletedImages').value = '';
+            additionalImages = [];
+            deletedImageIds = [];
             document.getElementById('salePriceDisplay').style.display = 'none';
         }
 
@@ -841,7 +1087,7 @@ if (isset($_GET['edit'])) {
                 // Calculate sale price for editing
                 calculateSalePrice();
                 
-                // Display existing image
+                // Display existing main image
                 <?php 
                 $existing_images = json_decode($edit_product['images'] ?: '[]', true);
                 if (!empty($existing_images)): 
@@ -857,12 +1103,45 @@ if (isset($_GET['edit'])) {
                     `;
                 <?php endif; ?>
                 
+                // Display existing additional images
+                <?php if (!empty($edit_additional_images)): ?>
+                    const additionalPreview = document.getElementById('additionalImagesPreview');
+                    additionalPreview.innerHTML = '';
+                    <?php foreach ($edit_additional_images as $img): ?>
+                        const imgDiv = document.createElement('div');
+                        imgDiv.id = 'existing-img-<?php echo $img['id']; ?>';
+                        imgDiv.className = 'relative';
+                        imgDiv.innerHTML = `
+                            <img src="../<?php echo htmlspecialchars($img['image_path']); ?>" class="w-full h-24 object-cover rounded-lg border">
+                            <button type="button" onclick="removeExistingAdditionalImage(<?php echo $img['id']; ?>, '<?php echo htmlspecialchars($img['image_path']); ?>')" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        additionalPreview.appendChild(imgDiv);
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                
                 updateSubcategories();
                 document.getElementById('productSubcategory').value = <?php echo $edit_product['subcategory_id'] ?? '""'; ?>;
                 
                 document.getElementById('productModal').classList.remove('hidden');
             });
         <?php endif; ?>
+        
+        // Form submission handler for additional images
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            // Create a FormData object to handle file uploads
+            const formData = new FormData(this);
+            
+            // Add additional images to form data
+            additionalImages.forEach((img, index) => {
+                formData.append('additional_images[]', img.file);
+            });
+            
+            // Remove the original file input to avoid conflicts
+            const originalInput = document.getElementById('additionalImages');
+            originalInput.remove();
+        });
     </script>
 </body>
 </html>
