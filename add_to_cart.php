@@ -43,9 +43,9 @@ try {
     }
     
     // Check stock availability
-    if ($product['stock_quantity'] < $quantity) {
+    if ($product['stock'] < $quantity) {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => 'Insufficient stock. Available: ' . $product['stock_quantity']]);
+        echo json_encode(['success' => false, 'message' => 'Insufficient stock. Available: ' . $product['stock']]);
         exit();
     }
     
@@ -79,9 +79,9 @@ try {
         $new_quantity = $existing_item['quantity'] + $quantity;
         
         // Check if new quantity exceeds stock
-        if ($new_quantity > $product['stock_quantity']) {
+        if ($new_quantity > $product['stock']) {
             $pdo->rollBack();
-            echo json_encode(['success' => false, 'message' => 'Cannot add more items. Stock limit reached. Current in cart: ' . $existing_item['quantity'] . ', Available: ' . $product['stock_quantity']]);
+            echo json_encode(['success' => false, 'message' => 'Cannot add more items. Stock limit reached. Current in cart: ' . $existing_item['quantity'] . ', Available: ' . $product['stock']]);
             exit();
         }
         

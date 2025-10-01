@@ -24,7 +24,7 @@ function applyStockControl(PDO $pdo, int $orderId, int $adminUserId): void {
 		$all = $items->fetchAll();
 		foreach ($all as $it) {
 			// Reduce product stock
-			$upd = $pdo->prepare("UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?");
+			$upd = $pdo->prepare("UPDATE products SET stock = stock - ? WHERE product_id = ?");
 			$upd->execute([(int)$it['quantity'], (int)$it['product_id']]);
 			// Log inventory movement
 			$inv = $pdo->prepare("INSERT INTO inventory (product_id, change_type, quantity, reference_id, created_by) VALUES (?, 'stock_out', ?, ?, ?)");
@@ -59,7 +59,7 @@ function restoreStockControl(PDO $pdo, int $orderId, int $adminUserId): void {
 		$all = $items->fetchAll();
 		foreach ($all as $it) {
 			// Restore product stock
-			$upd = $pdo->prepare("UPDATE products SET stock_quantity = stock_quantity + ? WHERE product_id = ?");
+			$upd = $pdo->prepare("UPDATE products SET stock = stock + ? WHERE product_id = ?");
 			$upd->execute([(int)$it['quantity'], (int)$it['product_id']]);
 			// Log inventory movement
 			$inv = $pdo->prepare("INSERT INTO inventory (product_id, change_type, quantity, reference_id, created_by) VALUES (?, 'stock_in', ?, ?, ?)");
@@ -81,7 +81,7 @@ function restoreStockControl(PDO $pdo, int $orderId, int $adminUserId): void {
 function deductStockImmediately(PDO $pdo, array $items, int $orderId, int $userId): void {
 	foreach ($items as $item) {
 		// Reduce product stock
-		$upd = $pdo->prepare("UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?");
+		$upd = $pdo->prepare("UPDATE products SET stock = stock - ? WHERE product_id = ?");
 		$upd->execute([(int)$item['quantity'], (int)$item['product_id']]);
 		// Log inventory movement
 		$inv = $pdo->prepare("INSERT INTO inventory (product_id, change_type, quantity, reference_id, created_by) VALUES (?, 'stock_out', ?, ?, ?)");

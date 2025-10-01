@@ -42,7 +42,7 @@ try {
     
     $placeholders = str_repeat('?,', count($selected_items) - 1) . '?';
     $cart_sql = "SELECT c.cart_id, ci.cart_item_id, ci.product_id, ci.quantity, 
-                        p.name, p.price, p.stock_quantity
+                        p.name, p.price, p.stock
                  FROM cart c 
                  LEFT JOIN cart_items ci ON c.cart_id = ci.cart_id 
                  LEFT JOIN products p ON ci.product_id = p.product_id 
@@ -61,7 +61,7 @@ try {
     
     // Check stock availability
     foreach ($cart_items as $item) {
-        if ($item['quantity'] > $item['stock_quantity']) {
+        if ($item['quantity'] > $item['stock']) {
             $pdo->rollBack();
             echo json_encode(['success' => false, 'message' => 'Insufficient stock for ' . $item['name']]);
             exit();

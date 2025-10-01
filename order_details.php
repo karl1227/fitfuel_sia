@@ -1,6 +1,15 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
+require_once 'customer_auth_check.php';
 require_once 'config/database.php';
+
+$user_id = (int)($_SESSION['user_id'] ?? 0);
+
+function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
+function active_link($f){
+  $c = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+  return $c === $f ? 'text-emerald-600 font-semibold' : 'hover:text-emerald-600';
+}
 
 /* ---------- Flash helpers ---------- */
 function set_flash($key, $msg) { $_SESSION['flash_'.$key] = $msg; }
@@ -13,13 +22,6 @@ function get_flash($key) {
   return null;
 }
 
-/* ---------- Auth check ---------- */
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit();
-}
-$user_id = (int) $_SESSION['user_id'];
-
 /* ---------- Get order id ---------- */
 if (!isset($_GET['order_id'])) {
   header("Location: my_orders.php");
@@ -27,8 +29,29 @@ if (!isset($_GET['order_id'])) {
 }
 $custom_order_id = trim($_GET['order_id']);
 
+$pdo = getDBConnection();
+
+/* fetch user data for sidebar */
+$user = ['username' => 'User', 'profile_picture' => null];
 try {
-  $pdo = getDBConnection();
+    $userStmt = $pdo->prepare("SELECT username, profile_picture FROM users WHERE user_id = ?");
+    $userStmt->execute([$user_id]);
+    $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
+    if ($userData) {
+        $user = $userData;
+    }
+} catch (Throwable $e) {}
+
+/* cart badge */
+$cart_count = 0;
+try{
+  $cs=$pdo->prepare("SELECT COALESCE(SUM(ci.quantity),0) c
+                     FROM cart c LEFT JOIN cart_items ci ON c.cart_id=ci.cart_id
+                     WHERE c.user_id=?");
+  $cs->execute([$user_id]); $cart_count=(int)($cs->fetch()['c']??0);
+}catch(Throwable $e){}
+
+try {
 
   /* ---------- Handle cancel (POST) ---------- */
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cancel') {
@@ -195,178 +218,217 @@ $pay_text    = !empty($order['payment_method']) ? payment_text($order['payment_m
 $computed_total = $items_subtotal + $shipping_fee + $other_fee - $discount_amount - $voucher_discount;
 $display_total  = $total_amount; // authoritative total from DB
 ?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Order Details - FitFuel</title>
-  <link rel="icon" href="img/LOGO-Fitfuel.png" type="image/png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Details - FitFuel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 font-body text-slate-700">
-  <div class="max-w-4xl mx-auto px-4 py-8">
-
-    <!-- Header: Back + ORDER DETAILS -->
-    <div class="flex items-center gap-3 mb-4">
-      <a href="my_orders.php" class="inline-flex items-center text-emerald-600 hover:text-emerald-800">
-        <i class="fa-solid fa-arrow-left mr-2"></i>
-        <span></span>
-      </a>
-      <h1 class="text-2xl font-bold text-slate-900">Order Details</h1>
+<body class="bg-[#f6f6f6] text-slate-700 min-h-screen flex flex-col">
+  <nav class="bg-white text-black py-2">
+    <div class="container mx-auto px-4 flex justify-end space-x-6 text-sm">
+      <a class="hover:text-emerald-400">Review</a>
+      <a class="hover:text-emerald-400">Help</a>
+      <a href="logout.php" class="hover:text-emerald-400">Logout</a>
     </div>
-
-    <!-- Status banner + Payment method -->
-    <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 flex justify-between items-center">
-      <div><i class="fa-solid fa-truck-fast mr-2"></i><span class="font-semibold"><?= htmlspecialchars($banner) ?></span></div>
-      <?php if ($pay_text): ?>
-        <div class="text-sm font-medium text-slate-700"><?= htmlspecialchars($pay_text) ?></div>
-      <?php endif; ?>
+  </nav>
+  <nav class="bg-black py-4">
+    <div class="container mx-auto px-4 flex items-center justify-between">
+      <a href="index.php"><img src="img/LOGO-Fitfuel.png" width="75" alt=""></a>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="index.php" class="text-white hover:text-emerald-600">Home</a>
+        <a href="shop.php" class="text-white hover:text-emerald-600">Shop</a>
+        <a href="#" class="text-white hover:text-emerald-600">About</a>
+        <a href="#" class="text-white hover:text-emerald-600">Contact</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="cart.php" class="relative p-2 text-white hover:text-emerald-600">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <?php if($cart_count > 0): ?>
+            <span class="absolute -top-1 -right-1 bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"><?php echo $cart_count; ?></span>
+          <?php endif; ?>
+        </a>
+        <a href="profile.php" class="p-2 text-white hover:text-emerald-600"><i class="fas fa-user text-xl"></i></a>
+      </div>
     </div>
+  </nav>
 
-    <!-- Flash messages -->
-    <?php if ($msg = get_flash('success')): ?>
-      <div class="mb-4 p-4 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
-        <?= htmlspecialchars($msg) ?>
-      </div>
-    <?php endif; ?>
-    <?php if ($msg = get_flash('error')): ?>
-      <div class="mb-4 p-4 rounded-lg bg-red-50 text-red-700 border border-red-200">
-        <?= htmlspecialchars($msg) ?>
-      </div>
-    <?php endif; ?>
+  <main class="flex-1">
+    <div class="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+      <?php include __DIR__.'/sidebar.php'; ?>
 
-    <div class="bg-white rounded-2xl shadow-sm border p-6">
-
-      <!-- Order summary (Total Cost removed from here) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
-          <p class="text-sm text-slate-500">Order ID</p>
-          <p class="font-semibold text-slate-800"><?= htmlspecialchars($order['custom_order_id']) ?></p>
-        </div>
-        <div>
-          <p class="text-sm text-slate-500">Status</p>
-          <p class="font-semibold <?= $can_cancel ? 'text-yellow-700' : 'text-emerald-700' ?>">
-            <?= htmlspecialchars(ucfirst($order['status'])) ?>
-          </p>
-        </div>
-        <div>
-          <p class="text-sm text-slate-500">Order Date</p>
-          <p class="font-semibold text-slate-800">
-            <?= htmlspecialchars($order['created_at']) ?>
-          </p>
-        </div>
-      </div>
-
-      <!-- Delivery Information -->
-      <div class="mb-6">
-        <h2 class="text-lg font-semibold text-slate-900 mb-3">Delivery Information</h2>
-        <div class="rounded-xl border bg-slate-50 p-4 space-y-2">
-          <?php if ($recipient): ?>
-            <p><span class="text-slate-500">Name:</span> <span class="font-medium"><?= htmlspecialchars($recipient) ?></span></p>
-          <?php endif; ?>
-
-          <?php if ($addr_full): ?>
-            <p>
-              <span class="text-slate-500">Address:</span>
-              <?php if ($maps_query): ?>
-                <a href="<?= htmlspecialchars($maps_query) ?>" target="_blank" class="font-medium underline hover:no-underline">
-                  <?= htmlspecialchars($addr_full) ?>
-                </a>
-              <?php else: ?>
-                <span class="font-medium"><?= htmlspecialchars($addr_full) ?></span>
-              <?php endif; ?>
-            </p>
-          <?php endif; ?>
-
-          <?php if ($phone): ?>
-            <p><span class="text-slate-500">Contact:</span>
-              <a href="tel:<?= htmlspecialchars(preg_replace('/\s+/', '', $phone)) ?>" class="font-medium underline hover:no-underline">
-                <?= htmlspecialchars($phone) ?>
-              </a>
-            </p>
-          <?php endif; ?>
-        </div>
-      </div>
-
-      <!-- Items Purchased -->
-      <h2 class="text-lg font-semibold text-slate-900 mb-3">Items Purchased</h2>
-      <div class="space-y-4">
-        <?php foreach ($items as $item): 
-          $img = first_image($item['images'] ?? '') ?: 'img/Featured/1.png';
-          $line_total = (float)$item['price'] * (int)$item['quantity'];
-        ?>
-          <div class="flex items-center border-b pb-4">
-            <img src="<?= htmlspecialchars($img) ?>" class="w-16 h-16 rounded object-cover mr-4" alt="Product">
-            <div class="flex-1 min-w-0">
-              <h3 class="font-semibold text-slate-800 line-clamp-1"><?= htmlspecialchars($item['name']) ?></h3>
-              <p class="text-gray-600">Qty: <?= (int)$item['quantity'] ?></p>
-            </div>
-            <div class="text-right">
-              <p class="font-semibold">₱<?= number_format($line_total, 2) ?></p>
-              <p class="text-sm text-gray-500">₱<?= number_format((float)$item['price'], 2) ?> each</p>
-            </div>
+      <section class="md:col-span-3 bg-white rounded-lg border border-gray-200">
+        <div class="p-6 border-b">
+          <div class="flex items-center gap-3">
+            <a href="my_orders.php" class="inline-flex items-center text-emerald-600 hover:text-emerald-800">
+              <i class="fa-solid fa-arrow-left mr-2"></i>
+            </a>
+            <h1 class="text-[20px] font-semibold">Order Details</h1>
           </div>
-        <?php endforeach; ?>
+        </div>
 
-        <!-- Breakdown box (always shows Shipping Fee, even if 0.00) -->
-        <div class="mt-4 rounded-xl border bg-slate-50 p-4 space-y-2">
-          <div class="flex justify-between text-sm">
-            <span class="text-slate-600">Items Subtotal</span>
-            <span class="font-medium">₱<?= number_format($items_subtotal, 2) ?></span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-slate-600">Shipping Fee</span>
-            <span class="font-medium">₱<?= number_format($shipping_fee, 2) ?></span>
-          </div>
-          <?php if ($other_fee != 0): ?>
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-600">Other Fee</span>
-              <span class="font-medium">₱<?= number_format($other_fee, 2) ?></span>
-            </div>
-          <?php endif; ?>
-          <?php if ($discount_amount != 0): ?>
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-600">Discount</span>
-              <span class="font-medium">-₱<?= number_format(abs($discount_amount), 2) ?></span>
-            </div>
-          <?php endif; ?>
-          <?php if ($voucher_discount != 0): ?>
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-600">Voucher</span>
-              <span class="font-medium">-₱<?= number_format(abs($voucher_discount), 2) ?></span>
-            </div>
-          <?php endif; ?>
-
-          <div class="flex justify-between items-center pt-3 mt-2 border-t">
-            <span class="text-base font-semibold text-slate-800">Total Cost</span>
-            <span class="text-lg font-bold text-emerald-600">₱<?= number_format($display_total, 2) ?></span>
-          </div>
-
-          <?php if (abs($computed_total - $display_total) > 0.01): ?>
-            <p class="text-xs text-amber-700 mt-1">
-              Note: Computed total (₱<?= number_format($computed_total, 2) ?>) differs from stored total. Check fees/discounts.
-            </p>
+        <!-- Status banner + Payment method -->
+        <div class="mx-6 mt-4 rounded border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 flex justify-between items-center">
+          <div><i class="fa-solid fa-truck-fast mr-2"></i><span class="font-semibold"><?= htmlspecialchars($banner) ?></span></div>
+          <?php if ($pay_text): ?>
+            <div class="text-sm font-medium text-slate-700"><?= htmlspecialchars($pay_text) ?></div>
           <?php endif; ?>
         </div>
-      </div>
 
-      <!-- Bottom actions: ONLY Cancel -->
-      <div class="mt-6 flex items-center justify-end">
-        <?php if ($can_cancel): ?>
-          <form method="post" onsubmit="return confirm('Cancel this order?');">
-            <input type="hidden" name="action" value="cancel">
-            <input type="hidden" name="order_pk" value="<?= (int)$order['order_id'] ?>">
-            <button type="submit"
-              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50">
-              <i class="fa-solid fa-ban"></i>
-              Cancel Order
-            </button>
-          </form>
+        <!-- Flash messages -->
+        <?php if ($msg = get_flash('success')): ?>
+          <div class="mx-6 mt-4 rounded bg-emerald-50 text-emerald-700 px-4 py-3 border border-emerald-200">
+            <?= htmlspecialchars($msg) ?>
+          </div>
         <?php endif; ?>
-      </div>
+        <?php if ($msg = get_flash('error')): ?>
+          <div class="mx-6 mt-4 rounded bg-red-50 text-red-700 px-4 py-3 border border-red-200">
+            <?= htmlspecialchars($msg) ?>
+          </div>
+        <?php endif; ?>
 
+        <div class="p-6">
+
+          <!-- Order summary -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <p class="text-sm text-slate-500">Order ID</p>
+              <p class="font-semibold text-slate-800"><?= htmlspecialchars($order['custom_order_id']) ?></p>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500">Status</p>
+              <p class="font-semibold <?= $can_cancel ? 'text-yellow-700' : 'text-emerald-700' ?>">
+                <?= htmlspecialchars(ucfirst($order['status'])) ?>
+              </p>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500">Order Date</p>
+              <p class="font-semibold text-slate-800">
+                <?= htmlspecialchars($order['created_at']) ?>
+              </p>
+            </div>
+          </div>
+
+          <!-- Delivery Information -->
+          <div class="mb-6">
+            <h2 class="text-lg font-semibold text-slate-900 mb-3">Delivery Information</h2>
+            <div class="rounded-lg border bg-gray-50 p-4 space-y-2">
+              <?php if ($recipient): ?>
+                <p><span class="text-slate-500">Name:</span> <span class="font-medium"><?= htmlspecialchars($recipient) ?></span></p>
+              <?php endif; ?>
+
+              <?php if ($addr_full): ?>
+                <p>
+                  <span class="text-slate-500">Address:</span>
+                  <?php if ($maps_query): ?>
+                    <a href="<?= htmlspecialchars($maps_query) ?>" target="_blank" class="font-medium underline hover:no-underline">
+                      <?= htmlspecialchars($addr_full) ?>
+                    </a>
+                  <?php else: ?>
+                    <span class="font-medium"><?= htmlspecialchars($addr_full) ?></span>
+                  <?php endif; ?>
+                </p>
+              <?php endif; ?>
+
+              <?php if ($phone): ?>
+                <p><span class="text-slate-500">Contact:</span>
+                  <a href="tel:<?= htmlspecialchars(preg_replace('/\s+/', '', $phone)) ?>" class="font-medium underline hover:no-underline">
+                    <?= htmlspecialchars($phone) ?>
+                  </a>
+                </p>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <!-- Items Purchased -->
+          <h2 class="text-lg font-semibold text-slate-900 mb-3">Items Purchased</h2>
+          <div class="space-y-4">
+            <?php foreach ($items as $item): 
+              $img = first_image($item['images'] ?? '') ?: 'img/Featured/1.png';
+              $line_total = (float)$item['price'] * (int)$item['quantity'];
+            ?>
+              <div class="flex items-center border-b pb-4">
+                <img src="<?= htmlspecialchars($img) ?>" class="w-16 h-16 rounded object-cover mr-4" alt="Product">
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-semibold text-slate-800 line-clamp-1"><?= htmlspecialchars($item['name']) ?></h3>
+                  <p class="text-gray-600">Qty: <?= (int)$item['quantity'] ?></p>
+                </div>
+                <div class="text-right">
+                  <p class="font-semibold">₱<?= number_format($line_total, 2) ?></p>
+                  <p class="text-sm text-gray-500">₱<?= number_format((float)$item['price'], 2) ?> each</p>
+                </div>
+              </div>
+            <?php endforeach; ?>
+
+            <!-- Breakdown box -->
+            <div class="mt-4 rounded-lg border bg-gray-50 p-4 space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-600">Items Subtotal</span>
+                <span class="font-medium">₱<?= number_format($items_subtotal, 2) ?></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-600">Shipping Fee</span>
+                <span class="font-medium">₱<?= number_format($shipping_fee, 2) ?></span>
+              </div>
+              <?php if ($other_fee != 0): ?>
+                <div class="flex justify-between text-sm">
+                  <span class="text-slate-600">Other Fee</span>
+                  <span class="font-medium">₱<?= number_format($other_fee, 2) ?></span>
+                </div>
+              <?php endif; ?>
+              <?php if ($discount_amount != 0): ?>
+                <div class="flex justify-between text-sm">
+                  <span class="text-slate-600">Discount</span>
+                  <span class="font-medium">-₱<?= number_format(abs($discount_amount), 2) ?></span>
+                </div>
+              <?php endif; ?>
+              <?php if ($voucher_discount != 0): ?>
+                <div class="flex justify-between text-sm">
+                  <span class="text-slate-600">Voucher</span>
+                  <span class="font-medium">-₱<?= number_format(abs($voucher_discount), 2) ?></span>
+                </div>
+              <?php endif; ?>
+
+              <div class="flex justify-between items-center pt-3 mt-2 border-t">
+                <span class="text-base font-semibold text-slate-800">Total Cost</span>
+                <span class="text-lg font-bold text-emerald-600">₱<?= number_format($display_total, 2) ?></span>
+              </div>
+
+              <?php if (abs($computed_total - $display_total) > 0.01): ?>
+                <p class="text-xs text-amber-700 mt-1">
+                  Note: Computed total (₱<?= number_format($computed_total, 2) ?>) differs from stored total. Check fees/discounts.
+                </p>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <!-- Bottom actions: ONLY Cancel -->
+          <div class="mt-6 flex items-center justify-end">
+            <?php if ($can_cancel): ?>
+              <form method="post" onsubmit="return confirm('Cancel this order?');">
+                <input type="hidden" name="action" value="cancel">
+                <input type="hidden" name="order_pk" value="<?= (int)$order['order_id'] ?>">
+                <button type="submit"
+                  class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50">
+                  <i class="fa-solid fa-ban"></i>
+                  Cancel Order
+                </button>
+              </form>
+            <?php endif; ?>
+          </div>
+        </div>
+      </section>
     </div>
+  </main>
+
+  <?php // partials/footer.php ?>
+<footer class="bg-slate-800 text-white py-12 mt-auto">
+  <div class="container mx-auto px-4 text-center">
+    <p>&copy; 2024 FitFuel. All rights reserved.</p>
   </div>
+</footer>
+
 </body>
 </html>

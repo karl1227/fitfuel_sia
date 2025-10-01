@@ -14,14 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($action === 'update_inventory') {
         $product_id = intval($_POST['product_id']);
         $current_stock = intval($_POST['current_stock']);
-        $new_stock_quantity = intval($_POST['stock_quantity']);
+        $new_stock = intval($_POST['stock']);
         $min_stock_level = intval($_POST['min_stock_level']);
-        $quantity_changed = $new_stock_quantity - $current_stock;
+        $quantity_changed = $new_stock - $current_stock;
         try {
             $pdo->beginTransaction();
             // Update product stock and min level
-            $stmt = $pdo->prepare("UPDATE products SET stock_quantity = ?, min_stock_level = ? WHERE product_id = ?");
-            $stmt->execute([$new_stock_quantity, $min_stock_level, $product_id]);
+            $stmt = $pdo->prepare("UPDATE products SET stock = ?, min_stock_level = ? WHERE product_id = ?");
+            $stmt->execute([$new_stock, $min_stock_level, $product_id]);
             // Log as adjustment (read/update only, but keep audit trail)
             if ($quantity_changed !== 0) {
                 $stmt = $pdo->prepare("INSERT INTO inventory (product_id, change_type, quantity, created_by) VALUES (?, 'adjustment', ?, ?)");
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 // Log inventory adjustment in audit log
                 $reason = $quantity_changed > 0 ? 'Stock increase' : 'Stock decrease';
-                $auditLogger->logInventoryAdjustment($product_id, $current_stock, $new_stock_quantity, $reason);
+                $auditLogger->logInventoryAdjustment($product_id, $current_stock, $new_stock, $reason);
             }
             $pdo->commit();
             $message = "Inventory updated successfully!";
@@ -42,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Get inventory summary data
 $total_products = $pdo->query("SELECT COUNT(*) FROM products WHERE status = 'active'")->fetchColumn();
-$low_stock_items = $pdo->query("SELECT COUNT(*) FROM products WHERE stock_quantity <= min_stock_level AND status = 'active'")->fetchColumn();
-$critical_stock = $pdo->query("SELECT COUNT(*) FROM products WHERE stock_quantity = 0 AND status = 'active'")->fetchColumn();
+$low_stock_items = $pdo->query("SELECT COUNT(*) FROM products WHERE stock <= min_stock_level AND status = 'active'")->fetchColumn();
+$critical_stock = $pdo->query("SELECT COUNT(*) FROM products WHERE stock = 0 AND status = 'active'")->fetchColumn();
 $stock_value = 0; // Removed from UI
 
 // Get inventory items with search and filters
@@ -71,13 +71,13 @@ if ($category_filter) {
 if ($status_filter) {
     switch ($status_filter) {
         case 'low_stock':
-            $where_conditions[] = "p.stock_quantity <= p.min_stock_level";
+            $where_conditions[] = "p.stock <= p.min_stock_level";
             break;
         case 'out_of_stock':
-            $where_conditions[] = "p.stock_quantity = 0";
+            $where_conditions[] = "p.stock = 0";
             break;
         case 'in_stock':
-            $where_conditions[] = "p.stock_quantity > p.min_stock_level";
+            $where_conditions[] = "p.stock > p.min_stock_level";
             break;
     }
 }
@@ -97,7 +97,7 @@ $sql = "SELECT p.*, c.name as category_name, s.name as subcategory_name
         LEFT JOIN categories c ON p.category_id = c.category_id 
         LEFT JOIN subcategories s ON p.subcategory_id = s.subcategory_id 
         $where_clause 
-        ORDER BY p.stock_quantity ASC, p.name ASC 
+        ORDER BY p.stock ASC, p.name ASC 
         LIMIT $limit OFFSET $offset";
 
 $stmt = $pdo->prepare($sql);
@@ -442,7 +442,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                                         <?php echo htmlspecialchars($item['category_name'] ?? 'N/A'); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <?php echo $item['stock_quantity']; ?>
+                                        <?php echo $item['stock']; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <?php echo $item['min_stock_level']; ?>
@@ -454,10 +454,10 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                                         <?php
                                         $stock_status = '';
                                         $status_class = '';
-                                        if ($item['stock_quantity'] == 0) {
+                                        if ($item['stock'] == 0) {
                                             $stock_status = 'Out of Stock';
                                             $status_class = 'status-critical';
-                                        } elseif ($item['stock_quantity'] <= $item['min_stock_level']) {
+                                        } elseif ($item['stock'] <= $item['min_stock_level']) {
                                             $stock_status = 'Low Stock';
                                             $status_class = 'status-low';
                                         } else {
@@ -470,7 +470,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button onclick="openStockModal(<?php echo $item['product_id']; ?>, '<?php echo htmlspecialchars($item['name']); ?>', <?php echo $item['stock_quantity']; ?>, <?php echo $item['min_stock_level']; ?>)" class="text-blue-600 hover:text-blue-900">
+                                        <button onclick="openStockModal(<?php echo $item['product_id']; ?>, '<?php echo htmlspecialchars($item['name']); ?>', <?php echo $item['stock']; ?>, <?php echo $item['min_stock_level']; ?>)" class="text-blue-600 hover:text-blue-900">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                     </td>
@@ -535,7 +535,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                         
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
-                            <input type="number" name="stock_quantity" id="stockQuantityInput" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+                            <input type="number" name="stock" id="stockQuantityInput" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
                         </div>
                         
                         <div class="mb-6">
