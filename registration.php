@@ -2,6 +2,13 @@
 require_once 'config/database.php';
 require_once 'config/google_config.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require './PHPMailer/src/Exception.php';
+require './PHPMailer/src/PHPMailer.php';
+require './PHPMailer/src/SMTP.php';
+
 // Handle registration form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
@@ -51,10 +58,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, role, status) VALUES (?, ?, ?, 'customer', 'active')");
                 $stmt->execute([$username, $email, $password_hash]);
                 
-                // Registration successful
-                $_SESSION['success'] = "Registration successful! Please login with your credentials.";
-                header('Location: login.php');
-                exit();
+                // Get the newly created user ID
+                $user_id = $pdo->lastInsertId();
+                
+                // Generate OTP for email verification
+                $otp = rand(100000, 999999);
+                $otp_expiry = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+                
+                // Store email in session for OTP verification
+                $_SESSION['email'] = $email;
+                
+                // Send OTP via email
+                $mail = new PHPMailer(true);
+                
+                try {
+                    // Server settings
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.gmail.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = 'siafitfuel@gmail.com';
+                    $mail->Password   = 'felclcbkazuspzde';
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = 587;
+                    
+                    // Recipients
+                    $mail->setFrom('siafitfuel@gmail.com', 'FitFuel');
+                    $mail->addAddress($email);
+                    
+                    // Content
+                    $mail->isHTML(true);
+                    $mail->Subject = "Welcome to FitFuel - Verify Your Email";
+                    
+                    $mail->Body = '
+                    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+                    <div style="max-width: 500px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
+                        <h2 style="color: #333;">🎉 Welcome to FitFuel!</h2>
+                        <p style="font-size: 16px; color: #555;">
+                        Hello ' . htmlspecialchars($username) . ',<br> Thank you for registering! Use the OTP below to verify your email address:
+                        </p>
+                        <div style="font-size: 32px; font-weight: bold; color: #2c3e50; margin: 20px 0; letter-spacing: 4px;">
+                        ' . $otp . '
+                        </div>
+                        <p style="font-size: 14px; color: #999;">
+                        This OTP will expire in 5 minutes. Please do not share it with anyone.
+                        </p>
+                    </div>
+                    </div>';
+                    
+                    $mail->send();
+                    
+                    // Store OTP in database
+                    $updateStmt = $pdo->prepare("UPDATE users SET otp = ?, otp_expiry = ? WHERE user_id = ?");
+                    $updateStmt->execute([$otp, $otp_expiry, $user_id]);
+                    
+                    // Store temp session for verification
+                    $_SESSION['temp_user'] = ['user_id' => $user_id, 'otp' => $otp];
+                    
+                    // Redirect to OTP verification
+                    header("Location: otp_verification.php");
+                    exit();
+                    
+                } catch (Exception $e) {
+                    $errors[] = "Registration successful but failed to send verification email. Please contact support.";
+                }
             }
         } catch (PDOException $e) {
             $errors[] = "Registration failed. Please try again.";

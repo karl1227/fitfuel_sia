@@ -3,6 +3,13 @@ require_once 'config/database.php';
 require_once 'config/google_config.php';
 require_once 'config/audit_logger.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require './PHPMailer/src/Exception.php';
+require './PHPMailer/src/PHPMailer.php';
+require './PHPMailer/src/SMTP.php';
+
 // Handle login form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username_email = trim($_POST['username_email']);
@@ -21,26 +28,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $stmt->fetch();
             
             if ($user && password_verify($password, $user['password_hash'])) {
-                // Login successful
-                $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['username'] = $user['username'];
+                // Generate OTP
+                $otp = rand(100000, 999999);
+                $otp_expiry = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+                
+                // Store email in session for OTP verification
                 $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $user['role'];
                 
-                // Update last login
-                $updateStmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
-                $updateStmt->execute([$user['user_id']]);
+                // Send OTP via email
+                $mail = new PHPMailer(true);
                 
-                // Log successful login
-                $auditLogger->logLogin($user['username'], true, $user['user_id']);
-                
-                // Redirect based on role
-                if ($user['role'] == 'admin' || $user['role'] == 'manager' || $user['role'] == 'staff') {
-                    header('Location: admin/dashboard.php');
-                } else {
-                    header('Location: index.php');
+                try {
+                    // Server settings
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.gmail.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = 'siafitfuel@gmail.com';
+                    $mail->Password   = 'felclcbkazuspzde';
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = 587;
+                    
+                    // Recipients
+                    $mail->setFrom('siafitfuel@gmail.com', 'FitFuel');
+                    $mail->addAddress($user['email']);
+                    
+                    // Content
+                    $mail->isHTML(true);
+                    $mail->Subject = "Your OTP Code - FitFuel";
+                    
+                    $mail->Body = '
+                    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+                    <div style="max-width: 500px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
+                        <h2 style="color: #333;">🔐 Email Verification</h2>
+                        <p style="font-size: 16px; color: #555;">
+                        Hello ' . htmlspecialchars($user['username']) . ',<br> Use the OTP below to complete your login:
+                        </p>
+                        <div style="font-size: 32px; font-weight: bold; color: #2c3e50; margin: 20px 0; letter-spacing: 4px;">
+                        ' . $otp . '
+                        </div>
+                        <p style="font-size: 14px; color: #999;">
+                        This OTP will expire in 5 minutes. Please do not share it with anyone.
+                        </p>
+                    </div>
+                    </div>';
+                    
+                    $mail->send();
+                    
+                    // Store OTP in database
+                    $updateStmt = $pdo->prepare("UPDATE users SET otp = ?, otp_expiry = ? WHERE user_id = ?");
+                    $updateStmt->execute([$otp, $otp_expiry, $user['user_id']]);
+                    
+                    // Store temp session for verification
+                    $_SESSION['temp_user'] = ['user_id' => $user['user_id'], 'otp' => $otp];
+                    
+                    // Log OTP sent
+                    $auditLogger->logLogin($user['username'], true, $user['user_id']);
+                    
+                    // Redirect to OTP verification
+                    header("Location: otp_verification.php");
+                    exit();
+                    
+                } catch (Exception $e) {
+                    $error = "Failed to send OTP. Please try again.";
                 }
-                exit();
             } else {
                 // Log failed login attempt
                 $auditLogger->logLogin($username_email, false);
