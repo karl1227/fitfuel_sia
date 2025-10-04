@@ -238,6 +238,7 @@ try {
   </head>
   <body class="font-body bg-white text-slate-600">
     <!-- First Navigation Bar -->
+    <p>Final to sa lahat</p>
     <nav class="bg-white text-black py-2">
       <div class="container mx-auto px-4">
         <div class="flex justify-end space-x-6 text-sm">
