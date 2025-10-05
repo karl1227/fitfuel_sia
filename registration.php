@@ -26,8 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if (empty($password)) {
         $errors[] = "Password is required";
-    } elseif (strlen($password) < 6) {
-        $errors[] = "Password must be at least 6 characters long";
+    } elseif (strlen($password) < 8) {
+        $errors[] = "Password must be at least 8 characters long";
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $errors[] = "Password must contain at least one uppercase letter";
+    } elseif (!preg_match('/[a-z]/', $password)) {
+        $errors[] = "Password must contain at least one lowercase letter";
+    } elseif (!preg_match('/\d/', $password)) {
+        $errors[] = "Password must contain at least one number";
+    } elseif (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/', $password)) {
+        $errors[] = "Password must contain at least one special character";
     }
     
     if ($password !== $confirm_password) {
@@ -249,7 +257,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <input type="password" 
                                    name="password" 
                                    id="password"
-                                   placeholder="Password" 
+                                   placeholder="Enter password" 
                                    class="w-full px-4 py-3 rounded-lg input-field focus:outline-none pr-12"
                                    required>
                             <button type="button" 
@@ -257,6 +265,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
                                 <i class="fas fa-eye" id="passwordToggle"></i>
                             </button>
+                        </div>
+                        
+                        <!-- Password Strength Bar -->
+                        <div class="w-full bg-gray-200 rounded-full h-2 transition-all duration-300" id="strength-container" style="height: 0; margin: 0; padding: 0;">
+                            <div class="bg-gray-400 h-2 rounded-full transition-all duration-300" id="strength-bar" style="width: 0%;"></div>
+                        </div>
+                        
+                        <!-- Password Requirements -->
+                        <div class="bg-gray-50 p-4 rounded-lg transition-all duration-500 linear overflow-hidden" id="password-requirements" style="max-height: 0; opacity: 0; margin: 0;">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Password Requirements:</h4>
+                            <ul class="space-y-1 text-sm">
+                                <li class="flex items-center" id="req-length">
+                                    <i class="fas fa-times text-red-500 mr-2"></i>
+                                    <span>At least 8 characters</span>
+                                </li>
+                                <li class="flex items-center" id="req-uppercase">
+                                    <i class="fas fa-times text-red-500 mr-2"></i>
+                                    <span>One uppercase letter</span>
+                                </li>
+                                <li class="flex items-center" id="req-lowercase">
+                                    <i class="fas fa-times text-red-500 mr-2"></i>
+                                    <span>One lowercase letter</span>
+                                </li>
+                                <li class="flex items-center" id="req-number">
+                                    <i class="fas fa-times text-red-500 mr-2"></i>
+                                    <span>One number</span>
+                                </li>
+                                <li class="flex items-center" id="req-special">
+                                    <i class="fas fa-times text-red-500 mr-2"></i>
+                                    <span>One special character</span>
+                                </li>
+                            </ul>
                         </div>
                         
                         <!-- Confirm Password Field -->
@@ -270,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <button type="button" 
                                     onclick="togglePassword('confirm_password')" 
                                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                                <i class="fas fa-eye" id="confirmPasswordToggle"></i>
+                                <i class="fas fa-eye" id="confirm_passwordToggle"></i>
                             </button>
                         </div>
                         
@@ -320,32 +360,191 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     
     <script>
+        // Simple password validation
+        function updatePasswordRequirements() {
+            const password = document.getElementById('password').value;
+            
+            // Check each requirement
+            const length = password.length >= 8;
+            const uppercase = /[A-Z]/.test(password);
+            const lowercase = /[a-z]/.test(password);
+            const number = /\d/.test(password);
+            const special = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            // Update icons
+            updateIcon('req-length', length);
+            updateIcon('req-uppercase', uppercase);
+            updateIcon('req-lowercase', lowercase);
+            updateIcon('req-number', number);
+            updateIcon('req-special', special);
+            
+            // Update strength bar
+            const strength = [length, uppercase, lowercase, number, special].filter(Boolean).length;
+            const strengthBar = document.getElementById('strength-bar');
+            if (strengthBar) {
+                strengthBar.style.width = (strength / 5 * 100) + '%';
+                
+                if (strength === 0) strengthBar.className = 'bg-gray-400 h-2 rounded-full transition-all duration-300';
+                else if (strength === 1) strengthBar.className = 'bg-red-500 h-2 rounded-full transition-all duration-300';
+                else if (strength === 2) strengthBar.className = 'bg-orange-500 h-2 rounded-full transition-all duration-300';
+                else if (strength === 3) strengthBar.className = 'bg-yellow-500 h-2 rounded-full transition-all duration-300';
+                else if (strength === 4) strengthBar.className = 'bg-blue-500 h-2 rounded-full transition-all duration-300';
+                else if (strength === 5) strengthBar.className = 'bg-green-500 h-2 rounded-full transition-all duration-300';
+            }
+            
+            // Show/hide requirements
+            const requirements = document.getElementById('password-requirements');
+            if (requirements) {
+                if (password.length > 0) {
+                    requirements.style.maxHeight = '200px';
+                    requirements.style.opacity = '1';
+                    requirements.style.margin = '8px 0';
+                } else {
+                    requirements.style.maxHeight = '0';
+                    requirements.style.opacity = '0';
+                    requirements.style.margin = '0';
+                }
+            }
+            
+            // Update submit button
+            updateSubmitButton();
+        }
+        
+        function updateIcon(elementId, isValid) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                const icon = element.querySelector('i');
+                if (icon) {
+                    icon.className = isValid ? 'fas fa-check text-green-500 mr-2' : 'fas fa-times text-red-500 mr-2';
+                }
+            }
+        }
+        
+        function updateSubmitButton() {
+            const submitBtn = document.querySelector('button[type="submit"]');
+            if (!submitBtn) return;
+            
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const termsChecked = document.getElementById('terms').checked;
+            
+            const length = password.length >= 8;
+            const uppercase = /[A-Z]/.test(password);
+            const lowercase = /[a-z]/.test(password);
+            const number = /\d/.test(password);
+            const special = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            const strongPassword = length && uppercase && lowercase && number && special;
+            const passwordsMatch = password === confirmPassword && password !== '';
+            const allFieldsFilled = username !== '' && email !== '' && password !== '' && confirmPassword !== '';
+            
+            const canSubmit = strongPassword && passwordsMatch && allFieldsFilled && termsChecked;
+            
+            if (canSubmit) {
+                submitBtn.disabled = false;
+                submitBtn.className = 'w-full py-3 rounded-lg text-white font-semibold register-btn focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.className = 'w-full py-3 rounded-lg text-white font-semibold bg-gray-400 cursor-not-allowed focus:outline-none';
+            }
+        }
+        
         function togglePassword(fieldId) {
             const passwordField = document.getElementById(fieldId);
             const toggleIcon = document.getElementById(fieldId + 'Toggle');
             
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordField.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
+            if (passwordField && toggleIcon) {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
             }
         }
         
-        
-        // Password match validation
-        document.getElementById('confirm_password').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-            
-            if (password !== confirmPassword) {
-                this.setCustomValidity('Passwords do not match');
-            } else {
-                this.setCustomValidity('');
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password field
+            const passwordField = document.getElementById('password');
+            if (passwordField) {
+                passwordField.addEventListener('input', updatePasswordRequirements);
+                passwordField.addEventListener('focus', function() {
+                    if (this.value.length > 0) {
+                        const requirements = document.getElementById('password-requirements');
+                        if (requirements) {
+                            requirements.style.maxHeight = '200px';
+                            requirements.style.opacity = '1';
+                            requirements.style.margin = '8px 0';
+                        }
+                    }
+                });
             }
+            
+            // Other fields
+            const fields = ['username', 'email', 'confirm_password'];
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', updateSubmitButton);
+                }
+            });
+            
+            // Terms checkbox
+            const termsCheckbox = document.getElementById('terms');
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('change', updateSubmitButton);
+            }
+            
+            // Confirm password specific
+            const confirmPasswordField = document.getElementById('confirm_password');
+            if (confirmPasswordField) {
+                confirmPasswordField.addEventListener('input', function() {
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = this.value;
+                    
+                    if (password !== confirmPassword) {
+                        this.setCustomValidity('Passwords do not match');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                    
+                    updateSubmitButton();
+                });
+            }
+            
+            // Form submission
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const username = document.getElementById('username').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirm_password').value;
+                    const termsChecked = document.getElementById('terms').checked;
+                    
+                    const length = password.length >= 8;
+                    const uppercase = /[A-Z]/.test(password);
+                    const lowercase = /[a-z]/.test(password);
+                    const number = /\d/.test(password);
+                    const special = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+                    const strongPassword = length && uppercase && lowercase && number && special;
+                    const passwordsMatch = password === confirmPassword && password !== '';
+                    const allFieldsFilled = username !== '' && email !== '' && password !== '' && confirmPassword !== '';
+                    
+                    if (!strongPassword || !passwordsMatch || !allFieldsFilled || !termsChecked) {
+                        e.preventDefault();
+                        alert('Please fill in all fields, ensure your password meets all requirements, passwords match, and agree to the terms.');
+                    }
+                });
+            }
+            
+            // Initialize
+            updateSubmitButton();
         });
     </script>
 </body>
