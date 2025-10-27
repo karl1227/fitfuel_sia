@@ -2,6 +2,10 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/analytics.php';
+require_once '../includes/admin_sidebar.php';
+
+// Check role-based access for analytics module
+requireAccess('analytics');
 
 $analytics = new Analytics();
 
@@ -45,12 +49,35 @@ if (isset($_GET['export'])) {
             break;
             
         case 'pdf':
-            $html = '<h1>FitFuel Analytics Report</h1>';
-            $html .= '<h2>KPIs</h2>';
-            $html .= '<p>Revenue (30 Days): ₱' . number_format($data['kpis']['revenue_30_days'], 2) . '</p>';
-            $html .= '<p>Orders (30 Days): ' . number_format($data['kpis']['orders_30_days']) . '</p>';
-            $html .= '<p>Conversion Rate: ' . $data['kpis']['conversion_rate'] . '%</p>';
-            $html .= '<p>Active Customers: ' . number_format($data['kpis']['active_customers']) . '</p>';
+            $html = '<h1>FitFuel Analytics Report - ' . date('F Y') . '</h1>';
+            $html .= '<p><strong>Generated:</strong> ' . date('Y-m-d H:i:s') . '</p>';
+            $html .= '<p><strong>Report Period:</strong> ' . $filters['start_date'] . ' to ' . $filters['end_date'] . '</p>';
+            $html .= '<hr style="margin: 20px 0; border: 0; border-top: 2px solid #000;">';
+            $html .= '<div class="metric">';
+            $html .= '<h2>Key Performance Indicators</h2>';
+            $html .= '<p><strong>Revenue (30 Days):</strong> ₱' . number_format($data['kpis']['revenue_30_days'], 2) . '</p>';
+            $html .= '<p><strong>Orders (30 Days):</strong> ' . number_format($data['kpis']['orders_30_days']) . '</p>';
+            $html .= '<p><strong>Conversion Rate:</strong> ' . $data['kpis']['conversion_rate'] . '%</p>';
+            $html .= '<p><strong>Active Customers:</strong> ' . number_format($data['kpis']['active_customers']) . '</p>';
+            $html .= '</div>';
+            
+            // Add revenue trend table
+            if (!empty($data['revenue_trend'])) {
+                $html .= '<h2>Revenue Trend</h2>';
+                $html .= '<table>';
+                $html .= '<thead><tr><th>Date</th><th>Revenue</th><th>Orders</th><th>Customers</th></tr></thead>';
+                $html .= '<tbody>';
+                foreach (array_slice($data['revenue_trend'], -10) as $trend) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . htmlspecialchars($trend['period']) . '</td>';
+                    $html .= '<td>₱' . number_format($trend['revenue'], 2) . '</td>';
+                    $html .= '<td>' . number_format($trend['orders']) . '</td>';
+                    $html .= '<td>' . number_format($trend['unique_customers']) . '</td>';
+                    $html .= '</tr>';
+                }
+                $html .= '</tbody></table>';
+            }
+            
             $analytics->generatePDF($html, 'analytics_report_' . date('Y-m-d') . '.pdf');
             break;
     }
@@ -130,74 +157,7 @@ $dashboardData = $analytics->getDashboardData($filters);
         </div>
     </header>
 
-    <!-- Sidebar -->
-    <aside class="fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto">
-        <nav class="p-4">
-            <ul class="space-y-2">
-                <li>
-                    <a href="dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-th-large text-gray-600"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="product.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-cube text-gray-600"></i>
-                        <span>Products</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="orders.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-shopping-cart text-gray-600"></i>
-                        <span>Orders</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="inventory.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-archive text-gray-600"></i>
-                        <span>Inventory</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="users.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-users text-gray-600"></i>
-                        <span>Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="analytics.php" class="sidebar-item active flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-chart-line text-gray-600"></i>
-                        <span>Analytics</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="content.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-file-alt text-gray-600"></i>
-                        <span>Contents</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-history text-gray-600"></i>
-                        <span>Audit Trail</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-bell text-gray-600"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-cog text-gray-600"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-    </aside>
+    <?php renderAdminSidebar('analytics'); ?>
 
     <!-- Main Content -->
     <main class="ml-64 pt-24 pb-6 px-6">
@@ -226,6 +186,7 @@ $dashboardData = $analytics->getDashboardData($filters);
                                 <i class="fas fa-file-excel mr-3 text-gray-400"></i>Export Excel
                             </a>
                             <a href="?export=pdf&start_date=<?php echo $filters['start_date']; ?>&end_date=<?php echo $filters['end_date']; ?>&group_by=<?php echo $filters['group_by']; ?>" 
+                               target="_blank"
                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-file-pdf mr-3 text-gray-400"></i>Export PDF
                             </a>

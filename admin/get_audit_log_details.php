@@ -2,6 +2,9 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 
+// Check role-based access for audit_logs module
+requireAccess('audit_logs');
+
 $pdo = getDBConnection();
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {

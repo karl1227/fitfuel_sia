@@ -2,6 +2,9 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 
+// Check role-based access for products module (clear_admin_carts is part of products)
+requireAccess('products');
+
 $pdo = getDBConnection();
 $success = false;
 $message = '';

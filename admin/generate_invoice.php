@@ -2,6 +2,9 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 
+// Check role-based access for orders module (generate_invoice is part of orders)
+requireAccess('orders');
+
 $pdo = getDBConnection();
 
 // Get order ID from URL parameter

@@ -2,6 +2,10 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/audit_logger.php';
+require_once '../includes/admin_sidebar.php';
+
+// Check role-based access for audit_logs module
+requireAccess('audit_logs');
 
 $pdo = getDBConnection();
 $auditLogger = new AuditLogger();
@@ -265,73 +269,7 @@ function getActionTypeIcon($actionType) {
         </div>
     </header>
 
-    <!-- Sidebar -->
-    <aside class="fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto">
-        <nav class="p-4">
-            <ul class="space-y-2">
-                <li>
-                    <a href="dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-th-large text-gray-600"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="product.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-cube text-gray-600"></i>
-                        <span>Products</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="orders.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-shopping-cart text-gray-600"></i>
-                        <span>Orders</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="inventory.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-archive text-gray-600"></i>
-                        <span>Inventory</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="users.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-users text-gray-600"></i>
-                        <span>Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="analytics.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-chart-line text-gray-600"></i>
-                        <span>Analytics</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="content.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-file-alt text-gray-600"></i>
-                        <span>Contents</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="audit_logs.php" class="sidebar-item active flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-history text-gray-600"></i>
-                        <span>Audit Trail</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-bell text-gray-600"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-cog text-gray-600"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </aside>
+    <?php renderAdminSidebar('audit_logs'); ?>
 
     <!-- Main Content -->
     <main class="ml-64 pt-16 pb-6 px-6 pt-24">

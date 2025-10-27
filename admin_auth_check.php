@@ -32,4 +32,51 @@ try {
     header('Location: ../login.php');
     exit();
 }
+
+/**
+ * Check if the current user has permission to access a specific module
+ * @param string $module The module name to check
+ * @return bool True if user has access, false otherwise
+ */
+function hasAccess($module) {
+    $role = $_SESSION['role'] ?? '';
+    
+    // Define module permissions based on roles
+    $permissions = [
+        'admin' => [
+            'dashboard', 'products', 'orders', 'inventory', 
+            'users', 'analytics', 'content', 'audit_logs'
+        ],
+        'manager' => [
+            'dashboard', 'analytics'
+        ],
+        'staff' => [
+            'dashboard', 'orders', 'inventory'
+        ]
+    ];
+    
+    // Admin has access to everything
+    if ($role === 'admin') {
+        return true;
+    }
+    
+    // Check if the module is in the user's allowed modules
+    if (isset($permissions[$role])) {
+        return in_array($module, $permissions[$role]);
+    }
+    
+    return false;
+}
+
+/**
+ * Require access to a specific module
+ * Redirects to dashboard if access is denied
+ * @param string $module The module name to require access to
+ */
+function requireAccess($module) {
+    if (!hasAccess($module)) {
+        header('Location: ../admin/dashboard.php');
+        exit();
+    }
+}
 ?>
