@@ -80,7 +80,8 @@ try {
   ");
   $da->execute([$user_id]);
   $default_address_row = $da->fetch(PDO::FETCH_ASSOC);
-  $default_address_str = format_address_line($default_address_row);
+  // Handle case where no shipping address exists (fetch returns false)
+  $default_address_str = format_address_line($default_address_row ?: null);
 
 } catch (Throwable $e) {
   $user = ['username'=>'','email'=>'','phone'=>'','date_of_birth'=>null,'first_name'=>'','last_name'=>'','address'=>'','profile_picture'=>''];

@@ -358,7 +358,7 @@ $publishedItems = (int)$pdo->query("SELECT COUNT(*) FROM contents WHERE status =
 				<li><a href="orders.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-shopping-cart text-gray-600"></i><span>Orders</span></a></li>
 				<li><a href="inventory.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-archive text-gray-600"></i><span>Inventory</span></a></li>
 				<li><a href="users.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-users text-gray-600"></i><span>Users</span></a></li>
-				<li><a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-chart-line text-gray-600"></i><span>Analytics</span></a></li>
+				<li><a href="analytics.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-chart-line text-gray-600"></i><span>Analytics</span></a></li>
 				<li><a href="content.php" class="sidebar-item active flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-file-alt text-gray-600"></i><span>Contents</span></a></li>
 				<li><a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-history text-gray-600"></i><span>Audit Trail</span></a></li>
 				<li><a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800"><i class="fas fa-bell text-gray-600"></i><span>Notifications</span></a></li>

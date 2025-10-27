@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Please login to add items to cart']);
+    echo json_encode(['success' => false, 'message' => 'Please login to add items to your cart']);
     exit();
 }
 
@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!$input || !isset($input['product_id']) || !isset($input['quantity'])) {
-    echo json_encode(['success' => false, 'message' => 'Invalid request']);
+    echo json_encode(['success' => false, 'message' => 'Unable to process your request. Please try again']);
     exit();
 }
 
@@ -21,7 +21,7 @@ $product_id = (int)$input['product_id'];
 $quantity = (int)$input['quantity'];
 
 if ($product_id <= 0 || $quantity <= 0) {
-    echo json_encode(['success' => false, 'message' => 'Invalid product or quantity']);
+    echo json_encode(['success' => false, 'message' => 'Invalid product or quantity. Please try again']);
     exit();
 }
 
@@ -38,14 +38,14 @@ try {
     
     if (!$product) {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => 'Product not found or inactive']);
+        echo json_encode(['success' => false, 'message' => 'This product is currently unavailable']);
         exit();
     }
     
     // Check stock availability
     if ($product['stock'] < $quantity) {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => 'Insufficient stock. Available: ' . $product['stock']]);
+        echo json_encode(['success' => false, 'message' => 'Sorry, we only have ' . $product['stock'] . ' item(s) in stock']);
         exit();
     }
     
@@ -62,7 +62,7 @@ try {
         
         if (!$cart_id) {
             $pdo->rollBack();
-            echo json_encode(['success' => false, 'message' => 'Failed to create cart']);
+            echo json_encode(['success' => false, 'message' => 'Unable to create your cart. Please try again']);
             exit();
         }
     } else {
@@ -81,7 +81,7 @@ try {
         // Check if new quantity exceeds stock
         if ($new_quantity > $product['stock']) {
             $pdo->rollBack();
-            echo json_encode(['success' => false, 'message' => 'Cannot add more items. Stock limit reached. Current in cart: ' . $existing_item['quantity'] . ', Available: ' . $product['stock']]);
+            echo json_encode(['success' => false, 'message' => 'Sorry, only ' . $product['stock'] . ' item(s) available in stock. You already have ' . $existing_item['quantity'] . ' in your cart']);
             exit();
         }
         
@@ -90,7 +90,7 @@ try {
         
         if (!$result || $update_stmt->rowCount() == 0) {
             $pdo->rollBack();
-            echo json_encode(['success' => false, 'message' => 'Failed to update cart item. No rows affected.']);
+            echo json_encode(['success' => false, 'message' => 'Unable to update cart. Please try again']);
             exit();
         }
         
@@ -102,7 +102,7 @@ try {
         
         if (!$result || $insert_stmt->rowCount() == 0) {
             $pdo->rollBack();
-            echo json_encode(['success' => false, 'message' => 'Failed to add item to cart. No rows affected.']);
+            echo json_encode(['success' => false, 'message' => 'Unable to add item to cart. Please try again']);
             exit();
         }
         
@@ -128,11 +128,11 @@ try {
     if (isset($pdo)) {
         $pdo->rollBack();
     }
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Something went wrong. Please try again']);
 } catch (Exception $e) {
     if (isset($pdo)) {
         $pdo->rollBack();
     }
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Something went wrong. Please try again']);
 }
 ?>

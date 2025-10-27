@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Sep 30, 2025 at 01:05 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: Oct 05, 2025 at 02:18 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -120,7 +120,28 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (68, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-30 10:55:30'),
 (69, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 93 → 43 (Stock decrease)', '{\"stock\":93}', '{\"stock\":43}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-09-30 10:55:57'),
 (70, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-09-30 10:56:03'),
-(71, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-30 10:56:09');
+(71, 17, 'mich0303', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"mich0303\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 17, 'user', 'low', 'success', '2025-09-30 10:56:09'),
+(72, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-01 15:23:26'),
+(73, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-01 15:25:06'),
+(74, 14, 'karlblockstock', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-01 16:15:10'),
+(75, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-01 16:15:14'),
+(76, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 99 (Stock decrease)', '{\"stock\":100}', '{\"stock\":99}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 167, 'product', 'medium', 'success', '2025-10-01 16:16:50'),
+(77, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 199 → 99 (Stock decrease)', '{\"stock\":199}', '{\"stock\":99}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 151, 'product', 'medium', 'success', '2025-10-01 16:17:14'),
+(78, 15, 'karlblockstock1', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"karlblockstock1\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 15, 'user', 'low', 'success', '2025-10-05 12:04:01'),
+(79, 15, 'karlblockstock1', 'product_status_change', 'profile_update', 'User updated profile.', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, NULL, 'low', 'success', '2025-10-05 12:05:00'),
+(80, 15, 'karlblockstock1', 'product_status_change', 'profile_update', 'User updated profile.', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, NULL, 'low', 'success', '2025-10-05 12:05:21'),
+(81, 15, 'karlblockstock1', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 15, 'user', 'low', 'success', '2025-10-05 12:08:14'),
+(82, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-05 12:08:18'),
+(83, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-05 12:10:06'),
+(84, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-05 12:10:08'),
+(85, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-05 12:10:15'),
+(86, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-05 12:10:31'),
+(87, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-05 12:10:50'),
+(88, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-05 12:10:56'),
+(89, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-05 12:11:02'),
+(90, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-05 12:14:01'),
+(91, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-05 12:14:37'),
+(92, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-05 12:15:22');
 
 -- --------------------------------------------------------
 
@@ -174,9 +195,12 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (120, 23, 158, 1, '2025-09-24 07:37:25'),
 (121, 23, 144, 1, '2025-09-24 08:28:11'),
 (122, 14, 161, 3, '2025-09-24 17:10:56'),
-(123, 14, 143, 1, '2025-09-24 19:33:56'),
+(123, 14, 143, 3, '2025-09-24 19:33:56'),
 (124, 14, 145, 1, '2025-09-24 19:33:58'),
-(125, 23, 145, 1, '2025-09-27 19:01:11');
+(125, 23, 145, 1, '2025-09-27 19:01:11'),
+(127, 15, 143, 3, '2025-10-05 12:04:11'),
+(128, 15, 144, 2, '2025-10-05 12:04:13'),
+(129, 15, 145, 2, '2025-10-05 12:04:14');
 
 -- --------------------------------------------------------
 
@@ -276,7 +300,9 @@ INSERT INTO `inventory` (`inventory_id`, `product_id`, `change_type`, `quantity`
 (18, 161, 'stock_out', 100, 24, 17, '2025-09-28 19:26:44'),
 (19, 167, 'adjustment', 100, NULL, 4, '2025-09-28 19:35:46'),
 (20, 143, 'stock_out', 7, 25, 17, '2025-09-30 10:53:31'),
-(21, 143, 'adjustment', 50, NULL, 4, '2025-09-30 10:55:57');
+(21, 143, 'adjustment', 50, NULL, 4, '2025-09-30 10:55:57'),
+(22, 167, 'adjustment', 1, NULL, 4, '2025-10-01 16:16:50'),
+(23, 151, 'adjustment', 100, NULL, 4, '2025-10-01 16:17:14');
 
 -- --------------------------------------------------------
 
@@ -314,7 +340,7 @@ INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payme
 (17, 'FF-20250923-9VBF9', 17, 'cancelled', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2390.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:52:08', '2025-09-28 05:47:27'),
 (18, 'FF-20250923-4ICC6', 17, 'cancelled', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 16:53:20', '2025-09-28 05:47:20'),
 (19, 'FF-20250923-QM7MC', 17, 'cancelled', 'paypal', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 2900.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:05', '2025-09-25 15:41:55'),
-(20, 'FF-20250923-OFCAR', 17, 'cancelled', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":null,\"state\":null,\"postal_code\":\"1860\"}', 1200.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:36', '2025-09-25 15:41:37'),
+(20, 'FF-20250923-OFCAR', 17, 'cancelled', 'cod', 'failed', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address\":\"225 bulubok st.\",\"city\":\"\",\"state\":\"\",\"postal_code\":\"1860\"}', 1200.00, '2025-09-27', NULL, NULL, 0, '2025-09-23 18:25:36', '2025-10-01 15:24:04'),
 (21, 'FF-20250925-T7KZK', 15, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address\":\"Testing St. Hehe\",\"city\":\"City of Manila\",\"state\":\"NCR\",\"postal_code\":\"1012\"}', 1040.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 03:57:15', '2025-09-25 03:57:15'),
 (22, 'FF-20250925-WCLQR', 15, 'pending', 'paypal', 'pending', NULL, '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 750.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:00:07', '2025-09-25 04:00:07'),
 (23, 'FF-20250925-A0EVR', 15, 'pending', 'paypal', 'pending', '5JG15145VU699244U', '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 4060.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:01:38', '2025-09-25 04:01:49'),
@@ -428,7 +454,7 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `
 (148, 'Massage Gun', 'Deep tissue massage tool for faster muscle recovery.', 3500.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:17', 10),
 (149, 'Gel Pack', 'Hot and cold gel pack for muscle relief.', 450.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:25', 10),
 (150, 'Compression Sleeves', 'Enhances blood flow and reduces soreness.', 700.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:32', 10),
-(151, 'Stretching Strap', 'Assists in improving flexibility and stretching.', 400.00, 199, 1, 12, '[\"uploads\\/products\\/68d98e8b997ae_1759088267.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:37:47', 10),
+(151, 'Stretching Strap', 'Assists in improving flexibility and stretching.', 400.00, 99, 1, 12, '[\"uploads\\/products\\/68d98e8b997ae_1759088267.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-01 16:17:14', 10),
 (152, 'Resistance Band', 'Multi-purpose band for rehab and warm-up routines.', 300.00, 100, 1, 12, '[\"uploads\\/products\\/68d98eed29421_1759088365.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:39:25', 10),
 (153, 'Shaker Bottle', 'Durable shaker for protein shakes and supplements.', 350.00, 100, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:44', 10),
 (154, 'Duffle Bag', 'Spacious gym bag for gear and clothes.', 1500.00, 100, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:46:47', 10),
@@ -444,7 +470,7 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `
 (164, 'Parallette Bars', 'Perfect for calisthenics and bodyweight training.', 2200.00, 0, 2, 15, '[\"uploads\\/products\\/68d98ffa13dda_1759088634.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:43:54', 10),
 (165, 'Dip Belts', 'Adds extra weight for dips and pull-ups.', 1500.00, 0, 2, 15, '[\"uploads\\/products\\/68d990133959e_1759088659.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:44:19', 10),
 (166, 'Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 0, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:30:34', 10),
-(167, 'Gymnastic Rings', 'Adjustable rings for advanced bodyweight exercises.', 1800.00, 100, 2, 15, '[\"uploads\\/products\\/68d99029daa51_1759088681.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:44:41', 10),
+(167, 'Gymnastic Rings', 'Adjustable rings for advanced bodyweight exercises.', 1800.00, 99, 2, 15, '[\"uploads\\/products\\/68d99029daa51_1759088681.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-01 16:16:50', 10),
 (168, 'Foam Roller', 'Helps relieve muscle tension and improve mobility.', 900.00, 0, 2, 16, '[\"uploads\\/products\\/68d9904dd8a36_1759088717.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:45:17', 10),
 (169, 'Massage Stick', 'Portable tool for deep tissue massage.', 600.00, 0, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-08 18:31:44', 10),
 (170, 'Mobility Ball', 'Small ball for targeted muscle release.', 300.00, 0, 2, 16, '[\"uploads\\/products\\/68d990723b22e_1759088754.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 19:45:54', 10),
@@ -626,27 +652,30 @@ CREATE TABLE `users` (
   `last_login` timestamp NULL DEFAULT NULL,
   `first_name` varchar(100) DEFAULT NULL,
   `last_name` varchar(100) DEFAULT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL
+  `profile_picture` varchar(255) DEFAULT NULL,
+  `otp` varchar(6) DEFAULT NULL,
+  `otp_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`) VALUES
-(1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL),
-(2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-09-30 10:55:30', '2025-09-30 10:55:30', NULL, NULL, NULL),
-(8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL),
-(9, 'emmanadmin', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$FueQzeltWy15uvefERs8Au75iBgbuNAYVTsqxrJE0eH.GV2I6yRSq', NULL, 'admin', 'active', '2025-09-09 04:07:49', '2025-09-10 09:54:31', NULL, NULL, NULL, NULL),
-(10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, NULL, NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-28 19:09:11', '2025-09-10 11:45:30', NULL, NULL, NULL),
-(11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-09-10 12:09:52', '2025-09-10 12:09:52', NULL, NULL, NULL),
-(12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL),
-(13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-09-10 15:05:56', NULL, NULL, NULL, NULL),
-(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-09-24 19:39:25', '2025-09-24 19:39:25', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg'),
-(15, 'karlblockstock1', 'karlblockstock27@gmail.com', NULL, NULL, NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-09-25 03:52:17', '2025-09-25 03:52:17', NULL, NULL, NULL),
-(16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL),
-(17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', NULL, '$2y$10$ChOPozWcWfkcpWaG7cgLZebfhwOMRO/a/z0LCcsqI8skXYU.cuM42', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-30 10:56:09', '2025-09-30 10:56:09', 'Michelle', 'Angeles', 'uploads/profile/u17_1758814465_7d18d537.jpg');
+INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`, `otp`, `otp_expiry`) VALUES
+(1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL, NULL, NULL),
+(2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-05 12:14:37', '2025-10-05 12:14:37', NULL, NULL, NULL, NULL, NULL),
+(8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL, NULL, NULL),
+(9, 'emmanadmin', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$FueQzeltWy15uvefERs8Au75iBgbuNAYVTsqxrJE0eH.GV2I6yRSq', NULL, 'admin', 'active', '2025-09-09 04:07:49', '2025-09-10 09:54:31', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL, NULL, NULL),
+(11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-09-10 12:09:52', '2025-09-10 12:09:52', NULL, NULL, NULL, NULL, NULL),
+(12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-10-02 10:03:25', '2025-10-02 10:03:25', NULL, NULL, NULL, NULL, NULL),
+(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-09-24 19:39:25', '2025-09-24 19:39:25', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
+(15, 'karlblockstock1', 'karlblockstock27@gmail.com', '09765725123', '2003-12-27', NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-10-05 12:05:21', '2025-10-05 12:04:01', 'Karl', 'Blockstock', 'uploads/profile/u15_1759665921_6906177e.jpg', NULL, NULL),
+(16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL, NULL, NULL),
+(17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', NULL, '$2y$10$t2.GNMloV5cZ9NQIiQfAJ.KMMBrTNcr.3dxPl9WwOnJ5Aqi9BaNqG', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-24 09:02:09', '2025-09-24 08:47:32', 'Michelle', 'Angeles', 'uploads/profile/u17_1758702327_45104a57.jpg', NULL, NULL),
+(18, 'emmanuelespeña', 'espena.emman@gmail.com', NULL, NULL, NULL, NULL, '106046174656984709849', 'customer', 'active', '2025-09-27 02:59:56', '2025-10-04 13:07:43', '2025-10-04 13:07:43', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -669,7 +698,9 @@ CREATE TABLE `user_inbox` (
 --
 
 INSERT INTO `user_inbox` (`id`, `user_id`, `from_name`, `subject`, `body`, `is_read`, `created_at`) VALUES
-(1, 17, 'FitFuel', 'Welcome to FitFuel 🎉', 'Hi mich0303! Thanks for joining FitFuel. We’ll use this inbox for order updates, promos, and account notices.', 0, '2025-09-26 21:02:51');
+(1, 17, 'FitFuel', 'Welcome to FitFuel 🎉', 'Hi mich0303! Thanks for joining FitFuel. We’ll use this inbox for order updates, promos, and account notices.', 0, '2025-09-26 21:02:51'),
+(2, 14, 'FitFuel', 'Welcome to FitFuel 🎉', 'Hi karlblockstock! Thanks for joining FitFuel. We’ll use this inbox for order updates, promos, and account notices.', 0, '2025-10-01 15:28:57'),
+(3, 15, 'FitFuel', 'Welcome to FitFuel 🎉', 'Hi karlblockstock1! Thanks for joining FitFuel. We’ll use this inbox for order updates, promos, and account notices.', 0, '2025-10-05 12:06:01');
 
 -- --------------------------------------------------------
 
@@ -690,6 +721,8 @@ CREATE TABLE `user_notifications` (
 --
 
 INSERT INTO `user_notifications` (`user_id`, `email_enabled`, `sms_enabled`, `push_enabled`, `updated_at`) VALUES
+(14, 1, 0, 1, '2025-10-01 15:28:52'),
+(15, 1, 0, 1, '2025-10-05 12:05:58'),
 (17, 0, 1, 0, '2025-09-26 20:56:30');
 
 -- --------------------------------------------------------
@@ -917,7 +950,7 @@ ALTER TABLE `user_privacy_settings`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -929,7 +962,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -947,7 +980,7 @@ ALTER TABLE `contents`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -1013,7 +1046,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_inbox`
 --
 ALTER TABLE `user_inbox`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_payment_methods`

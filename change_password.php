@@ -119,20 +119,65 @@ try{
           <div class="mx-6 mt-4 rounded bg-red-50 text-red-700 px-4 py-3 border border-red-200"><?php echo h($alert['msg']); ?></div>
         <?php endif;?>
 
-        <form class="p-6 max-w-lg" method="post" autocomplete="off">
+        <form class="p-6 max-w-lg" method="post" autocomplete="off" id="passwordForm">
           <label class="block mb-3">
             <span class="text-sm text-slate-600">Current Password</span>
             <input type="password" name="current_password" class="w-full border rounded px-3 py-2" required>
           </label>
+          
           <label class="block mb-3">
             <span class="text-sm text-slate-600">New Password</span>
-            <input type="password" name="new_password" class="w-full border rounded px-3 py-2" minlength="8" required>
+            <input type="password" name="new_password" id="newPassword" class="w-full border rounded px-3 py-2" minlength="8" required>
+            
+            <!-- Password Strength Meter -->
+            <div class="mt-2">
+              <div class="flex items-center space-x-2 mb-2">
+                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                  <div id="strengthMeter" class="h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <span id="strengthText" class="text-xs font-medium text-gray-500">Enter password</span>
+              </div>
+              
+              <!-- Password Requirements -->
+              <div class="text-xs text-gray-600 space-y-1">
+                <div class="flex items-center space-x-2">
+                  <i id="req-length" class="fas fa-times text-red-500"></i>
+                  <span>At least 8 characters</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i id="req-uppercase" class="fas fa-times text-red-500"></i>
+                  <span>One uppercase letter</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i id="req-lowercase" class="fas fa-times text-red-500"></i>
+                  <span>One lowercase letter</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i id="req-number" class="fas fa-times text-red-500"></i>
+                  <span>One number</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i id="req-special" class="fas fa-times text-red-500"></i>
+                  <span>One special character</span>
+                </div>
+              </div>
+            </div>
           </label>
+          
           <label class="block mb-4">
             <span class="text-sm text-slate-600">Confirm New Password</span>
-            <input type="password" name="confirm_password" class="w-full border rounded px-3 py-2" minlength="8" required>
+            <input type="password" name="confirm_password" id="confirmPassword" class="w-full border rounded px-3 py-2" minlength="8" required>
+            
+            <!-- Password Match Indicator -->
+            <div id="matchIndicator" class="mt-2 text-xs hidden">
+              <div class="flex items-center space-x-2">
+                <i id="matchIcon" class="fas"></i>
+                <span id="matchText"></span>
+              </div>
+            </div>
           </label>
-          <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded">Update Password</button>
+          
+          <button type="submit" id="submitBtn" class="bg-gray-400 text-white px-6 py-2 rounded cursor-not-allowed" disabled>Update Password</button>
         </form>
       </section>
     </div>
@@ -144,6 +189,135 @@ try{
     <p>&copy; 2024 FitFuel. All rights reserved.</p>
   </div>
 </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const newPasswordInput = document.getElementById('newPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const strengthMeter = document.getElementById('strengthMeter');
+    const strengthText = document.getElementById('strengthText');
+    const matchIndicator = document.getElementById('matchIndicator');
+    const matchIcon = document.getElementById('matchIcon');
+    const matchText = document.getElementById('matchText');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Password requirements elements
+    const reqLength = document.getElementById('req-length');
+    const reqUppercase = document.getElementById('req-uppercase');
+    const reqLowercase = document.getElementById('req-lowercase');
+    const reqNumber = document.getElementById('req-number');
+    const reqSpecial = document.getElementById('req-special');
+    
+    let passwordStrength = 0;
+    let passwordsMatch = false;
+    
+    // Check password requirements
+    function checkPasswordRequirements(password) {
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        };
+        
+        // Update requirement icons
+        reqLength.className = requirements.length ? 'fas fa-check text-green-500' : 'fas fa-times text-red-500';
+        reqUppercase.className = requirements.uppercase ? 'fas fa-check text-green-500' : 'fas fa-times text-red-500';
+        reqLowercase.className = requirements.lowercase ? 'fas fa-check text-green-500' : 'fas fa-times text-red-500';
+        reqNumber.className = requirements.number ? 'fas fa-check text-green-500' : 'fas fa-times text-red-500';
+        reqSpecial.className = requirements.special ? 'fas fa-check text-green-500' : 'fas fa-times text-red-500';
+        
+        // Calculate strength
+        const metRequirements = Object.values(requirements).filter(Boolean).length;
+        passwordStrength = metRequirements;
+        
+        // Update strength meter
+        const percentage = (metRequirements / 5) * 100;
+        strengthMeter.style.width = percentage + '%';
+        
+        // Update strength text and colors
+        if (metRequirements === 0) {
+            strengthText.textContent = 'Enter password';
+            strengthText.className = 'text-xs font-medium text-gray-500';
+            strengthMeter.className = 'h-2 rounded-full transition-all duration-300 bg-gray-300';
+        } else if (metRequirements <= 2) {
+            strengthText.textContent = 'Weak';
+            strengthText.className = 'text-xs font-medium text-red-500';
+            strengthMeter.className = 'h-2 rounded-full transition-all duration-300 bg-red-500';
+        } else if (metRequirements <= 3) {
+            strengthText.textContent = 'Fair';
+            strengthText.className = 'text-xs font-medium text-yellow-500';
+            strengthMeter.className = 'h-2 rounded-full transition-all duration-300 bg-yellow-500';
+        } else if (metRequirements <= 4) {
+            strengthText.textContent = 'Good';
+            strengthText.className = 'text-xs font-medium text-blue-500';
+            strengthMeter.className = 'h-2 rounded-full transition-all duration-300 bg-blue-500';
+        } else {
+            strengthText.textContent = 'Strong';
+            strengthText.className = 'text-xs font-medium text-green-500';
+            strengthMeter.className = 'h-2 rounded-full transition-all duration-300 bg-green-500';
+        }
+        
+        updateSubmitButton();
+    }
+    
+    // Check if passwords match
+    function checkPasswordMatch() {
+        const newPassword = newPasswordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        
+        if (confirmPassword.length === 0) {
+            matchIndicator.classList.add('hidden');
+            passwordsMatch = false;
+        } else if (newPassword === confirmPassword) {
+            matchIndicator.classList.remove('hidden');
+            matchIcon.className = 'fas fa-check text-green-500';
+            matchText.textContent = 'Passwords match';
+            matchText.className = 'text-green-500';
+            passwordsMatch = true;
+        } else {
+            matchIndicator.classList.remove('hidden');
+            matchIcon.className = 'fas fa-times text-red-500';
+            matchText.textContent = 'Passwords do not match';
+            matchText.className = 'text-red-500';
+            passwordsMatch = false;
+        }
+        
+        updateSubmitButton();
+    }
+    
+    // Update submit button state
+    function updateSubmitButton() {
+        const isStrongPassword = passwordStrength >= 4; // At least 4/5 requirements met
+        const canSubmit = isStrongPassword && passwordsMatch;
+        
+        if (canSubmit) {
+            submitBtn.disabled = false;
+            submitBtn.className = 'bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded transition-colors';
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.className = 'bg-gray-400 text-white px-6 py-2 rounded cursor-not-allowed';
+        }
+    }
+    
+    // Event listeners
+    newPasswordInput.addEventListener('input', function() {
+        checkPasswordRequirements(this.value);
+        checkPasswordMatch(); // Re-check match when new password changes
+    });
+    
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+    
+    // Prevent form submission if validation fails
+    document.getElementById('passwordForm').addEventListener('submit', function(e) {
+        if (!passwordsMatch || passwordStrength < 4) {
+            e.preventDefault();
+            alert('Please ensure your password meets all requirements and both passwords match.');
+        }
+    });
+});
+</script>
 
 </body>
 </html>

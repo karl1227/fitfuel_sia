@@ -2,6 +2,9 @@
 require_once 'config/database.php';
 require_once 'config/audit_logger.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -40,6 +43,11 @@ try {
     $resetToken = bin2hex(random_bytes(32));
     $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour')); // Token expires in 1 hour
     
+    // Debug: Log token generation
+    error_log("Password reset request - Email: " . $email);
+    error_log("Password reset request - Token: " . $resetToken);
+    error_log("Password reset request - Expires: " . $expiresAt);
+    
     // Store reset token in database
     $stmt = $pdo->prepare("INSERT INTO password_resets (email, token, expires_at, created_at) VALUES (?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE token = VALUES(token), expires_at = VALUES(expires_at), created_at = NOW()");
     $stmt->execute([$email, $resetToken, $expiresAt]);
@@ -47,67 +55,84 @@ try {
     // Log password reset request
     $auditLogger->logPasswordReset($email, false); // false = request, not completion
     
-    // Send email with reset link
-    $resetLink = "http://localhost/fitfuel_sia/reset_password.php?token=" . $resetToken;
+    // Send email with reset link using PHPMailer
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
+    $resetLink = $protocol . '://' . $host . $scriptPath . '/reset_password.php?token=' . $resetToken;
     
-    $subject = "FitFuel - Password Reset Request";
-    $message = "
-    <html>
-    <head>
-        <title>Password Reset Request</title>
-    </head>
-    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
-        <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
-            <div style='text-align: center; margin-bottom: 30px;'>
-                <h1 style='color: #059669; margin: 0;'>FitFuel</h1>
+    // Debug: Log reset link
+    error_log("Password reset request - Reset Link: " . $resetLink);
+    
+    // Include PHPMailer files
+    require_once './PHPMailer/src/Exception.php';
+    require_once './PHPMailer/src/PHPMailer.php';
+    require_once './PHPMailer/src/SMTP.php';
+    
+    $mail = new PHPMailer(true);
+    
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'siafitfuel@gmail.com';
+        $mail->Password   = 'felclcbkazuspzde';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        
+        // Recipients
+        $mail->setFrom('siafitfuel@gmail.com', 'FitFuel');
+        $mail->addAddress($user['email']);
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = "Password Reset Request - FitFuel";
+        
+        $mail->Body = '
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+        <div style="max-width: 500px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
+            <h2 style="color: #333;">🔐 Password Reset Request</h2>
+            <p style="font-size: 16px; color: #555;">
+            Hello ' . htmlspecialchars($user['username']) . ', <br> 
+            We received a request to reset your password for your FitFuel account. If you made this request, click the button below to reset your password:
+            </p>
+            <div style="margin: 30px 0;">
+                <a href="' . $resetLink . '" style="background-color: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Reset Password</a>
             </div>
-            
-            <h2 style='color: #333; margin-bottom: 20px;'>Password Reset Request</h2>
-            
-            <p>Hello " . htmlspecialchars($user['username']) . ",</p>
-            
-            <p>We received a request to reset your password for your FitFuel account. If you made this request, click the button below to reset your password:</p>
-            
-            <div style='text-align: center; margin: 30px 0;'>
-                <a href='" . $resetLink . "' style='background-color: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;'>Reset Password</a>
+            <p style="font-size: 14px; color: #999;">
+            Or copy and paste this link into your browser:<br>
+            <span style="word-break: break-all; background-color: #f5f5f5; padding: 10px; border-radius: 5px; display: inline-block; margin-top: 10px;">' . $resetLink . '</span>
+            </p>
+            <div style="text-align: left; margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
+                <p style="font-size: 14px; color: #666; margin: 0;"><strong>Important:</strong></p>
+                <ul style="font-size: 14px; color: #666; margin: 10px 0;">
+                    <li>This link will expire in 1 hour</li>
+                    <li>If you didn\'t request this password reset, please ignore this email</li>
+                    <li>Your password will remain unchanged until you create a new one</li>
+                </ul>
             </div>
-            
-            <p>Or copy and paste this link into your browser:</p>
-            <p style='word-break: break-all; background-color: #f5f5f5; padding: 10px; border-radius: 5px;'>" . $resetLink . "</p>
-            
-            <p><strong>Important:</strong></p>
-            <ul>
-                <li>This link will expire in 1 hour</li>
-                <li>If you didn't request this password reset, please ignore this email</li>
-                <li>Your password will remain unchanged until you create a new one</li>
-            </ul>
-            
-            <hr style='margin: 30px 0; border: none; border-top: 1px solid #eee;'>
-            
-            <p style='font-size: 12px; color: #666; text-align: center;'>
-                This email was sent from FitFuel. If you have any questions, please contact our support team.
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+            <p style="font-size: 12px; color: #999;">
+            This email was sent from FitFuel. If you have any questions, please contact our support team.
             </p>
         </div>
-    </body>
-    </html>
-    ";
-    
-    // Log the reset link for debugging (always works)
-    error_log("Password reset link for " . $email . ": " . $resetLink);
-    
-    // Try to send email (may not work in local development)
-    $headers = [
-        'MIME-Version: 1.0',
-        'Content-type: text/html; charset=UTF-8',
-        'From: FitFuel <noreply@fitfuel.com>',
-        'Reply-To: support@fitfuel.com',
-        'X-Mailer: PHP/' . phpversion()
-    ];
-    
-    $mailSent = @mail($email, $subject, $message, implode("\r\n", $headers));
-    
-    // Always return success since we log the reset link
-    echo json_encode(['success' => true, 'message' => 'Password reset link has been sent to your email address. Check your PHP error log for the reset link if email sending is not configured.']);
+        </div>';
+        
+        $mail->send();
+        
+        // Log the reset link for debugging
+        error_log("Password reset link for " . $email . ": " . $resetLink);
+        
+        echo json_encode(['success' => true, 'message' => 'Password reset link has been sent to your email address.']);
+        
+    } catch (Exception $e) {
+        // Log the reset link for debugging even if email fails
+        error_log("Password reset link for " . $email . ": " . $resetLink);
+        error_log("Email sending failed: " . $e->getMessage());
+        
+        echo json_encode(['success' => true, 'message' => 'Password reset link has been sent to your email address. Check your PHP error log for the reset link if email sending failed.']);
+    }
     
 } catch (Exception $e) {
     error_log("Password reset error: " . $e->getMessage());

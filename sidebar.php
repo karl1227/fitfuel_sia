@@ -22,7 +22,7 @@ $sections = [
         ['label' => 'Banks & Cards',         'href' => 'bank_cards.php',            'icon' => 'fa-credit-card'],
         ['label' => 'Addresses',             'href' => 'addresses.php',        'icon' => 'fa-location-dot'],
         ['label' => 'Change Password',       'href' => 'change_password.php',  'icon' => 'fa-key'],
-        ['label' => 'Privacy Settings',      'href' => 'privacy_settings.php',          'icon' => 'fa-shield-halved'],
+        ['label' => 'Privacy Settings',      'href' => 'privacy_settings.php',          'icon' => 'fa-shield'],
         ['label' => 'Notification Settings', 'href' => 'notifications_settings.php',    'icon' => 'fa-bell'],
     ],
     'MY PURCHASE' => [
