@@ -2,6 +2,12 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 
+// Check if admin is trying to access customer product details - redirect to admin dashboard
+if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'manager', 'staff'])) {
+    header('Location: admin/dashboard.php');
+    exit();
+}
+
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$product_id) {

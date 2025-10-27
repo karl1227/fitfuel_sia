@@ -2,6 +2,12 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 
+// Check if admin is trying to access customer shop - redirect to admin dashboard
+if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'manager', 'staff'])) {
+    header('Location: admin/dashboard.php');
+    exit();
+}
+
 /* -------- Debug while building -------- */
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

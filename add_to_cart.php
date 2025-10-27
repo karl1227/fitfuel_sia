@@ -1,4 +1,5 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 
 header('Content-Type: application/json');
@@ -6,6 +7,12 @@ header('Content-Type: application/json');
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Please login to add items to your cart']);
+    exit();
+}
+
+// Check if admin is trying to add to cart - prevent this
+if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'manager', 'staff'])) {
+    echo json_encode(['success' => false, 'message' => 'Admins cannot add items to cart. Please access the customer portal.']);
     exit();
 }
 
