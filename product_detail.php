@@ -55,6 +55,18 @@ try {
     exit;
 }
 
+// Check if product is in user's wishlist
+$is_in_wishlist = false;
+if (!empty($_SESSION['user_id'])) {
+    try {
+        $wishlist_check = $pdo->prepare("SELECT wishlist_id FROM wishlist WHERE user_id = ? AND product_id = ?");
+        $wishlist_check->execute([$_SESSION['user_id'], $product_id]);
+        $is_in_wishlist = (bool)$wishlist_check->fetch();
+    } catch (PDOException $e) {
+        $is_in_wishlist = false;
+    }
+}
+
 // Get cart count
 $cart_count = 0;
 if (!empty($_SESSION['user_id'])) {
@@ -236,7 +248,7 @@ if (!empty($_SESSION['user_id'])) {
                         </span>
                     </div>
 
-                    <div class="flex space-x-4">
+                    <div class="flex items-center gap-2">
                         <button onclick="addToCart(<?php echo $product['product_id']; ?>)" 
                                 class="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors flex items-center space-x-2 <?php echo $product['stock'] <= 0 ? 'opacity-50 cursor-not-allowed' : ''; ?>"
                                 <?php echo $product['stock'] <= 0 ? 'disabled' : ''; ?>>
@@ -247,6 +259,13 @@ if (!empty($_SESSION['user_id'])) {
                         <a href="shop.php" class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 transition-colors">
                             Continue Shopping
                         </a>
+                        
+                        <button onclick="toggleWishlist(<?php echo $product['product_id']; ?>, this)" 
+                                id="wishlistBtn"
+                                class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all <?php echo $is_in_wishlist ? 'border-red-500 bg-red-50' : ''; ?>"
+                                title="<?php echo $is_in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'; ?>">
+                            <i class="fa-heart <?php echo $is_in_wishlist ? 'fas text-red-600' : 'far text-gray-600'; ?>"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -380,6 +399,60 @@ if (!empty($_SESSION['user_id'])) {
                     }
                 })
                 .catch(() => {});
+        }
+
+        function toggleWishlist(productId, button) {
+            <?php if (empty($_SESSION['user_id'])): ?>
+                window.location.href = 'login.php';
+                return;
+            <?php endif; ?>
+
+            const icon = button.querySelector('i');
+            const isFilled = icon.classList.contains('fas');
+            
+            if (isFilled) {
+                // Remove from wishlist
+                fetch('remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ product_id: productId })
+                })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) {
+                        icon.classList.remove('fas', 'text-red-600');
+                        icon.classList.add('far', 'text-gray-600');
+                        button.classList.remove('border-red-500', 'bg-red-50');
+                        button.classList.add('border-gray-300');
+                        button.title = 'Add to Wishlist';
+                        showNotification('Removed from wishlist');
+                    } else {
+                        showNotification('Error: ' + d.message, 'error');
+                    }
+                })
+                .catch(() => showNotification('Network error', 'error'));
+            } else {
+                // Add to wishlist
+                fetch('add_to_wishlist.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ product_id: productId })
+                })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) {
+                        icon.classList.remove('far', 'text-gray-600');
+                        icon.classList.add('fas', 'text-red-600');
+                        button.classList.remove('border-gray-300');
+                        button.classList.add('border-red-500', 'bg-red-50');
+                        button.title = 'Remove from Wishlist';
+                        showNotification('Added to wishlist');
+                    } else {
+                        showNotification('Error: ' + d.message, 'error');
+                    }
+                })
+                .catch(() => showNotification('Network error', 'error'));
+            }
         }
 
         // Profile dropdown

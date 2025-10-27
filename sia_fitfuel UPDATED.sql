@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2025 at 09:23 AM
+-- Generation Time: Oct 27, 2025 at 10:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -180,7 +180,15 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (128, 11, 'karlchristopherblockstock', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 11, 'user', 'low', 'success', '2025-10-27 08:18:42'),
 (129, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-27 08:18:45'),
 (130, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-27 08:22:04'),
-(131, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-27 08:22:06');
+(131, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-27 08:22:06'),
+(132, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-27 08:27:49'),
+(133, NULL, NULL, 'password_reset_request', 'authentication', 'Password reset requested', NULL, '{\"email\":\"blockstockkc@gmail.com\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'success', '2025-10-27 08:28:11'),
+(134, 14, 'karlblockstock', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"karlblockstock\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-27 08:45:27'),
+(135, 14, 'karlblockstock', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-27 08:46:13'),
+(136, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-27 08:46:16'),
+(137, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-27 08:46:23'),
+(138, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-27 09:00:47'),
+(139, 14, 'karlblockstock', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"karlblockstock\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-27 09:01:11');
 
 -- --------------------------------------------------------
 
@@ -227,10 +235,6 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `added_at`) VALUES
-(6, 6, 143, 6, '2025-09-10 14:53:45'),
-(7, 6, 145, 4, '2025-09-10 14:56:41'),
-(8, 6, 144, 3, '2025-09-10 14:56:44'),
-(85, 6, 161, 2, '2025-09-10 19:46:42'),
 (86, 7, 161, 3, '2025-09-10 19:56:09'),
 (120, 23, 158, 1, '2025-09-24 07:37:25'),
 (121, 23, 144, 1, '2025-09-24 08:28:11'),
@@ -238,9 +242,11 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (127, 15, 143, 3, '2025-10-05 12:04:11'),
 (128, 15, 144, 2, '2025-10-05 12:04:13'),
 (129, 15, 145, 2, '2025-10-05 12:04:14'),
-(132, 14, 143, 1, '2025-10-05 14:41:41'),
+(132, 14, 143, 6, '2025-10-05 14:41:41'),
 (135, 24, 143, 3, '2025-10-27 08:10:09'),
-(137, 24, 144, 3, '2025-10-27 08:14:16');
+(137, 24, 144, 3, '2025-10-27 08:14:16'),
+(141, 14, 144, 1, '2025-10-27 09:28:34'),
+(142, 14, 146, 1, '2025-10-27 09:28:35');
 
 -- --------------------------------------------------------
 
@@ -471,7 +477,8 @@ INSERT INTO `password_resets` (`id`, `email`, `token`, `expires_at`, `created_at
 (7, 'karlblockstock27@gmail.com', 'a24041b7d68b6980d18bd979b7cec004b2a06f8ec8c8b811ca85f0ca9259c179', '2025-10-05 08:52:44', '2025-10-05 13:52:44'),
 (8, 'karlblockstock27@gmail.com', '0584f8f0323f51b95f3866fd5fd3f871fb5a72d707385d02938e631f6fff34f5', '2025-10-05 08:56:18', '2025-10-05 13:56:18'),
 (9, 'karlblockstock27@gmail.com', 'dbf3cb8a0d32ceda52371a0c7b8862ffa3f64bd54f8cd6be807faf08ee9b4171', '2025-10-05 08:58:03', '2025-10-05 13:58:03'),
-(10, 'karlblockstock27@gmail.com', '78a5bb4f9319e06b731393e90deb919f0fdaabf1f7d21f36c5762e0dfffb1435', '2025-10-05 09:12:38', '2025-10-05 14:12:38');
+(10, 'karlblockstock27@gmail.com', '78a5bb4f9319e06b731393e90deb919f0fdaabf1f7d21f36c5762e0dfffb1435', '2025-10-05 09:12:38', '2025-10-05 14:12:38'),
+(11, 'blockstockkc@gmail.com', '22ce71e2421d97ffd03732885f24934956fe6ff13b3e2c771073df0ef31dd45b', '2025-10-27 02:28:11', '2025-10-27 08:28:11');
 
 -- --------------------------------------------------------
 
@@ -736,14 +743,14 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`, `otp`, `otp_expiry`) VALUES
 (1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL, NULL, NULL),
 (2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-27 08:18:45', '2025-10-27 08:18:45', NULL, NULL, NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-27 08:46:16', '2025-10-27 08:46:16', NULL, NULL, NULL, NULL, NULL),
 (8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL, NULL, NULL),
 (9, 'emmanadmin', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$FueQzeltWy15uvefERs8Au75iBgbuNAYVTsqxrJE0eH.GV2I6yRSq', NULL, 'admin', 'active', '2025-09-09 04:07:49', '2025-09-10 09:54:31', NULL, NULL, NULL, NULL, NULL, NULL),
 (10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL, NULL, NULL),
 (11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-10-27 08:09:42', '2025-10-27 08:09:42', NULL, NULL, NULL, NULL, NULL),
 (12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL, NULL, NULL),
 (13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-10-02 10:03:25', '2025-10-02 10:03:25', NULL, NULL, NULL, NULL, NULL),
-(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-16 05:23:39', '2025-10-16 05:23:39', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
+(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-27 09:01:11', '2025-10-27 09:01:11', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
 (15, 'karlblockstock1', 'karlblockstock27@gmail.com', '09765725123', '2003-12-27', NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-10-05 13:59:13', '2025-10-05 13:59:13', 'Karl', 'Blockstock', 'uploads/profile/u15_1759665921_6906177e.jpg', '434570', '2025-10-05 16:04:13'),
 (16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL, NULL, NULL),
 (17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', NULL, '$2y$10$t2.GNMloV5cZ9NQIiQfAJ.KMMBrTNcr.3dxPl9WwOnJ5Aqi9BaNqG', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-24 09:02:09', '2025-09-24 08:47:32', 'Michelle', 'Angeles', 'uploads/profile/u17_1758702327_45104a57.jpg', NULL, NULL),
@@ -849,6 +856,27 @@ CREATE TABLE `user_privacy_settings` (
 
 INSERT INTO `user_privacy_settings` (`user_id`, `profile_visibility`, `show_email`, `show_phone`, `updated_at`) VALUES
 (17, 'private', 0, 0, '2025-09-26 22:30:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wishlist`
+--
+
+CREATE TABLE `wishlist` (
+  `wishlist_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`wishlist_id`, `user_id`, `product_id`, `created_at`) VALUES
+(4, 14, 144, '2025-10-27 09:26:59'),
+(5, 14, 161, '2025-10-27 09:27:00');
 
 --
 -- Indexes for dumped tables
@@ -1025,6 +1053,15 @@ ALTER TABLE `user_privacy_settings`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  ADD PRIMARY KEY (`wishlist_id`),
+  ADD UNIQUE KEY `unique_wishlist` (`user_id`,`product_id`),
+  ADD KEY `idx_user` (`user_id`),
+  ADD KEY `idx_product` (`product_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1032,7 +1069,7 @@ ALTER TABLE `user_privacy_settings`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -1044,7 +1081,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1086,7 +1123,7 @@ ALTER TABLE `order_promo_codes`
 -- AUTO_INCREMENT for table `password_resets`
 --
 ALTER TABLE `password_resets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -1141,6 +1178,12 @@ ALTER TABLE `user_inbox`
 --
 ALTER TABLE `user_payment_methods`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  MODIFY `wishlist_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -1216,6 +1259,13 @@ ALTER TABLE `shipping_addresses`
 --
 ALTER TABLE `subcategories`
   ADD CONSTRAINT `subcategories_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
