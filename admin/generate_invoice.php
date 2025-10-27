@@ -68,9 +68,8 @@ if ($order['status'] === 'processing' || $order['status'] === 'shipped' || $orde
     $waybill_info = generateWaybill($order, $shipping_address);
 }
 
-// Set headers for PDF download
-header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="invoice_' . ($order['custom_order_id'] ?? $order['order_id']) . '.pdf"');
+// Set headers for HTML display (will be printed as PDF)
+header('Content-Type: text/html; charset=UTF-8');
 
 // Generate waybill API call (placeholder for actual implementation)
 function generateWaybill($order_data, $shipping_address) {
