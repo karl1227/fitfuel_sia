@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'customer_auth_check.php';
 require_once 'config/database.php';
+require_once 'config/currency_helper.php';
 
 $user_id = (int)($_SESSION['user_id'] ?? 0);
 
@@ -271,7 +272,7 @@ foreach ($rows as $r) {
                   </div>
 
                   <div class="text-right">
-                    <div class="text-emerald-600 font-bold">₱<?= number_format($c['line_total'], 2) ?></div>
+                    <div class="text-emerald-600 font-bold"><?= formatCurrency($c['line_total']) ?></div>
                     <a href="order_details.php?order_id=<?= urlencode($c['custom_order_id']) ?>" class="text-emerald-600 text-sm hover:underline">View Details</a>
                   </div>
                 </div>

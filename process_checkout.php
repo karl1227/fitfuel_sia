@@ -2,6 +2,7 @@
 session_start();
 require_once 'config/database.php';
 require_once 'config/stock_control.php';
+require_once 'config/audit_logger.php';
 
 header('Content-Type: application/json');
 
@@ -204,6 +205,16 @@ try {
     
     $order_id = $pdo->lastInsertId();
     error_log("Order created successfully with ID: $order_id, Custom ID: $custom_order_id");
+    
+    // Log order creation
+    $auditLogger = new AuditLogger();
+    $auditLogger->logOrderCreate($order_id, [
+        'user_id' => $user_id,
+        'payment_method' => $payment_method,
+        'total_amount' => $total_amount,
+        'custom_order_id' => $custom_order_id,
+        'items_count' => count($cart_items)
+    ]);
     
     // Create order items
     foreach ($cart_items as $item) {

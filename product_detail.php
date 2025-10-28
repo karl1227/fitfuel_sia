@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 require_once 'config/maintenance_check.php';
+require_once 'config/currency_helper.php';
 
 // Check maintenance mode
 checkMaintenanceMode();
@@ -234,10 +235,10 @@ if (!empty($_SESSION['user_id'])) {
                             $original_price = $product['price'];
                             $sale_price = $original_price * (1 - $product['sale_percentage'] / 100);
                             ?>
-                            <span class="text-red-600">₱<?php echo number_format($sale_price, 2); ?></span>
-                            <span class="text-gray-500 line-through text-lg ml-2">₱<?php echo number_format($original_price, 2); ?></span>
+                            <span class="text-red-600"><?php echo formatCurrency($sale_price); ?></span>
+                            <span class="text-gray-500 line-through text-lg ml-2"><?php echo formatCurrency($original_price); ?></span>
                         <?php else: ?>
-                            <span class="text-gray-900">₱<?php echo number_format($product['price'], 2); ?></span>
+                            <span class="text-gray-900"><?php echo formatCurrency($product['price']); ?></span>
                         <?php endif; ?>
                     </div>
 

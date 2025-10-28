@@ -3,6 +3,15 @@
         const slides = document.querySelectorAll('.carousel-slide');
         const indicators = document.querySelectorAll('.carousel-indicator');
         
+        function formatPrice(amount) {
+            if (typeof window.currencySymbol === 'undefined') {
+                // Fallback if currency not loaded
+                return '₱' + amount;
+            }
+            const position = window.currencyPosition || 'before';
+            return position === 'after' ? amount + window.currencySymbol : window.currencySymbol + amount;
+        }
+        
         function showSlide(index) {
             slides.forEach((slide, i) => {
                 slide.classList.toggle('active', i === index);

@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'config/currency_helper.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -255,12 +256,12 @@ if (isset($_SESSION['user_id'])) {
                                 </div>
                                 <div class="text-right">
                                     <?php if ($item['sale_percentage'] > 0): ?>
-                                        <p class="font-semibold text-red-600">₱<?php echo number_format($item['final_price'] * $item['quantity'], 2); ?></p>
-                                        <p class="text-sm text-gray-500 line-through">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
-                                        <p class="text-sm text-gray-500">₱<?php echo number_format($item['final_price'], 2); ?> each</p>
+                                        <p class="font-semibold text-red-600"><?php echo formatCurrency($item['final_price'] * $item['quantity']); ?></p>
+                                        <p class="text-sm text-gray-500 line-through"><?php echo formatCurrency($item['price'] * $item['quantity']); ?></p>
+                                        <p class="text-sm text-gray-500"><?php echo formatCurrency($item['final_price']); ?> each</p>
                                     <?php else: ?>
-                                        <p class="font-semibold text-emerald-600">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
-                                        <p class="text-sm text-gray-500">₱<?php echo number_format($item['price'], 2); ?> each</p>
+                                        <p class="font-semibold text-emerald-600"><?php echo formatCurrency($item['price'] * $item['quantity']); ?></p>
+                                        <p class="text-sm text-gray-500"><?php echo formatCurrency($item['price']); ?> each</p>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -271,7 +272,7 @@ if (isset($_SESSION['user_id'])) {
                     <div class="border-t border-gray-200 pt-4 mt-6">
                         <div class="flex justify-between text-lg font-bold">
                             <span>Total Amount:</span>
-                            <span class="text-emerald-600">₱<?php echo number_format($order['total_amount'], 2); ?></span>
+                            <span class="text-emerald-600"><?php echo formatCurrency($order['total_amount']); ?></span>
                         </div>
                     </div>
                 </div>

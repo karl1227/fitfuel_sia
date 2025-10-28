@@ -4,6 +4,7 @@
    ============================================================================ */
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
+require_once 'config/currency_helper.php';
 ini_set('display_errors','1'); ini_set('display_startup_errors','1'); error_reporting(E_ALL);
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -155,10 +156,10 @@ try {
 
         <div class="flex items-end gap-3 mb-3">
           <?php if ($on_sale): ?>
-            <div class="text-3xl font-extrabold text-red-600">₱<?= number_format($final, 2); ?></div>
-            <div class="text-lg text-gray-500 line-through">₱<?= number_format($price, 2); ?></div>
+            <div class="text-3xl font-extrabold text-red-600"><?= formatCurrency($final); ?></div>
+            <div class="text-lg text-gray-500 line-through"><?= formatCurrency($price); ?></div>
           <?php else: ?>
-            <div class="text-3xl font-extrabold text-emerald-600">₱<?= number_format($price, 2); ?></div>
+            <div class="text-3xl font-extrabold text-emerald-600"><?= formatCurrency($price); ?></div>
           <?php endif; ?>
         </div>
 

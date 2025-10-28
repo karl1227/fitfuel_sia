@@ -1,6 +1,7 @@
 <?php
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
+require_once '../config/currency_helper.php';
 
 // Check role-based access for orders module (view_order is part of orders)
 requireAccess('orders');
@@ -477,13 +478,13 @@ if ($order['shipping_address']) {
                                         <span class="font-medium">Qty:</span> <?php echo (int)$item['quantity']; ?>
                                     </span>
                                     <span class="text-gray-600">
-                                        <span class="font-medium">Unit Price:</span> ₱<?php echo number_format((float)$item['price'], 2); ?>
+                                        <span class="font-medium">Unit Price:</span> <?php echo formatCurrency((float)$item['price']); ?>
                                     </span>
                                 </div>
                             </div>
                             <div class="text-right">
                                 <div class="text-lg font-bold text-gray-900">
-                                    ₱<?php echo number_format((float)$item['price'] * (int)$item['quantity'], 2); ?>
+                                    <?php echo formatCurrency((float)$item['price'] * (int)$item['quantity']); ?>
                                 </div>
                                 <div class="text-xs text-gray-500 mt-1">Total</div>
                             </div>
@@ -510,9 +511,9 @@ if ($order['shipping_address']) {
                                 <div class="text-lg font-semibold text-gray-900 mt-2">Total</div>
                             </div>
                             <div class="text-right">
-                                <div class="text-sm font-medium text-gray-900 mb-1">₱<?php echo number_format($calculated_subtotal, 2); ?></div>
-                                <div class="text-sm font-medium text-gray-900 mb-1">₱<?php echo number_format($shipping_fee, 2); ?></div>
-                                <div class="text-xl font-bold text-gray-900 mt-2">₱<?php echo number_format((float)$order['total_amount'], 2); ?></div>
+                                <div class="text-sm font-medium text-gray-900 mb-1"><?php echo formatCurrency($calculated_subtotal); ?></div>
+                                <div class="text-sm font-medium text-gray-900 mb-1"><?php echo formatCurrency($shipping_fee); ?></div>
+                                <div class="text-xl font-bold text-gray-900 mt-2"><?php echo formatCurrency((float)$order['total_amount']); ?></div>
                             </div>
                         </div>
                     </div>
@@ -540,16 +541,16 @@ if ($order['shipping_address']) {
                         ?>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="text-gray-900">₱<?php echo number_format($summary_subtotal, 2); ?></span>
+                            <span class="text-gray-900"><?php echo formatCurrency($summary_subtotal); ?></span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Shipping</span>
-                            <span class="text-gray-900">₱<?php echo number_format($summary_shipping, 2); ?></span>
+                            <span class="text-gray-900"><?php echo formatCurrency($summary_shipping); ?></span>
                         </div>
                         <div class="border-t pt-3">
                             <div class="flex justify-between">
                                 <span class="text-base font-semibold text-gray-900">Total</span>
-                                <span class="text-base font-semibold text-gray-900">₱<?php echo number_format((float)$order['total_amount'], 2); ?></span>
+                                <span class="text-base font-semibold text-gray-900"><?php echo formatCurrency((float)$order['total_amount']); ?></span>
                             </div>
                         </div>
                     </div>

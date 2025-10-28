@@ -3,6 +3,7 @@ require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/stock_control.php';
 require_once '../config/audit_logger.php';
+require_once '../config/currency_helper.php';
 require_once '../includes/admin_sidebar.php';
 
 // Check role-based access for orders module
@@ -97,8 +98,30 @@ try {
 		$paymentMethod = $_POST['payment_method'] ?? null;
 		$allowed = ['pending','paid','refunded','failed'];
 		if (!in_array($paymentStatus, $allowed, true)) { throw new InvalidArgumentException('Invalid payment status'); }
+		
+		// Get old payment status for audit log
+		$oldOrderStmt = $pdo->prepare("SELECT payment_status FROM orders WHERE order_id = ?");
+		$oldOrderStmt->execute([$orderId]);
+		$oldOrder = $oldOrderStmt->fetch();
+		
 		$stmt = $pdo->prepare("UPDATE orders SET payment_status = ?, payment_method = COALESCE(?, payment_method) WHERE order_id = ?");
 		$stmt->execute([$paymentStatus, $paymentMethod, $orderId]);
+		
+		// Log payment status change
+		if ($oldOrder && $oldOrder['payment_status'] !== $paymentStatus) {
+			$auditLogger->log(
+				'other',
+				'payments',
+				"Payment status changed from {$oldOrder['payment_status']} to {$paymentStatus}",
+				['payment_status' => $oldOrder['payment_status'], 'payment_method' => $paymentMethod],
+				['payment_status' => $paymentStatus, 'payment_method' => $paymentMethod],
+				$orderId,
+				'order',
+				'medium',
+				'success'
+			);
+		}
+		
 		if ($paymentStatus === 'paid') {
 			applyStockControl($pdo, $orderId, (int)($_SESSION['user_id'] ?? 0));
 		}
@@ -108,16 +131,47 @@ try {
 		$orderId = (int)($_POST['order_id'] ?? 0);
 		$address = trim($_POST['shipping_address'] ?? '');
 		$eta = $_POST['estimated_delivery_date'] ?? null;
+		
+		// Get old shipping info for audit log
+		$oldOrderStmt = $pdo->prepare("SELECT shipping_address, estimated_delivery_date FROM orders WHERE order_id = ?");
+		$oldOrderStmt->execute([$orderId]);
+		$oldOrder = $oldOrderStmt->fetch();
+		
 		$stmt = $pdo->prepare("UPDATE orders SET shipping_address = ?, estimated_delivery_date = ? WHERE order_id = ?");
 		$stmt->execute([$address ?: null, $eta ?: null, $orderId]);
+		
+		// Log shipping update
+		$auditLogger->log(
+			'other',
+			'orders',
+			"Shipping information updated",
+			['shipping_address' => $oldOrder['shipping_address'] ?? null, 'estimated_delivery_date' => $oldOrder['estimated_delivery_date'] ?? null],
+			['shipping_address' => $address ?: null, 'estimated_delivery_date' => $eta ?: null],
+			$orderId,
+			'order',
+			'low',
+			'success'
+		);
+		
 		$message = 'Shipping info updated.';
 	}
 	if ($action === 'approve_return') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
 		$reason = trim($_POST['return_reason'] ?? '');
 		$refund = (float)($_POST['refund_amount'] ?? 0);
+		
+		// Get order info for audit log
+		$orderStmt = $pdo->prepare("SELECT total_amount, status FROM orders WHERE order_id = ?");
+		$orderStmt->execute([$orderId]);
+		$orderInfo = $orderStmt->fetch();
+		
 		$stmt = $pdo->prepare("UPDATE orders SET status = 'returned', payment_status = CASE WHEN refund_amount IS NULL OR refund_amount = 0 THEN 'refunded' ELSE payment_status END, return_reason = ?, refund_amount = ? WHERE order_id = ?");
 		$stmt->execute([$reason ?: null, $refund ?: null, $orderId]);
+		
+		// Log return approval
+		if ($refund > 0) {
+			$auditLogger->logOrderRefund($orderId, $refund, "Return approved: $reason");
+		}
 		
 		// Restore stock when return is approved
 		restoreStockControl($pdo, $orderId, (int)($_SESSION['user_id'] ?? 0));
@@ -126,8 +180,24 @@ try {
 	}
 	if ($action === 'reject_return') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
+		$reason = $_POST['reject_reason'] ?? 'Not approved';
+		
 		$stmt = $pdo->prepare("UPDATE orders SET status = 'processing', return_reason = NULL, refund_amount = NULL WHERE order_id = ?");
 		$stmt->execute([$orderId]);
+		
+		// Log return rejection
+		$auditLogger->log(
+			'order_cancel',
+			'orders',
+			"Return request rejected: {$reason}",
+			null,
+			['reason' => $reason],
+			$orderId,
+			'order',
+			'medium',
+			'success'
+		);
+		
 		$message = 'Return rejected.';
 	}
 	if ($action === 'cancel_order') {
@@ -338,7 +408,7 @@ $orders = $stm->fetchAll();
 						<td class="p-3">#<?php echo (int)$o['order_id']; ?></td>
 						<td class="p-3"><?php echo htmlspecialchars($o['username']); ?> <span class="text-gray-500 text-xs"><?php echo htmlspecialchars($o['email']); ?></span></td>
 						<td class="p-3"><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($o['created_at']))); ?></td>
-						<td class="p-3">₱<?php echo number_format((float)$o['total_amount'], 2); ?></td>
+						<td class="p-3"><?php echo formatCurrency((float)$o['total_amount']); ?></td>
 						<td class="p-3">
 							<span class="px-2 py-1 rounded-full text-xs font-semibold <?php 
 								$statusClass = '';
@@ -522,7 +592,7 @@ $orders = $stm->fetchAll();
 								<input type="text" name="return_reason" id="modalReturnReason" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter return reason">
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-2">Refund Amount (₱)</label>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Refund Amount (<?php echo getCurrencySymbol(); ?>)</label>
 								<input type="number" step="0.01" name="refund_amount" id="modalRefundAmount" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0.00">
 							</div>
 						</div>

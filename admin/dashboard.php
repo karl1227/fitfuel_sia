@@ -1,6 +1,7 @@
 <?php
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
+require_once '../config/currency_helper.php';
 require_once '../includes/admin_sidebar.php';
 
 // Fetch dashboard metrics and data
@@ -162,7 +163,7 @@ for ($i = 6; $i >= 0; $i--) {
                     <div>
                         <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Revenue</h3>
                         <div class="flex items-center mt-2">
-                            <span class="text-2xl font-bold text-gray-900">₱<?php echo number_format($totalRevenue, 2); ?></span>
+                            <span class="text-2xl font-bold text-gray-900"><?php echo formatCurrency($totalRevenue); ?></span>
                             <i class="fas fa-chart-line text-gray-400 ml-2"></i>
                         </div>
                     </div>
@@ -221,7 +222,7 @@ for ($i = 6; $i >= 0; $i--) {
                             <div class="text-xs text-gray-500"><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($ro['created_at']))); ?></div>
                         </div>
                         <div class="text-right">
-                            <div class="text-sm font-semibold">₱<?php echo number_format((float)$ro['total_amount'], 2); ?></div>
+                            <div class="text-sm font-semibold"><?php echo formatCurrency((float)$ro['total_amount']); ?></div>
                             <div class="text-xs text-gray-600"><?php echo ucfirst($ro['status']); ?> / <?php echo ucfirst($ro['payment_status']); ?></div>
                         </div>
                     </li>
@@ -287,7 +288,7 @@ for ($i = 6; $i >= 0; $i--) {
                         <?php foreach ($days as $day): ?>
                         <?php $amt = (float)$day['amount']; $height = min(100, $amt > 0 ? (int)round(($amt / max(1.0, $totalRevenue)) * 100) : 0); ?>
                         <div class="flex flex-col items-center justify-end">
-                            <div class="w-6 bg-blue-500 rounded" style="height: <?php echo max(4, $height); ?>px" title="<?php echo htmlspecialchars($day['date']); ?>: ₱<?php echo number_format($amt,2); ?>"></div>
+                            <div class="w-6 bg-blue-500 rounded" style="height: <?php echo max(4, $height); ?>px" title="<?php echo htmlspecialchars($day['date']); ?>: <?php echo formatCurrency($amt); ?>"></div>
                             <div class="text-[10px] text-gray-500 mt-1"><?php echo date('D', strtotime($day['date'])); ?></div>
                         </div>
                         <?php endforeach; ?>

@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 require_once 'config/maintenance_check.php';
+require_once 'config/currency_helper.php';
 
 // Check maintenance mode
 checkMaintenanceMode();
@@ -221,11 +222,11 @@ try {
                     <h3 class="font-semibold text-slate-800"><?php echo htmlspecialchars($item['name']); ?></h3>
                     <?php if ((float)$item['sale_percentage'] > 0): ?>
                       <div class="flex flex-col">
-                        <span class="text-red-600 font-semibold">₱<?php echo number_format($item['final_price'], 2); ?></span>
-                        <span class="text-gray-500 line-through text-sm">₱<?php echo number_format($item['price'], 2); ?></span>
+                        <span class="text-red-600 font-semibold"><?php echo formatCurrency($item['final_price']); ?></span>
+                        <span class="text-gray-500 line-through text-sm"><?php echo formatCurrency($item['price']); ?></span>
                       </div>
                     <?php else: ?>
-                      <p class="text-emerald-600 font-semibold">₱<?php echo number_format($item['price'], 2); ?></p>
+                      <p class="text-emerald-600 font-semibold"><?php echo formatCurrency($item['price']); ?></p>
                     <?php endif; ?>
                   </div>
 
@@ -285,15 +286,15 @@ try {
             <div class="space-y-3 mb-6">
               <div class="flex justify-between">
                 <span class="text-gray-600">Subtotal</span>
-                <span class="font-semibold" id="subtotal">₱<?php echo number_format($subtotal, 2); ?></span>
+                <span class="font-semibold" id="subtotal"><?php echo formatCurrency($subtotal); ?></span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Shipping</span>
-                <span class="font-semibold" id="shipping">₱<?php echo number_format($shipping, 2); ?></span>
+                <span class="font-semibold" id="shipping"><?php echo formatCurrency($shipping); ?></span>
               </div>
               <div class="flex justify-between text-lg font-bold border-t border-gray-200 pt-3">
                 <span>Total</span>
-                <span id="total">₱<?php echo number_format($total, 2); ?></span>
+                <span id="total"><?php echo formatCurrency($total); ?></span>
               </div>
             </div>
 
@@ -434,10 +435,18 @@ try {
         const qty = parseInt(qEl.textContent);
         subtotal += price * qty; totalItems += qty;
       });
+      const currencySymbol = '<?php echo addslashes(getCurrencySymbol()); ?>';
+      const currencyPosition = '<?php echo getCurrencyPosition(); ?>';
       const shipping = 100.00;
       const total = subtotal + shipping;
-      document.getElementById('subtotal').textContent = '₱' + subtotal.toFixed(2);
-      document.getElementById('total').textContent = '₱' + total.toFixed(2);
+      
+      function formatPrice(amount) {
+        const formatted = parseFloat(amount).toFixed(2);
+        return currencyPosition === 'after' ? formatted + currencySymbol : currencySymbol + formatted;
+      }
+      
+      document.getElementById('subtotal').textContent = formatPrice(subtotal);
+      document.getElementById('total').textContent = formatPrice(total);
     }
 
     // Promo
@@ -447,16 +456,26 @@ try {
       if (!promoCode) {
         msg.textContent = 'Please enter a promo code'; msg.className='mt-2 text-sm text-red-500'; msg.classList.remove('hidden'); return;
       }
+      const currencySymbol = '<?php echo addslashes(getCurrencySymbol()); ?>';
+      const currencyPosition = '<?php echo getCurrencyPosition(); ?>';
       const codes = { FITFUEL10:0.10, WELCOME20:0.20, SAVE15:0.15 };
       const d = codes[promoCode.toUpperCase()];
+      
+      function formatPrice(amount) {
+        const formatted = parseFloat(amount).toFixed(2);
+        return currencyPosition === 'after' ? formatted + currencySymbol : currencySymbol + formatted;
+      }
+      
       if (d) {
-        const currentSubtotal = parseFloat(document.getElementById('subtotal').textContent.replace(/[₱,]/g,''));
+        // Remove currency symbol and commas
+        const currentSubtotal = parseFloat(document.getElementById('subtotal').textContent.replace(new RegExp(`[${currencySymbol.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')},]`, 'g'), ''));
         const discountAmount = currentSubtotal * d;
+        
         const newSubtotal = currentSubtotal - discountAmount;
         const newTotal = newSubtotal + 100.00;
-        document.getElementById('subtotal').textContent = '₱' + newSubtotal.toFixed(2);
-        document.getElementById('total').textContent = '₱' + newTotal.toFixed(2);
-        msg.textContent = `Promo code applied! You saved ₱${discountAmount.toFixed(2)}`;
+        document.getElementById('subtotal').textContent = formatPrice(newSubtotal);
+        document.getElementById('total').textContent = formatPrice(newTotal);
+        msg.textContent = `Promo code applied! You saved ${formatPrice(discountAmount)}`;
         msg.className='mt-2 text-sm text-green-500'; msg.classList.remove('hidden');
       } else {
         msg.textContent = 'Invalid promo code'; msg.className='mt-2 text-sm text-red-500'; msg.classList.remove('hidden');

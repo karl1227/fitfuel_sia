@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Log settings update
             $auditLogger->log(
-                'settings_update',
+                'system_settings_change',
                 'settings',
                 'Platform settings updated',
                 $oldSettings,

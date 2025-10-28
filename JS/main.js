@@ -4,6 +4,16 @@
         let indicators = [];
         let carouselInterval;
         
+        function formatPrice(amount) {
+            if (typeof window.currencySymbol === 'undefined') {
+                // Fallback if currency not loaded
+                return '₱' + amount.toFixed(2);
+            }
+            const formatted = parseFloat(amount).toFixed(2);
+            const position = window.currencyPosition || 'before';
+            return position === 'after' ? formatted + window.currencySymbol : window.currencySymbol + formatted;
+        }
+        
         function showSlide(index) {
             slides.forEach((slide, i) => {
                 const isActive = i === index;
@@ -191,7 +201,7 @@
                         <h3 class="font-semibold text-lg text-slate-800 mb-2">${product.name}</h3>
                         <p class="text-slate-600 mb-4">High-quality fitness product for your workout needs</p>
                         <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold text-emerald-600">₱${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</span>
+                            <span class="text-2xl font-bold text-emerald-600">${formatPrice(typeof product.price === 'number' ? product.price : parseFloat(product.price))}</span>
                             <button class="bg-black text-white px-4 py-2 rounded-lg hover:bg-black-200 transition-colors">
                                 <i class="fas fa-cart-plus"></i>
                             </button>

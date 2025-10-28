@@ -2,6 +2,7 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/audit_logger.php';
+require_once '../config/currency_helper.php';
 require_once '../includes/admin_sidebar.php';
 
 // Check role-based access for inventory module
@@ -385,7 +386,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                                         <?php echo $item['min_stock_level']; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        ₱<?php echo number_format($item['price'], 2); ?>
+                                        <?php echo formatCurrency($item['price']); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <?php

@@ -96,8 +96,10 @@ $actionTypes = [
     'user_status_change', 'product_create', 'product_update', 'product_delete', 'product_status_change',
     'inventory_adjustment', 'order_create', 'order_update', 'order_status_change', 'order_cancel',
     'order_refund', 'payment_process', 'payment_refund', 'promo_create', 'promo_update',
-    'promo_delete', 'category_create', 'category_update', 'category_delete', 'system_settings_change',
-    'admin_access', 'data_export', 'data_import'
+    'promo_delete', 'promo_status_change', 'category_create', 'category_update', 'category_delete',
+    'subcategory_create', 'subcategory_update', 'subcategory_delete', 'shipping_fee_update',
+    'system_settings_change', 'admin_access', 'data_export', 'data_import', 'content_create',
+    'content_update', 'content_delete', 'content_archive', 'content_publish', 'other'
 ];
 
 $modules = ['authentication', 'users', 'products', 'inventory', 'orders', 'payments', 'promo_codes', 'categories', 'system', 'admin', 'data_management'];

@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'customer_auth_check.php';
 require_once 'config/database.php';
+require_once 'config/currency_helper.php';
 $user_id = (int) $_SESSION['user_id'];
 
 /* ========== 2) Read & sanitize selected_items once ========== */
@@ -340,12 +341,12 @@ $total = $subtotal + $shipping_fee + $tax_amount;
                   </div>
                   <div class="text-right">
                     <?php if ($item['sale_percentage'] > 0): ?>
-                      <p class="font-semibold text-red-600">₱<?php echo number_format($item['final_price'] * $item['quantity'], 2); ?></p>
-                      <p class="text-xs text-gray-500 line-through">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
-                      <p class="text-xs text-gray-500">₱<?php echo number_format($item['final_price'], 2); ?> each</p>
+                      <p class="font-semibold text-red-600"><?php echo formatCurrency($item['final_price'] * $item['quantity']); ?></p>
+                      <p class="text-xs text-gray-500 line-through"><?php echo formatCurrency($item['price'] * $item['quantity']); ?></p>
+                      <p class="text-xs text-gray-500"><?php echo formatCurrency($item['final_price']); ?> each</p>
                     <?php else: ?>
-                      <p class="font-semibold text-emerald-600">₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
-                      <p class="text-xs text-gray-500">₱<?php echo number_format($item['price'], 2); ?> each</p>
+                      <p class="font-semibold text-emerald-600"><?php echo formatCurrency($item['price'] * $item['quantity']); ?></p>
+                      <p class="text-xs text-gray-500"><?php echo formatCurrency($item['price']); ?> each</p>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -369,25 +370,25 @@ $total = $subtotal + $shipping_fee + $tax_amount;
             <div class="border-t border-gray-200 pt-4 space-y-2">
               <div class="flex justify-between">
                 <span class="text-gray-600">Subtotal (<?php echo (int)$total_items; ?> items)</span>
-                <span class="font-semibold">₱<?php echo number_format($subtotal, 2); ?></span>
+                <span class="font-semibold"><?php echo formatCurrency($subtotal); ?></span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Shipping</span>
-                <span class="font-semibold">₱<?php echo number_format($shipping_fee, 2); ?></span>
+                <span class="font-semibold"><?php echo formatCurrency($shipping_fee); ?></span>
               </div>
               <?php if ($tax_enabled && $tax_amount > 0): ?>
               <div class="flex justify-between">
                 <span class="text-gray-600">Tax (<?php echo number_format($tax_rate * 100, 0); ?>%)</span>
-                <span class="font-semibold">₱<?php echo number_format($tax_amount, 2); ?></span>
+                <span class="font-semibold"><?php echo formatCurrency($tax_amount); ?></span>
               </div>
               <?php endif; ?>
               <div id="promo_discount" class="flex justify-between text-emerald-600 hidden">
                 <span>Discount</span>
-                <span class="font-semibold">-₱<span id="discount_amount">0.00</span></span>
+                <span class="font-semibold">-<span id="discount_amount"><?php echo getCurrencySymbol(); ?>0.00</span></span>
               </div>
               <div class="flex justify-between text-lg font-bold border-t border-gray-200 pt-2">
                 <span>Total</span>
-                <span class="text-emerald-600">₱<span id="total_amount"><?php echo number_format($total, 2); ?></span></span>
+                <span class="text-emerald-600"><span id="total_amount"><?php echo formatCurrency($total); ?></span></span>
               </div>
             </div>
 

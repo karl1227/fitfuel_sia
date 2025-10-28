@@ -1,6 +1,7 @@
 <?php
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
+require_once '../config/currency_helper.php';
 
 // Check role-based access for orders module (generate_invoice is part of orders)
 requireAccess('orders');
@@ -383,8 +384,8 @@ function generateWaybill($order_data, $shipping_address) {
             <tr>
                 <td class="qty"><?php echo (int)$item['quantity']; ?></td>
                 <td><?php echo htmlspecialchars($item['product_name']); ?></td>
-                <td class="price">₱<?php echo number_format((float)$item['price'], 2); ?></td>
-                <td class="total">₱<?php echo number_format($item_total, 2); ?></td>
+                <td class="price"><?php echo formatCurrency((float)$item['price']); ?></td>
+                <td class="total"><?php echo formatCurrency($item_total); ?></td>
                 <td><?php echo htmlspecialchars($item['category_name'] ?? ''); ?></td>
             </tr>
             <?php endforeach; ?>
@@ -394,15 +395,15 @@ function generateWaybill($order_data, $shipping_address) {
     <div class="summary">
         <div class="summary-row">
             <span class="summary-label">Subtotal:</span>
-            <span class="summary-value">₱<?php echo number_format($subtotal, 2); ?></span>
+            <span class="summary-value"><?php echo formatCurrency($subtotal); ?></span>
         </div>
         <div class="summary-row">
             <span class="summary-label">Shipping:</span>
-            <span class="summary-value">₱0.00</span>
+            <span class="summary-value"><?php echo formatCurrency(0); ?></span>
         </div>
         <div class="summary-row summary-total">
             <span class="summary-label">TOTAL:</span>
-            <span class="summary-value">₱<?php echo number_format($subtotal, 2); ?></span>
+            <span class="summary-value"><?php echo formatCurrency($subtotal); ?></span>
         </div>
     </div>
     

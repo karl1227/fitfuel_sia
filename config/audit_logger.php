@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/currency_helper.php';
 
 class AuditLogger {
     private $pdo;
@@ -346,7 +347,7 @@ class AuditLogger {
         return $this->log(
             'order_refund',
             'orders',
-            "Order refunded: ₱" . number_format($refundAmount, 2) . ($reason ? " - {$reason}" : ""),
+            "Order refunded: " . formatCurrency($refundAmount) . ($reason ? " - {$reason}" : ""),
             null,
             ['refund_amount' => $refundAmount, 'reason' => $reason],
             $orderId,
@@ -380,7 +381,7 @@ class AuditLogger {
         return $this->log(
             'payment_refund',
             'payments',
-            "Payment refunded: ₱" . number_format($refundAmount, 2) . ($reason ? " - {$reason}" : ""),
+            "Payment refunded: " . formatCurrency($refundAmount) . ($reason ? " - {$reason}" : ""),
             null,
             ['refund_amount' => $refundAmount, 'reason' => $reason],
             $orderId,

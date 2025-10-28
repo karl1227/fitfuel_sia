@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
 require_once 'config/maintenance_check.php';
+require_once 'config/currency_helper.php';
 
 // Check maintenance mode
 checkMaintenanceMode();
@@ -260,11 +261,12 @@ if (!empty($_SESSION['user_id'])) {
         <div class="mb-6">
           <h4 class="font-semibold text-lg text-slate-700 mb-3">Price Range</h4>
           <?php
+            $currencySymbol = getCurrencySymbol();
             $ranges = [
-              'under_1000'  => 'Under ₱1,000',
-              '1000_2000'   => '₱1,000 - ₱2,000',
-              '2000_3000'   => '₱2,000 - ₱3,000',
-              'above_3000'  => 'Above ₱3,000'
+              'under_1000'  => 'Under ' . $currencySymbol . '1,000',
+              '1000_2000'   => $currencySymbol . '1,000 - ' . $currencySymbol . '2,000',
+              '2000_3000'   => $currencySymbol . '2,000 - ' . $currencySymbol . '3,000',
+              'above_3000'  => 'Above ' . $currencySymbol . '3,000'
             ];
             foreach ($ranges as $key => $label):
           ?>
@@ -360,11 +362,11 @@ if (!empty($_SESSION['user_id'])) {
                 <div class="flex items-end justify-between mt-auto">
                   <?php if ($on_sale): ?>
                     <div class="flex flex-col">
-                      <span class="text-2xl font-bold text-red-600">₱<?php echo number_format($final, 2); ?></span>
-                      <span class="text-sm text-gray-500 line-through">₱<?php echo number_format($price, 2); ?></span>
+                      <span class="text-2xl font-bold text-red-600"><?php echo formatCurrency($final); ?></span>
+                      <span class="text-sm text-gray-500 line-through"><?php echo formatCurrency($price); ?></span>
                     </div>
                   <?php else: ?>
-                    <span class="text-2xl font-bold text-emerald-600">₱<?php echo number_format($price, 2); ?></span>
+                    <span class="text-2xl font-bold text-emerald-600"><?php echo formatCurrency($price); ?></span>
                   <?php endif; ?>
 
                   <button onclick="addToCart(<?php echo (int)$product['product_id']; ?>)"

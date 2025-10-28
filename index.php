@@ -8,6 +8,7 @@
 
 require_once __DIR__ . '/includes/db.php';
 require_once 'config/maintenance_check.php';
+require_once 'config/currency_helper.php';
 
 // Start session and initialize cart count
 if (session_status() === PHP_SESSION_NONE) { 
@@ -238,6 +239,8 @@ try {
     <script>
         // Provide best selling products (paged) from the database to homepage JS
         window.bestSellingProductsData = <?php echo json_encode($bestSellingProductsPages, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+        window.currencySymbol = '<?php echo addslashes(getCurrencySymbol()); ?>';
+        window.currencyPosition = '<?php echo getCurrencyPosition(); ?>';
     </script>
   </head>
   <body class="font-body bg-white text-slate-600">

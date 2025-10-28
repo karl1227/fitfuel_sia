@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'customer_auth_check.php';
 require_once 'config/database.php';
+require_once 'config/currency_helper.php';
 
 $user_id = (int)($_SESSION['user_id'] ?? 0);
 
@@ -182,10 +183,10 @@ function first_image($images, $fallback = 'img/placeholder-product.png') {
                     <div class="flex items-center justify-between mb-3">
                       <div>
                         <?php if ($on_sale): ?>
-                          <span class="text-lg font-bold text-red-600">₱<?php echo number_format($final, 2); ?></span>
-                          <span class="text-sm text-gray-500 line-through ml-2">₱<?php echo number_format($price, 2); ?></span>
+                          <span class="text-lg font-bold text-red-600"><?php echo formatCurrency($final); ?></span>
+                          <span class="text-sm text-gray-500 line-through ml-2"><?php echo formatCurrency($price); ?></span>
                         <?php else: ?>
-                          <span class="text-lg font-bold text-gray-900">₱<?php echo number_format($price, 2); ?></span>
+                          <span class="text-lg font-bold text-gray-900"><?php echo formatCurrency($price); ?></span>
                         <?php endif; ?>
                       </div>
                       <span class="text-xs font-semibold <?php echo $is_in_stock ? 'text-green-600' : 'text-red-600'; ?>">

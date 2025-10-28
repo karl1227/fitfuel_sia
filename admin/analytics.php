@@ -2,6 +2,7 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/analytics.php';
+require_once '../config/currency_helper.php';
 require_once '../includes/admin_sidebar.php';
 
 // Check role-based access for analytics module
@@ -55,7 +56,7 @@ if (isset($_GET['export'])) {
             $html .= '<hr style="margin: 20px 0; border: 0; border-top: 2px solid #000;">';
             $html .= '<div class="metric">';
             $html .= '<h2>Key Performance Indicators</h2>';
-            $html .= '<p><strong>Revenue (30 Days):</strong> ₱' . number_format($data['kpis']['revenue_30_days'], 2) . '</p>';
+            $html .= '<p><strong>Revenue (30 Days):</strong> ' . formatCurrency($data['kpis']['revenue_30_days']) . '</p>';
             $html .= '<p><strong>Orders (30 Days):</strong> ' . number_format($data['kpis']['orders_30_days']) . '</p>';
             $html .= '<p><strong>Conversion Rate:</strong> ' . $data['kpis']['conversion_rate'] . '%</p>';
             $html .= '<p><strong>Active Customers:</strong> ' . number_format($data['kpis']['active_customers']) . '</p>';
@@ -70,7 +71,7 @@ if (isset($_GET['export'])) {
                 foreach (array_slice($data['revenue_trend'], -10) as $trend) {
                     $html .= '<tr>';
                     $html .= '<td>' . htmlspecialchars($trend['period']) . '</td>';
-                    $html .= '<td>₱' . number_format($trend['revenue'], 2) . '</td>';
+                    $html .= '<td>' . formatCurrency($trend['revenue']) . '</td>';
                     $html .= '<td>' . number_format($trend['orders']) . '</td>';
                     $html .= '<td>' . number_format($trend['unique_customers']) . '</td>';
                     $html .= '</tr>';
@@ -233,7 +234,7 @@ $dashboardData = $analytics->getDashboardData($filters);
                     <div>
                         <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Revenue (30 Days)</h3>
                         <div class="flex items-center mt-2">
-                            <span class="text-2xl font-bold text-gray-900">₱<?php echo number_format($dashboardData['kpis']['revenue_30_days'], 2); ?></span>
+                            <span class="text-2xl font-bold text-gray-900"><?php echo formatCurrency($dashboardData['kpis']['revenue_30_days']); ?></span>
                             <i class="fas fa-dollar-sign text-green-600 ml-2"></i>
                         </div>
                     </div>
@@ -317,7 +318,7 @@ $dashboardData = $analytics->getDashboardData($filters);
                                 </div>
                             </div>
                             <div class="text-right">
-                                <div class="font-semibold text-gray-900">₱<?php echo number_format($product['revenue'], 2); ?></div>
+                                <div class="font-semibold text-gray-900"><?php echo formatCurrency($product['revenue']); ?></div>
                                 <div class="text-sm text-gray-500"><?php echo $product['orders_count']; ?> orders</div>
                             </div>
                         </div>
@@ -344,7 +345,7 @@ $dashboardData = $analytics->getDashboardData($filters);
                     
                     <!-- Average Order Value -->
                     <div class="text-center p-4 bg-purple-50 rounded-lg">
-                        <div class="text-2xl font-bold text-purple-600">₱<?php echo number_format($dashboardData['customer_insights']['insights']['avg_order_value'], 2); ?></div>
+                        <div class="text-2xl font-bold text-purple-600"><?php echo formatCurrency($dashboardData['customer_insights']['insights']['avg_order_value']); ?></div>
                         <div class="text-sm text-gray-600">Average Order Value</div>
                     </div>
                     
@@ -359,7 +360,7 @@ $dashboardData = $analytics->getDashboardData($filters);
                                     <div class="font-medium"><?php echo htmlspecialchars($spender['username']); ?></div>
                                     <div class="text-gray-500"><?php echo $spender['orders_count']; ?> orders</div>
                                 </div>
-                                <div class="font-semibold">₱<?php echo number_format($spender['total_spent'], 2); ?></div>
+                                <div class="font-semibold"><?php echo formatCurrency($spender['total_spent']); ?></div>
                             </div>
                             <?php endforeach; ?>
                         </div>
@@ -398,7 +399,7 @@ $dashboardData = $analytics->getDashboardData($filters);
                                         <?php echo htmlspecialchars($trend['period']); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ₱<?php echo number_format($trend['revenue'], 2); ?>
+                                        <?php echo formatCurrency($trend['revenue']); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <?php echo number_format($trend['orders']); ?>
@@ -454,7 +455,7 @@ $dashboardData = $analytics->getDashboardData($filters);
                                         <?php echo number_format($status['count']); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ₱<?php echo number_format($status['total_amount'], 2); ?>
+                                        <?php echo formatCurrency($status['total_amount']); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <?php echo number_format($percentage, 1); ?>%
@@ -482,7 +483,7 @@ $dashboardData = $analytics->getDashboardData($filters);
             data: {
                 labels: revenueLabels,
                 datasets: [{
-                    label: 'Revenue (₱)',
+                    label: 'Revenue (<?php echo getCurrencyCode(); ?>)',
                     data: revenueValues,
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -507,7 +508,10 @@ $dashboardData = $analytics->getDashboardData($filters);
                         position: 'left',
                         ticks: {
                             callback: function(value) {
-                                return '₱' + value.toLocaleString();
+                                const currencySymbol = '<?php echo addslashes(getCurrencySymbol()); ?>';
+                                const currencyPosition = '<?php echo getCurrencyPosition(); ?>';
+                                const formatted = value.toLocaleString();
+                                return currencyPosition === 'after' ? formatted + currencySymbol : currencySymbol + formatted;
                             }
                         }
                     },

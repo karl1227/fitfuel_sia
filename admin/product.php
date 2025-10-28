@@ -2,6 +2,7 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/audit_logger.php';
+require_once '../config/currency_helper.php';
 require_once '../includes/admin_sidebar.php';
 
 // Check role-based access for products module
@@ -550,11 +551,11 @@ if (isset($_GET['edit'])) {
                                             $sale_price = $original_price * (1 - $product['sale_percentage'] / 100);
                                             ?>
                                             <div class="flex flex-col">
-                                                <span class="text-red-600 font-semibold">₱<?php echo number_format($sale_price, 2); ?></span>
-                                                <span class="text-gray-500 line-through text-xs">₱<?php echo number_format($original_price, 2); ?></span>
+                                                <span class="text-red-600 font-semibold"><?php echo formatCurrency($sale_price); ?></span>
+                                                <span class="text-gray-500 line-through text-xs"><?php echo formatCurrency($original_price); ?></span>
                                             </div>
                                         <?php else: ?>
-                                            ₱<?php echo number_format($product['price'], 2); ?>
+                                            <?php echo formatCurrency($product['price']); ?>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -639,7 +640,7 @@ if (isset($_GET['edit'])) {
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Price (₱)</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Price (<?php echo getCurrencySymbol(); ?>)</label>
                                 <input type="number" name="price" id="productPrice" step="0.01" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" oninput="calculateSalePrice()">
                                 <div id="salePriceDisplay" class="mt-2 text-sm text-green-600 font-semibold" style="display: none;">
                                     Sale Price: <span id="salePriceValue"></span>
@@ -949,7 +950,10 @@ if (isset($_GET['edit'])) {
             if (salePercentage > 0) {
                 const discountAmount = originalPrice * (salePercentage / 100);
                 const salePrice = originalPrice - discountAmount;
-                document.getElementById('salePriceValue').textContent = '₱' + salePrice.toFixed(2);
+                const currencySymbol = '<?php echo addslashes(getCurrencySymbol()); ?>';
+                const currencyPosition = '<?php echo getCurrencyPosition(); ?>';
+                const formatted = salePrice.toFixed(2);
+                document.getElementById('salePriceValue').textContent = currencyPosition === 'after' ? formatted + currencySymbol : currencySymbol + formatted;
                 document.getElementById('salePriceDisplay').style.display = 'block';
             } else {
                 document.getElementById('salePriceDisplay').style.display = 'none';

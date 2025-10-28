@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'customer_auth_check.php';
 require_once 'config/database.php';
+require_once 'config/currency_helper.php';
 
 $user_id = (int)($_SESSION['user_id'] ?? 0);
 
@@ -356,8 +357,8 @@ $display_total  = $total_amount; // authoritative total from DB
                   <p class="text-gray-600">Qty: <?= (int)$item['quantity'] ?></p>
                 </div>
                 <div class="text-right">
-                  <p class="font-semibold">₱<?= number_format($line_total, 2) ?></p>
-                  <p class="text-sm text-gray-500">₱<?= number_format((float)$item['price'], 2) ?> each</p>
+                  <p class="font-semibold"><?= formatCurrency($line_total) ?></p>
+                  <p class="text-sm text-gray-500"><?= formatCurrency((float)$item['price']) ?> each</p>
                 </div>
               </div>
             <?php endforeach; ?>
@@ -366,39 +367,39 @@ $display_total  = $total_amount; // authoritative total from DB
             <div class="mt-4 rounded-lg border bg-gray-50 p-4 space-y-2">
               <div class="flex justify-between text-sm">
                 <span class="text-slate-600">Items Subtotal</span>
-                <span class="font-medium">₱<?= number_format($items_subtotal, 2) ?></span>
+                <span class="font-medium"><?= formatCurrency($items_subtotal) ?></span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-slate-600">Shipping Fee</span>
-                <span class="font-medium">₱<?= number_format($shipping_fee, 2) ?></span>
+                <span class="font-medium"><?= formatCurrency($shipping_fee) ?></span>
               </div>
               <?php if ($other_fee != 0): ?>
                 <div class="flex justify-between text-sm">
                   <span class="text-slate-600">Other Fee</span>
-                  <span class="font-medium">₱<?= number_format($other_fee, 2) ?></span>
+                  <span class="font-medium"><?= formatCurrency($other_fee) ?></span>
                 </div>
               <?php endif; ?>
               <?php if ($discount_amount != 0): ?>
                 <div class="flex justify-between text-sm">
                   <span class="text-slate-600">Discount</span>
-                  <span class="font-medium">-₱<?= number_format(abs($discount_amount), 2) ?></span>
+                  <span class="font-medium">-<?= formatCurrency(abs($discount_amount)) ?></span>
                 </div>
               <?php endif; ?>
               <?php if ($voucher_discount != 0): ?>
                 <div class="flex justify-between text-sm">
                   <span class="text-slate-600">Voucher</span>
-                  <span class="font-medium">-₱<?= number_format(abs($voucher_discount), 2) ?></span>
+                  <span class="font-medium">-<?= formatCurrency(abs($voucher_discount)) ?></span>
                 </div>
               <?php endif; ?>
 
               <div class="flex justify-between items-center pt-3 mt-2 border-t">
                 <span class="text-base font-semibold text-slate-800">Total Cost</span>
-                <span class="text-lg font-bold text-emerald-600">₱<?= number_format($display_total, 2) ?></span>
+                <span class="text-lg font-bold text-emerald-600"><?= formatCurrency($display_total) ?></span>
               </div>
 
               <?php if (abs($computed_total - $display_total) > 0.01): ?>
                 <p class="text-xs text-amber-700 mt-1">
-                  Note: Computed total (₱<?= number_format($computed_total, 2) ?>) differs from stored total. Check fees/discounts.
+                  Note: Computed total (<?= formatCurrency($computed_total) ?>) differs from stored total. Check fees/discounts.
                 </p>
               <?php endif; ?>
             </div>
