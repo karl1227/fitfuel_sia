@@ -114,7 +114,29 @@ try {
         }
     }
     
-    $total_amount = $subtotal + $shipping_fee - $discount_amount;
+    // Check if tax is enabled
+    $tax_enabled = false;
+    $tax_rate = 0.12;
+    $tax_amount = 0;
+    
+    try {
+        $settings_stmt = $pdo->query("SELECT key_name, value FROM settings");
+        $settings = [];
+        while ($row = $settings_stmt->fetch()) {
+            $settings[$row['key_name']] = $row['value'];
+        }
+        
+        $tax_enabled = isset($settings['tax_enabled']) && $settings['tax_enabled'] === '1';
+        if ($tax_enabled) {
+            $tax_rate = floatval($settings['tax_rate'] ?? 0.12);
+            // Tax is calculated on subtotal + shipping (before discount, to match checkout display)
+            $tax_amount = ($subtotal + $shipping_fee) * $tax_rate;
+        }
+    } catch (PDOException $e) {
+        // If error loading settings, proceed without tax
+    }
+    
+    $total_amount = $subtotal + $shipping_fee - $discount_amount + $tax_amount;
     
     // Generate custom order ID with shuffled characters
     $order_date = date('Ymd');

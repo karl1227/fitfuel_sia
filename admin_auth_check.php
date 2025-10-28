@@ -45,13 +45,13 @@ function hasAccess($module) {
     $permissions = [
         'admin' => [
             'dashboard', 'products', 'orders', 'inventory', 
-            'users', 'analytics', 'content', 'audit_logs'
+            'users', 'analytics', 'content', 'audit_logs', 'settings'
         ],
         'manager' => [
-            'dashboard', 'analytics'
+            'dashboard', 'analytics', 'settings'
         ],
         'staff' => [
-            'dashboard', 'orders', 'inventory'
+            'dashboard', 'orders', 'inventory', 'settings'
         ]
     ];
     

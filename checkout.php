@@ -93,6 +93,38 @@ try {
 } catch (PDOException $e) {
     $cart_count = 0;
 }
+
+/* ========== 7) Load Settings ========== */
+$settings = [];
+try {
+    $settings_stmt = $pdo->query("SELECT key_name, value FROM settings");
+    while ($row = $settings_stmt->fetch()) {
+        $settings[$row['key_name']] = $row['value'];
+    }
+} catch (PDOException $e) {
+    // If no settings, use defaults
+}
+
+function getSetting($key, $default = '0') {
+    global $settings;
+    return $settings[$key] ?? $default;
+}
+
+// Get enabled payment methods
+$paypal_enabled = getSetting('paypal_enabled') === '1';
+$cod_enabled = getSetting('cash_on_delivery_enabled') === '1';
+$bank_transfer_enabled = getSetting('bank_transfer_enabled') === '1';
+
+// Calculate tax if enabled (before discount)
+$tax_enabled = getSetting('tax_enabled') === '1';
+$tax_rate = floatval(getSetting('tax_rate', '0.12'));
+$tax_amount = 0;
+
+if ($tax_enabled) {
+    // Tax is calculated on subtotal + shipping (before discount)
+    $tax_amount = ($subtotal + $shipping_fee) * $tax_rate;
+}
+$total = $subtotal + $shipping_fee + $tax_amount;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -235,8 +267,9 @@ try {
           <div class="bg-white rounded-lg shadow-lg p-6">
             <h2 class="text-xl font-semibold text-slate-800 mb-6">Payment Method</h2>
             <div class="space-y-4">
+              <?php if ($cod_enabled): ?>
               <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                <input type="radio" name="payment_method" value="cod" class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500" checked>
+                <input type="radio" name="payment_method" value="cod" class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500" <?php echo (!$paypal_enabled && !$bank_transfer_enabled) ? 'checked' : ''; ?>>
                 <div class="ml-3">
                   <div class="flex items-center">
                     <i class="fas fa-money-bill-wave text-green-600 text-xl mr-3"></i>
@@ -245,7 +278,9 @@ try {
                   <p class="text-sm text-gray-600 mt-1">Pay when your order arrives</p>
                 </div>
               </label>
+              <?php endif; ?>
 
+              <?php if ($paypal_enabled): ?>
               <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                 <input type="radio" name="payment_method" value="paypal" class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500">
                 <div class="ml-3">
@@ -256,6 +291,29 @@ try {
                   <p class="text-sm text-gray-600 mt-1">Pay securely with PayPal</p>
                 </div>
               </label>
+              <?php endif; ?>
+
+              <?php if ($bank_transfer_enabled): ?>
+              <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                <input type="radio" name="payment_method" value="bank_transfer" class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500">
+                <div class="ml-3">
+                  <div class="flex items-center">
+                    <i class="fas fa-university text-indigo-600 text-xl mr-3"></i>
+                    <span class="font-semibold text-slate-800">Bank Transfer</span>
+                  </div>
+                  <p class="text-sm text-gray-600 mt-1">Transfer directly to our bank account</p>
+                </div>
+              </label>
+              <?php endif; ?>
+
+              <?php if (!$cod_enabled && !$paypal_enabled && !$bank_transfer_enabled): ?>
+              <div class="p-4 border border-red-200 rounded-lg bg-red-50">
+                <p class="text-sm text-red-600 text-center">
+                  <i class="fas fa-exclamation-triangle mr-2"></i>
+                  No payment methods are currently enabled. Please contact support.
+                </p>
+              </div>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -317,6 +375,12 @@ try {
                 <span class="text-gray-600">Shipping</span>
                 <span class="font-semibold">₱<?php echo number_format($shipping_fee, 2); ?></span>
               </div>
+              <?php if ($tax_enabled && $tax_amount > 0): ?>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Tax (<?php echo number_format($tax_rate * 100, 0); ?>%)</span>
+                <span class="font-semibold">₱<?php echo number_format($tax_amount, 2); ?></span>
+              </div>
+              <?php endif; ?>
               <div id="promo_discount" class="flex justify-between text-emerald-600 hidden">
                 <span>Discount</span>
                 <span class="font-semibold">-₱<span id="discount_amount">0.00</span></span>

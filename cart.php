@@ -1,7 +1,12 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
-require_once 'customer_auth_check.php';
 require_once 'config/database.php';
+require_once 'config/maintenance_check.php';
+
+// Check maintenance mode
+checkMaintenanceMode();
+
+require_once 'customer_auth_check.php';
 $user_id = (int)$_SESSION['user_id'];
 
 $cart_items = [];

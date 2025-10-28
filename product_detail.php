@@ -1,6 +1,10 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/database.php';
+require_once 'config/maintenance_check.php';
+
+// Check maintenance mode
+checkMaintenanceMode();
 
 // Check if admin is trying to access customer product details - redirect to admin dashboard
 if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'manager', 'staff'])) {

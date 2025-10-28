@@ -7,11 +7,15 @@
 // =============================================================================
 
 require_once __DIR__ . '/includes/db.php';
+require_once 'config/maintenance_check.php';
 
 // Start session and initialize cart count
 if (session_status() === PHP_SESSION_NONE) { 
     session_start(); 
 }
+
+// Check maintenance mode
+checkMaintenanceMode();
 
 // Check if admin is trying to access customer homepage
 if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'manager', 'staff'])) {

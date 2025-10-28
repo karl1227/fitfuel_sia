@@ -73,7 +73,7 @@ function renderAdminSidebar($current_page = 'dashboard') {
         ],
         [
             'module' => 'settings',
-            'href' => '#',
+            'href' => 'settings.php',
             'icon' => 'fa-cog',
             'text' => 'Settings',
             'accessible_to' => ['admin', 'manager', 'staff']
