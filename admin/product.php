@@ -8,6 +8,7 @@ require_once '../includes/admin_sidebar.php';
 requireAccess('products');
 
 $pdo = getDBConnection();
+$auditLogger = new AuditLogger();
 $message = '';
 $error = '';
 
@@ -94,10 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 
                 $message = "Product added successfully!" . (!empty($additional_images) ? " (" . count($additional_images) . " additional images uploaded)" : "");
-                audit_log('products', 'add', 'success', ['product_id' => $product_id], ['name'=>$name, 'price'=>$price, 'category_id'=>$category_id, 'status'=>$status, 'additional_images_count' => count($additional_images)]);
+                $auditLogger->log('product_create', 'products', 'Product added successfully', null, ['product_id' => $product_id, 'name'=>$name, 'price'=>$price, 'category_id'=>$category_id, 'status'=>$status, 'additional_images_count' => count($additional_images)], $product_id, 'product', 'medium', 'success');
             } catch (PDOException $e) {
                 $error = "Failed to add product: " . $e->getMessage();
-                audit_log('products', 'add', 'failure', [], ['error'=>$e->getMessage(), 'name'=>$name]);
+                $auditLogger->log('product_create', 'products', 'Failed to add product', null, ['error'=>$e->getMessage(), 'name'=>$name], null, 'product', 'high', 'failed');
             }
             break;
             
@@ -178,6 +179,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             // Handle image deletions
             $deleted_images = $_POST['deleted_images'] ?? [];
+            // Decode JSON string if it's a string
+            if (is_string($deleted_images) && !empty($deleted_images)) {
+                $deleted_images = json_decode($deleted_images, true) ?: [];
+            }
             if (!empty($deleted_images)) {
                 foreach ($deleted_images as $img_id) {
                     // Get image path for deletion
@@ -211,11 +216,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 }
                 
-                $message = "Product updated successfully!" . (!empty($new_additional_images) ? " (" . count($new_additional_images) . " additional images uploaded)" : "") . (!empty($deleted_images) ? " (" . count($deleted_images) . " images deleted)" : "");
-                audit_log('products', 'edit', 'success', ['product_id'=>$product_id], ['name'=>$name, 'price'=>$price, 'status'=>$status, 'additional_images_added' => count($new_additional_images), 'images_deleted' => count($deleted_images)]);
+                // Ensure arrays for count operations
+                $new_images_count = is_array($new_additional_images) ? count($new_additional_images) : 0;
+                $deleted_images_count = is_array($deleted_images) ? count($deleted_images) : 0;
+                
+                $message = "Product updated successfully!" . ($new_images_count > 0 ? " ({$new_images_count} additional images uploaded)" : "") . ($deleted_images_count > 0 ? " ({$deleted_images_count} images deleted)" : "");
+                
+                $auditLogger->log('product_update', 'products', 'Product updated successfully', ['product_id'=>$product_id], ['product_id'=>$product_id, 'name'=>$name, 'price'=>$price, 'status'=>$status, 'additional_images_added' => $new_images_count, 'images_deleted' => $deleted_images_count], $product_id, 'product', 'medium', 'success');
             } catch (PDOException $e) {
                 $error = "Failed to update product: " . $e->getMessage();
-                audit_log('products', 'edit', 'failure', ['product_id'=>$product_id], ['error'=>$e->getMessage()]);
+                $auditLogger->log('product_update', 'products', 'Failed to update product', ['product_id'=>$product_id], ['error'=>$e->getMessage()], $product_id, 'product', 'high', 'failed');
             }
             break;
             
@@ -225,10 +235,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt = $pdo->prepare("DELETE FROM products WHERE product_id = ?");
                 $stmt->execute([$product_id]);
                 $message = "Product deleted successfully!";
-                audit_log('products', 'delete', 'success', ['product_id'=>$product_id], []);
+                $auditLogger->log('product_delete', 'products', 'Product deleted successfully', ['product_id'=>$product_id], null, $product_id, 'product', 'high', 'success');
             } catch (PDOException $e) {
                 $error = "Failed to delete product: " . $e->getMessage();
-                audit_log('products', 'delete', 'failure', ['product_id'=>$product_id], ['error'=>$e->getMessage()]);
+                $auditLogger->log('product_delete', 'products', 'Failed to delete product', ['product_id'=>$product_id], ['error'=>$e->getMessage()], $product_id, 'product', 'critical', 'failed');
             }
             break;
     }
