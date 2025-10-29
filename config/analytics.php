@@ -160,28 +160,172 @@ class Analytics {
         ");
         $avg_order_value->execute([$start_date, $end_date]);
         
-        // Top spenders
+        // Total unique customers in period
+        $total_customers = $this->pdo->prepare("
+            SELECT COUNT(DISTINCT user_id)
+            FROM orders
+            WHERE created_at BETWEEN ? AND ?
+        ");
+        $total_customers->execute([$start_date, $end_date]);
+        
+        // Customer Lifetime Value (CLV) - average total spent per customer
+        $avg_clv = $this->pdo->prepare("
+            SELECT COALESCE(AVG(customer_total), 0)
+            FROM (
+                SELECT SUM(o.total_amount) as customer_total
+                FROM orders o
+                WHERE o.created_at BETWEEN ? AND ? AND o.payment_status = 'paid'
+                GROUP BY o.user_id
+            ) as customer_totals
+        ");
+        $avg_clv->execute([$start_date, $end_date]);
+        
+        // Average order frequency (orders per customer)
+        $avg_order_frequency = $this->pdo->prepare("
+            SELECT COALESCE(AVG(order_count), 0)
+            FROM (
+                SELECT COUNT(*) as order_count
+                FROM orders
+                WHERE created_at BETWEEN ? AND ?
+                GROUP BY user_id
+            ) as customer_orders
+        ");
+        $avg_order_frequency->execute([$start_date, $end_date]);
+        
+        // Repeat purchase rate (% of customers with multiple orders)
+        $repeat_purchase_rate = $this->pdo->prepare("
+            SELECT 
+                CASE 
+                    WHEN COUNT(DISTINCT user_id) > 0 
+                    THEN (COUNT(DISTINCT CASE WHEN order_count > 1 THEN user_id END) / COUNT(DISTINCT user_id)) * 100
+                    ELSE 0
+                END as repeat_rate
+            FROM (
+                SELECT user_id, COUNT(*) as order_count
+                FROM orders
+                WHERE created_at BETWEEN ? AND ?
+                GROUP BY user_id
+            ) as customer_stats
+        ");
+        $repeat_purchase_rate->execute([$start_date, $end_date]);
+        
+        // Customer retention rate (returning / total customers)
+        $total_unique = (int)$total_customers->fetchColumn();
+        $returning_count = (int)$returning_customers->fetchColumn();
+        $retention_rate = $total_unique > 0 ? round(($returning_count / $total_unique) * 100, 2) : 0;
+        
+        // Customer acquisition trend
+        $acquisition_trend = $this->pdo->prepare("
+            SELECT 
+                DATE_FORMAT(MIN(o.created_at), '%Y-%m-%d') as first_order_date,
+                COUNT(DISTINCT o.user_id) as new_customers
+            FROM orders o
+            WHERE o.user_id NOT IN (
+                SELECT DISTINCT user_id 
+                FROM orders 
+                WHERE created_at < o.created_at
+            )
+            AND o.created_at BETWEEN ? AND ?
+            GROUP BY DATE(o.created_at)
+            ORDER BY first_order_date
+        ");
+        $acquisition_trend->execute([$start_date, $end_date]);
+        
+        // Customer segmentation by value (only customers who have made purchases)
+        $customer_segments = $this->pdo->prepare("
+            SELECT 
+                CASE 
+                    WHEN total_spent >= 5000 THEN 'Platinum (₱5,000+)'
+                    WHEN total_spent >= 2000 THEN 'Gold (₱2,000-₱4,999)'
+                    ELSE 'Bronze (<₱2,000)'
+                END as segment,
+                COUNT(*) as customer_count,
+                SUM(total_spent) as segment_revenue
+            FROM (
+                SELECT 
+                    o.user_id,
+                    SUM(o.total_amount) as total_spent
+                FROM orders o
+                WHERE o.created_at BETWEEN ? AND ? AND o.payment_status = 'paid'
+                GROUP BY o.user_id
+            ) as customer_values
+            GROUP BY segment
+            ORDER BY 
+                CASE segment
+                    WHEN 'Platinum (₱5,000+)' THEN 1
+                    WHEN 'Gold (₱2,000-₱4,999)' THEN 2
+                    ELSE 3
+                END
+        ");
+        $customer_segments->execute([$start_date, $end_date]);
+        
+        // Top spenders with more details
         $top_spenders = $this->pdo->prepare("
             SELECT 
+                u.user_id,
                 u.username,
+                u.email,
                 SUM(o.total_amount) as total_spent,
-                COUNT(o.order_id) as orders_count
+                COUNT(o.order_id) as orders_count,
+                AVG(o.total_amount) as avg_order_value,
+                MIN(o.created_at) as first_order_date,
+                MAX(o.created_at) as last_order_date
             FROM orders o
             JOIN users u ON o.user_id = u.user_id
             WHERE o.created_at BETWEEN ? AND ?
-            GROUP BY o.user_id, u.username
+            GROUP BY o.user_id, u.username, u.email
             ORDER BY total_spent DESC
             LIMIT 10
         ");
         $top_spenders->execute([$start_date, $end_date]);
         
+        // Most frequent customers
+        $most_frequent = $this->pdo->prepare("
+            SELECT 
+                u.user_id,
+                u.username,
+                COUNT(o.order_id) as order_count,
+                SUM(o.total_amount) as total_spent,
+                DATEDIFF(MAX(o.created_at), MIN(o.created_at)) / GREATEST(COUNT(o.order_id) - 1, 1) as avg_days_between_orders
+            FROM orders o
+            JOIN users u ON o.user_id = u.user_id
+            WHERE o.created_at BETWEEN ? AND ?
+            GROUP BY o.user_id, u.username
+            HAVING order_count > 1
+            ORDER BY order_count DESC, total_spent DESC
+            LIMIT 10
+        ");
+        $most_frequent->execute([$start_date, $end_date]);
+        
+        // Inactive customers (no orders in last 90 days but have ordered before)
+        $inactive_customers = $this->pdo->query("
+            SELECT COUNT(DISTINCT u.user_id) as inactive_count
+            FROM users u
+            WHERE u.role = 'customer'
+            AND u.user_id IN (SELECT DISTINCT user_id FROM orders)
+            AND u.user_id NOT IN (
+                SELECT DISTINCT user_id 
+                FROM orders 
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+            )
+        ")->fetchColumn();
+        
         return [
             'insights' => [
                 'new_customers' => (int)$new_customers->fetchColumn(),
-                'returning_customers' => (int)$returning_customers->fetchColumn(),
-                'avg_order_value' => (float)$avg_order_value->fetchColumn()
+                'returning_customers' => $returning_count,
+                'total_customers' => $total_unique,
+                'avg_order_value' => (float)$avg_order_value->fetchColumn(),
+                'avg_customer_lifetime_value' => (float)$avg_clv->fetchColumn(),
+                'avg_order_frequency' => round((float)$avg_order_frequency->fetchColumn(), 2),
+                'repeat_purchase_rate' => round((float)$repeat_purchase_rate->fetchColumn(), 2),
+                'retention_rate' => $retention_rate,
+                'inactive_customers' => (int)$inactive_customers
             ],
-            'top_spenders' => $top_spenders->fetchAll()
+            'top_spenders' => $top_spenders->fetchAll(),
+            'most_frequent' => $most_frequent->fetchAll(),
+            'acquisition_trend' => $acquisition_trend->fetchAll(),
+            'customer_segments' => $customer_segments->fetchAll()
         ];
     }
     

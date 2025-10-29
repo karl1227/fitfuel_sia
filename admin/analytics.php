@@ -327,9 +327,9 @@ $dashboardData = $analytics->getDashboardData($filters);
                 </div>
             </div>
 
-            <!-- Customer Insights -->
+            <!-- Customer Insights Overview -->
             <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Customer Insights</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Customer Insights Overview</h3>
                 <div class="space-y-6">
                     <!-- Customer Types -->
                     <div class="grid grid-cols-2 gap-4">
@@ -343,13 +343,31 @@ $dashboardData = $analytics->getDashboardData($filters);
                         </div>
                     </div>
                     
-                    <!-- Average Order Value -->
-                    <div class="text-center p-4 bg-purple-50 rounded-lg">
-                        <div class="text-2xl font-bold text-purple-600"><?php echo formatCurrency($dashboardData['customer_insights']['insights']['avg_order_value']); ?></div>
-                        <div class="text-sm text-gray-600">Average Order Value</div>
+                    <!-- Key Metrics -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-3 bg-purple-50 rounded-lg">
+                            <div class="text-xl font-bold text-purple-600"><?php echo formatCurrency($dashboardData['customer_insights']['insights']['avg_order_value']); ?></div>
+                            <div class="text-xs text-gray-600">Avg Order Value</div>
+                        </div>
+                        <div class="text-center p-3 bg-indigo-50 rounded-lg">
+                            <div class="text-xl font-bold text-indigo-600"><?php echo formatCurrency($dashboardData['customer_insights']['insights']['avg_customer_lifetime_value']); ?></div>
+                            <div class="text-xs text-gray-600">Avg CLV</div>
+                        </div>
                     </div>
                     
-                    <!-- Top Spenders -->
+                    <!-- Retention Metrics -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-3 bg-yellow-50 rounded-lg">
+                            <div class="text-xl font-bold text-yellow-600"><?php echo number_format($dashboardData['customer_insights']['insights']['retention_rate'], 1); ?>%</div>
+                            <div class="text-xs text-gray-600">Retention Rate</div>
+                        </div>
+                        <div class="text-center p-3 bg-pink-50 rounded-lg">
+                            <div class="text-xl font-bold text-pink-600"><?php echo number_format($dashboardData['customer_insights']['insights']['repeat_purchase_rate'], 1); ?>%</div>
+                            <div class="text-xs text-gray-600">Repeat Purchase Rate</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Spenders Preview -->
                     <?php if (!empty($dashboardData['customer_insights']['top_spenders'])): ?>
                     <div>
                         <h4 class="font-medium text-gray-900 mb-3">Top Spenders</h4>
@@ -468,6 +486,232 @@ $dashboardData = $analytics->getDashboardData($filters);
                 </div>
             </div>
         </div>
+
+        <!-- Customer Insights Section -->
+        <div class="mt-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Customer Insights & Analytics</h2>
+                <p class="text-gray-600">Comprehensive customer behavior and retention analysis</p>
+            </div>
+
+            <!-- Customer Metrics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Customers</h3>
+                            <div class="flex items-center mt-2">
+                                <span class="text-2xl font-bold text-gray-900"><?php echo number_format($dashboardData['customer_insights']['insights']['total_customers']); ?></span>
+                                <i class="fas fa-users text-blue-600 ml-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Avg Order Frequency</h3>
+                            <div class="flex items-center mt-2">
+                                <span class="text-2xl font-bold text-gray-900"><?php echo number_format($dashboardData['customer_insights']['insights']['avg_order_frequency'], 2); ?></span>
+                                <i class="fas fa-shopping-bag text-purple-600 ml-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Repeat Purchase Rate</h3>
+                            <div class="flex items-center mt-2">
+                                <span class="text-2xl font-bold text-gray-900"><?php echo number_format($dashboardData['customer_insights']['insights']['repeat_purchase_rate'], 1); ?>%</span>
+                                <i class="fas fa-redo text-green-600 ml-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Inactive Customers</h3>
+                            <div class="flex items-center mt-2">
+                                <span class="text-2xl font-bold text-gray-900"><?php echo number_format($dashboardData['customer_insights']['insights']['inactive_customers']); ?></span>
+                                <i class="fas fa-user-slash text-orange-600 ml-2"></i>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">No orders in 90 days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Customer Acquisition Trend -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Customer Acquisition Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="customerAcquisitionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Customer Segmentation -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Customer Segmentation by Value</h3>
+                    <div class="chart-container">
+                        <canvas id="customerSegmentationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Tables Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Top Spenders Table -->
+                <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Top Spenders</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Spent</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg Order</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <?php if (empty($dashboardData['customer_insights']['top_spenders'])): ?>
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-12 text-center text-gray-500">No data available</td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($dashboardData['customer_insights']['top_spenders'] as $spender): ?>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($spender['username']); ?></div>
+                                            <div class="text-xs text-gray-500"><?php echo htmlspecialchars($spender['email']); ?></div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <?php echo number_format($spender['orders_count']); ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                            <?php echo formatCurrency($spender['total_spent']); ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <?php echo formatCurrency($spender['avg_order_value']); ?>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Most Frequent Customers Table -->
+                <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Most Frequent Customers</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Spent</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg Days Between</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <?php if (empty($dashboardData['customer_insights']['most_frequent'])): ?>
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-12 text-center text-gray-500">No data available</td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($dashboardData['customer_insights']['most_frequent'] as $customer): ?>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($customer['username']); ?></div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <?php echo number_format($customer['order_count']); ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                            <?php echo formatCurrency($customer['total_spent']); ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <?php echo number_format($customer['avg_days_between_orders'], 0); ?> days
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Segmentation Table -->
+            <div class="bg-white rounded-lg border border-gray-200 mb-8">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Customer Segmentation Details</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Segment</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer Count</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Revenue</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg per Customer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php 
+                            if (empty($dashboardData['customer_insights']['customer_segments'])): ?>
+                                <tr>
+                                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">No data available</td>
+                                </tr>
+                            <?php else: 
+                                $total_segment_customers = array_sum(array_column($dashboardData['customer_insights']['customer_segments'], 'customer_count'));
+                                foreach ($dashboardData['customer_insights']['customer_segments'] as $segment): 
+                                    $percentage = $total_segment_customers > 0 ? ($segment['customer_count'] / $total_segment_customers) * 100 : 0;
+                                    $avg_per_customer = $segment['customer_count'] > 0 ? $segment['segment_revenue'] / $segment['customer_count'] : 0;
+                            ?>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 text-xs font-semibold rounded-full <?php 
+                                            echo strpos($segment['segment'], 'Platinum') !== false ? 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300' :
+                                                (strpos($segment['segment'], 'Gold') !== false ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300' :
+                                                'bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 border border-orange-300');
+                                        ?>">
+                                            <?php echo htmlspecialchars($segment['segment']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <?php echo number_format($segment['customer_count']); ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                        <?php echo formatCurrency($segment['segment_revenue']); ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <?php echo formatCurrency($avg_per_customer); ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <?php echo number_format($percentage, 1); ?>%
+                                    </td>
+                                </tr>
+                            <?php endforeach; endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -564,6 +808,92 @@ $dashboardData = $analytics->getDashboardData($filters);
                 }
             }
         });
+
+        // Customer Acquisition Trend Chart
+        const acquisitionData = <?php echo json_encode($dashboardData['customer_insights']['acquisition_trend']); ?>;
+        const acquisitionLabels = acquisitionData.map(item => item.first_order_date);
+        const acquisitionValues = acquisitionData.map(item => parseInt(item.new_customers) || 0);
+
+        const acquisitionCtx = document.getElementById('customerAcquisitionChart');
+        if (acquisitionCtx) {
+            new Chart(acquisitionCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: acquisitionLabels,
+                    datasets: [{
+                        label: 'New Customers',
+                        data: acquisitionValues,
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Customer Segmentation Chart
+        const segmentData = <?php echo json_encode($dashboardData['customer_insights']['customer_segments']); ?>;
+        const segmentLabels = segmentData.map(item => item.segment);
+        const segmentCounts = segmentData.map(item => parseInt(item.customer_count) || 0);
+        const segmentColors = [
+            'rgba(156, 163, 175, 0.8)',  // Platinum - Silver/Gray
+            'rgba(234, 179, 8, 0.8)',    // Gold - Yellow/Gold
+            'rgba(249, 115, 22, 0.8)'    // Bronze - Orange/Copper
+        ];
+
+        const segmentationCtx = document.getElementById('customerSegmentationChart');
+        if (segmentationCtx) {
+            new Chart(segmentationCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: segmentLabels,
+                    datasets: [{
+                        data: segmentCounts,
+                        backgroundColor: segmentColors.slice(0, segmentLabels.length),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
         // Export menu toggle
         function toggleExportMenu() {
