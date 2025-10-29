@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2025 at 07:15 PM
+-- Generation Time: Oct 29, 2025 at 08:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -457,7 +457,28 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (402, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 18:07:58'),
 (403, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 18:08:01'),
 (404, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 18:15:16'),
-(405, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 18:15:37');
+(405, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 18:15:37'),
+(406, 14, 'karlblockstock', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-29 18:44:18'),
+(407, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 18:44:22'),
+(408, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 18:49:10'),
+(409, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 18:56:19'),
+(410, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 18:58:12'),
+(411, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:01:25'),
+(412, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 19:01:29'),
+(413, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 19:01:33'),
+(414, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:13:08'),
+(415, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:16:25'),
+(416, 4, 'admin', 'content_update', 'content_management', 'Content updated: Our Mission & Visionszz (page)', '{\"image_path\":null,\"image\":null}', '{\"title\":\"Our Mission & Visionszz\",\"type\":\"page\",\"status\":\"published\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 49, 'content', 'medium', 'success', '2025-10-29 19:17:19'),
+(417, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:17:36'),
+(418, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:17:53'),
+(419, 4, 'admin', 'content_update', 'content_management', 'Content updated: Our Mission & Visions (page)', '{\"image_path\":null,\"image\":null}', '{\"title\":\"Our Mission & Visions\",\"type\":\"page\",\"status\":\"draft\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 49, 'content', 'medium', 'success', '2025-10-29 19:18:07'),
+(420, 4, 'admin', 'content_update', 'content_management', 'Content updated: Our Mission & Vision (page)', '{\"image_path\":null,\"image\":null}', '{\"title\":\"Our Mission & Vision\",\"type\":\"page\",\"status\":\"published\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 49, 'content', 'medium', 'success', '2025-10-29 19:18:30'),
+(421, 4, 'admin', 'content_update', 'content_management', 'Content updated: Our Mission & Vision (page)', '{\"image_path\":null,\"image\":null}', '{\"title\":\"Our Mission & Vision\",\"type\":\"page\",\"status\":\"published\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 49, 'content', 'medium', 'success', '2025-10-29 19:19:33'),
+(422, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:19:39'),
+(423, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:24:25'),
+(424, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:25:35'),
+(425, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:25:40'),
+(426, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:25:42');
 
 -- --------------------------------------------------------
 
@@ -577,7 +598,21 @@ INSERT INTO `contents` (`content_id`, `title`, `type`, `status`, `body`, `seo_ti
 (44, 'JUST DO IT', 'homepage', 'published', '', NULL, NULL, NULL, 'uploads/content/68d446fb810794.83890367_1758742267.png', NULL, NULL, NULL, NULL, 4, '2025-09-24 19:31:07', '2025-09-24 19:31:07', 'just-do-it', 'uploads/content/68d446fb810794.83890367_1758742267.png', NULL, 'Make your dreams come true'),
 (45, 'FUEL YOUR DAY', 'homepage', 'published', '', NULL, NULL, NULL, 'uploads/content/68d4475e50f029.79337802_1758742366.png', NULL, NULL, NULL, NULL, 4, '2025-09-24 19:32:36', '2025-09-24 19:32:46', 'fuel-your-day', 'uploads/content/68d4475e50f029.79337802_1758742366.png', NULL, 'Power up with healthy choices that keep you going.'),
 (46, 'FIT STARTS HERE', 'homepage', 'published', '', NULL, NULL, NULL, 'uploads/content/68d44776b478f3.88915800_1758742390.png', NULL, NULL, NULL, NULL, 4, '2025-09-24 19:33:10', '2025-09-24 19:33:10', 'fit-starts-here', 'uploads/content/68d44776b478f3.88915800_1758742390.png', NULL, 'Small steps lead to big results.'),
-(47, 'MOVE WITH PURPOSE', 'homepage', 'published', '', NULL, NULL, NULL, 'uploads/content/68d44789a44430.50804613_1758742409.png', NULL, NULL, NULL, NULL, 4, '2025-09-24 19:33:29', '2025-09-24 19:33:29', 'move-with-purpose', 'uploads/content/68d44789a44430.50804613_1758742409.png', NULL, 'Every rep takes you closer to your goal.');
+(47, 'MOVE WITH PURPOSE', 'homepage', 'published', '', NULL, NULL, NULL, 'uploads/content/68d44789a44430.50804613_1758742409.png', NULL, NULL, NULL, NULL, 4, '2025-09-24 19:33:29', '2025-09-24 19:33:29', 'move-with-purpose', 'uploads/content/68d44789a44430.50804613_1758742409.png', NULL, 'Every rep takes you closer to your goal.'),
+(48, 'About Us', '', 'published', 'At Fit fuel we are dedicated to providing premium gym supplements designed to support and elevate your fitness journey. Our carefully curated selection of products meets the highest industry standards, ensuring optimal quality, safety, and effectiveness. Whether you\'re an athlete, a fitness professional, or someone committed to personal wellness, we offer the tools you need to achieve your performance and health goals. We pride ourselves on delivering trusted solutions that help you unlock your full potential.', 'About FitFuel | Premium Gym Supplements', 'Learn about FitFuel\'s mission to deliver safe, high-quality supplements for performance, recovery, and wellness.', 'fitfuel, about fitfuel, gym supplements, performance, recovery', NULL, NULL, NULL, NULL, 'about', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'aboutus', NULL, 'At Fit fuel we are dedicated to providing premium gym supplements designed to support and elevate your fitness journey. Our carefully curated selection of products meets the highest industry standards, ensuring optimal quality, safety, and effectiveness. Whether you\'re an athlete, a fitness professional, or someone committed to personal wellness, we offer the tools you need to achieve your performance and health goals. We pride ourselves on delivering trusted solutions that help you unlock your full potential.', NULL),
+(49, 'Our Mission & Vision', 'page', 'published', 'Our Mission\r\nOur mission is to empower individuals to achieve their fitness goals by offering scientifically backed, high-quality gym supplements that enhance performance, accelerate recovery, and support overall well-being. We are committed to delivering excellence in every product and experience, fostering a healthier, more active lifestyle for all.\r\n\r\nOur Vision\r\nOur vision is to become the leading e-commerce platform for gym supplements, recognized for our commitment to excellence, innovation, and customer satisfaction. We aspire to build a trusted community where individuals are equipped with the knowledge and products they need to optimize their health, performance, and quality of life.', 'FitFuel Mission & Vision | Empowering Fitness Goals', 'See how FitFuel inspires healthier, more active lives through science-backed supplements.', 'fitfuel mission, fitfuel vision, fitness goals, science backed supplements', NULL, NULL, NULL, NULL, 'mission', 1, '2025-10-29 19:16:09', '2025-10-29 19:19:33', 'mission-vision', NULL, 'Our Mission\r\nOur mission is to empower individuals to achieve their fitness goals by offering scientifically backed, high-quality gym supplements that enhance performance, accelerate recovery, and support overall well-being. We are committed to delivering excellence in every product and experience, fostering a healthier, more active lifestyle for all.\r\n\r\nOur Vision\r\nOur vision is to become the leading e-commerce platform for gym supplements, recognized for our commitment to excellence, innovation, and customer satisfaction. We aspire to build a trusted community where individuals are equipped with the knowledge and products they need to optimize their health, performance, and quality of life.', NULL),
+(50, 'Our Core Values', '', 'published', 'Excellence\r\nWe are unwavering in our commitment to providing superior products that meet rigorous standards of quality, potency, and safety.\r\n\r\nIntegrity\r\nWe uphold transparency, honesty, and ethical business practices, ensuring our customers can make informed decisions with confidence.\r\n\r\nCustomer Focus\r\nWe prioritize the needs and satisfaction of our customers, striving to exceed expectations with exceptional service and tailored experiences.\r\n\r\nInnovation\r\nWe continuously explore advancements in sports nutrition and fitness science to offer cutting-edge products that deliver results.', 'FitFuel Core Values | Excellence, Integrity, Customer Focus', 'The principles that guide our products and service: Excellence, Integrity, Customer Focus, and Innovation.', 'fitfuel values, excellence, integrity, customer focus, innovation', NULL, NULL, NULL, NULL, 'values', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'core-values', NULL, 'Excellence\r\nWe are unwavering in our commitment to providing superior products that meet rigorous standards of quality, potency, and safety.\r\n\r\nIntegrity\r\nWe uphold transparency, honesty, and ethical business practices, ensuring our customers can make informed decisions with confidence.\r\n\r\nCustomer Focus\r\nWe prioritize the needs and satisfaction of our customers, striving to exceed expectations with exceptional service and tailored experiences.\r\n\r\nInnovation\r\nWe continuously explore advancements in sports nutrition and fitness science to offer cutting-edge products that deliver results.', NULL),
+(51, 'What types of supplements do you offer?', 'faq', 'published', 'We offer a wide range of gym supplements, including protein powders, pre-workouts, BCAAs, fat burners, multivitamins, and more to support your fitness goals.', 'FAQ | Types of Supplements', 'Learn about our supplement categories for performance and recovery.', 'faq, supplements, protein, pre-workout, bcaa', NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-what-supplements', NULL, 'We offer a wide range of gym supplements, including protein powders, pre-workouts, BCAAs, fat burners, multivitamins, and more to support your fitness goals.', NULL),
+(52, 'Are your supplements safe to use?', 'faq', 'published', 'Yes, all our supplements are sourced from reputable brands and undergo strict quality control to ensure safety and effectiveness.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-supplement-safety', NULL, 'Yes, all our supplements are sourced from reputable brands and undergo strict quality control to ensure safety and effectiveness.', NULL),
+(53, 'How do I choose the right supplement for my fitness goals?', 'faq', 'published', 'Our product descriptions provide detailed benefits and usage recommendations. You can also reach out to our support team for personalized advice.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-choosing-supplements', NULL, 'Our product descriptions provide detailed benefits and usage recommendations. You can also reach out to our support team for personalized advice.', NULL),
+(54, 'Do you offer discounts or promotions?', 'faq', 'published', 'Yes! We regularly run promotions and offer discounts for first-time buyers, bulk purchases, and loyal customers. Check our website or subscribe to our newsletter for updates.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-discounts', NULL, 'Yes! We regularly run promotions and offer discounts for first-time buyers, bulk purchases, and loyal customers. Check our website or subscribe to our newsletter for updates.', NULL),
+(55, 'What payment methods do you accept?', 'faq', 'published', 'We accept major credit/debit cards, digital wallets, and bank transfers. More payment options may be available depending on your location.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-payment-methods', NULL, 'We accept major credit/debit cards, digital wallets, and bank transfers. More payment options may be available depending on your location.', NULL),
+(56, 'How long does shipping take?', 'faq', 'published', 'Shipping times vary by location. Typically, orders are delivered within 3-7 business days for domestic shipping and 7-14 business days for international orders.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-shipping-time', NULL, 'Shipping times vary by location. Typically, orders are delivered within 3-7 business days for domestic shipping and 7-14 business days for international orders.', NULL),
+(57, 'Do you ship internationally?', 'faq', 'published', 'Yes! We offer international shipping to select countries. Shipping fees and delivery times vary based on your location.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-international-shipping', NULL, 'Yes! We offer international shipping to select countries. Shipping fees and delivery times vary based on your location.', NULL),
+(58, 'Can I return or exchange a product?', 'faq', 'published', 'We accept returns or exchanges within 7 days of delivery, provided the product is unopened and in its original condition. See our return policy for details.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-returns', NULL, 'We accept returns or exchanges within 7 days of delivery, provided the product is unopened and in its original condition. See our return policy for details.', NULL),
+(59, 'Are your supplements FDA-approved?', 'faq', 'published', 'We only carry products that comply with industry safety standards. However, regulatory approvals may vary by country. Please check individual product labels for certifications.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-fda-approval', NULL, 'We only carry products that comply with industry safety standards. However, regulatory approvals may vary by country. Please check individual product labels for certifications.', NULL),
+(60, 'How can I contact your support team?', 'faq', 'published', 'You can reach us via email at siafitfuel@gmail.com, through our live chat, or by calling our hotline during business hours.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'faq', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'faq-contact-support', NULL, 'You can reach us via email at siafitfuel@gmail.com, through our live chat, or by calling our hotline during business hours.', NULL),
+(61, 'Contact Info', '', 'published', 'email: siafitfuel@gmail.com\r\naddress: Anonas LRT, Aurora Blvd, Quezon City\r\nphone: 09123456789\r\nfacebook: https://facebook.com/yourpage\r\ntwitter: https://twitter.com/yourhandle\r\ninstagram: https://instagram.com/yourhandle\r\ntiktok: https://tiktok.com/@yourhandle', 'Contact FitFuel | Get in Touch', 'Get in touch with FitFuel via email, phone, or social media channels.', 'contact fitfuel, fitfuel email, fitfuel phone, customer support', NULL, NULL, NULL, NULL, 'contact', 1, '2025-10-29 19:16:09', '2025-10-29 19:16:09', 'contact', NULL, 'email: siafitfuel@gmail.com\r\naddress: Anonas LRT, Aurora Blvd, Quezon City\r\nphone: 09123456789\r\nfacebook: https://facebook.com/yourpage\r\ntwitter: https://twitter.com/yourhandle\r\ninstagram: https://instagram.com/yourhandle\r\ntiktok: https://tiktok.com/@yourhandle', NULL);
 
 -- --------------------------------------------------------
 
@@ -660,6 +695,26 @@ INSERT INTO `inventory` (`inventory_id`, `product_id`, `change_type`, `quantity`
 (63, 183, 'adjustment', 40, NULL, 4, '2025-10-29 15:54:09'),
 (64, 186, 'adjustment', 80, NULL, 4, '2025-10-29 15:54:15'),
 (65, 177, 'adjustment', 10, NULL, 4, '2025-10-29 15:54:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `newsletter_subscribers`
+--
+
+CREATE TABLE `newsletter_subscribers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `newsletter_subscribers`
+--
+
+INSERT INTO `newsletter_subscribers` (`id`, `email`, `created_at`) VALUES
+(1, 'blockstockkc@gmail.com', '2025-10-29 18:37:05'),
+(3, 'asd@gmail.com', '2025-10-29 18:44:11');
 
 -- --------------------------------------------------------
 
@@ -1029,6 +1084,38 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `created_at`) VA
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product_views`
+--
+
+CREATE TABLE `product_views` (
+  `view_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `viewed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_views`
+--
+
+INSERT INTO `product_views` (`view_id`, `product_id`, `user_id`, `viewed_at`) VALUES
+(1, 143, NULL, '2025-10-29 19:26:08'),
+(2, 153, NULL, '2025-10-29 19:26:16'),
+(3, 153, NULL, '2025-10-29 19:26:17'),
+(4, 153, NULL, '2025-10-29 19:26:18'),
+(5, 154, NULL, '2025-10-29 19:26:19'),
+(6, 152, NULL, '2025-10-29 19:26:20'),
+(7, 151, NULL, '2025-10-29 19:26:20'),
+(8, 150, NULL, '2025-10-29 19:26:21'),
+(9, 148, NULL, '2025-10-29 19:26:22'),
+(10, 146, NULL, '2025-10-29 19:32:48'),
+(11, 153, NULL, '2025-10-29 19:33:04'),
+(12, 153, NULL, '2025-10-29 19:33:05'),
+(13, 153, NULL, '2025-10-29 19:33:06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `promo_codes`
 --
 
@@ -1336,7 +1423,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`, `otp`, `otp_expiry`) VALUES
 (1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL, NULL, NULL),
 (2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-29 18:07:58', '2025-10-29 18:07:58', NULL, NULL, NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-29 19:25:40', '2025-10-29 19:25:40', NULL, NULL, NULL, NULL, NULL),
 (8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL, NULL, NULL),
 (9, 'emmanthemanager', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$kSFY7rSwEQmfyeNXtUmf6eWXm/PmBFs1pLJeUYq31iLI6hhi6B/4O', NULL, 'manager', 'active', '2025-09-09 04:07:49', '2025-10-29 15:55:15', '2025-10-27 12:31:10', NULL, NULL, NULL, NULL, NULL),
 (10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL, NULL, NULL),
@@ -1529,6 +1616,13 @@ ALTER TABLE `inventory`
   ADD KEY `created_by` (`created_by`);
 
 --
+-- Indexes for table `newsletter_subscribers`
+--
+ALTER TABLE `newsletter_subscribers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
@@ -1576,6 +1670,14 @@ ALTER TABLE `products`
 ALTER TABLE `product_images`
   ADD PRIMARY KEY (`id`),
   ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `product_views`
+--
+ALTER TABLE `product_views`
+  ADD PRIMARY KEY (`view_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `viewed_at` (`viewed_at`);
 
 --
 -- Indexes for table `promo_codes`
@@ -1706,7 +1808,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=406;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=427;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -1730,13 +1832,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `contents`
 --
 ALTER TABLE `contents`
-  MODIFY `content_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `content_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
   MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+
+--
+-- AUTO_INCREMENT for table `newsletter_subscribers`
+--
+ALTER TABLE `newsletter_subscribers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -1775,6 +1883,12 @@ ALTER TABLE `product_images`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
+-- AUTO_INCREMENT for table `product_views`
+--
+ALTER TABLE `product_views`
+  MODIFY `view_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
 -- AUTO_INCREMENT for table `promo_codes`
 --
 ALTER TABLE `promo_codes`
@@ -1808,7 +1922,7 @@ ALTER TABLE `review_images`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=800;
+  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=824;
 
 --
 -- AUTO_INCREMENT for table `shipping_addresses`

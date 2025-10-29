@@ -121,45 +121,82 @@ try {
 	unset($banner); // Break the reference
 	
 	// =============================================================================
-	// BEST SELLING PRODUCTS - FETCH BASED ON ACTUAL SALES DATA
+	// PROMO: Load 1 active promo to display on homepage banner
 	// =============================================================================
-	$bestSellingStmt = $pdo->prepare(
-		"SELECT p.product_id, p.name, p.price, p.images, p.is_popular, p.is_best_seller, p.created_at,
-		 COALESCE(SUM(oi.quantity), 0) as total_sold
+	$activePromo = null;
+	try {
+		$promoStmt = $pdo->prepare(
+			"SELECT promo_id, code, discount_type, discount_value, maximum_discount, minimum_amount, valid_until
+			 FROM promo_codes
+			 WHERE is_active = 1
+			   AND valid_from <= NOW() AND valid_until >= NOW()
+			 ORDER BY valid_until ASC
+			 LIMIT 1"
+		);
+		$promoStmt->execute();
+		$activePromo = $promoStmt->fetch(PDO::FETCH_ASSOC) ?: null;
+	} catch (Throwable $e) {
+		$activePromo = null;
+	}
+
+	// =============================================================================
+	// BEST RATED PRODUCTS - Based on reviews (Bayesian average)
+	// =============================================================================
+	$bestRated = [];
+	$bestRatedStmt = $pdo->prepare(
+		"SELECT 
+			p.product_id, p.name, p.price, p.images,
+			COALESCE(AVG(r.rating), 0) AS avg_rating,
+			COUNT(r.review_id) AS review_count,
+			((COUNT(r.review_id) / (COUNT(r.review_id) + 10)) * COALESCE(AVG(r.rating), 0)
+			 + (10 / (COUNT(r.review_id) + 10)) * 3.5) AS bayes_score
 		 FROM products p
-		 LEFT JOIN order_items oi ON p.product_id = oi.product_id
-		 LEFT JOIN orders o ON oi.order_id = o.order_id AND o.status IN ('delivered', 'shipped', 'processing')
+		 LEFT JOIN reviews r ON r.product_id = p.product_id AND r.status = 'approved'
 		 WHERE p.status = 'active'
-		 GROUP BY p.product_id, p.name, p.price, p.images, p.is_popular, p.is_best_seller, p.created_at
-		 ORDER BY total_sold DESC, p.is_best_seller DESC, p.is_popular DESC, p.created_at DESC
+		 GROUP BY p.product_id, p.name, p.price, p.images
+		 ORDER BY bayes_score DESC
 		 LIMIT 12"
 	);
-	$bestSellingStmt->execute();
-	$bestSellingRows = $bestSellingStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+	$bestRatedStmt->execute();
+	$bestRated = $bestRatedStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-	$bestSellingDataFlat = [];
-	foreach ($bestSellingRows as $row) {
-		$images = [];
-		if (!empty($row['images'])) {
-			$decoded = json_decode($row['images'], true);
-			if (is_array($decoded)) { $images = $decoded; }
-		}
-		$imageUrl = !empty($images) ? $images[0] : 'img/placeholder.svg';
-		// Normalize relative URLs
-		if (!preg_match('#^https?://#i', $imageUrl)) {
-			$imageUrl = ltrim($imageUrl, '/');
-		}
-		$bestSellingDataFlat[] = [
-			'product_id' => (int)$row['product_id'],
-			'name' => $row['name'],
-			'price' => number_format((float)$row['price'], 2),
-			'imagePath' => $imageUrl,
-			'alt' => $row['name'],
-			'badge' => ($row['total_sold'] > 0 ? 'Best Seller' : ($row['is_best_seller'] ? 'Best Seller' : ($row['is_popular'] ? 'Popular' : ''))),
-		];
+	// =============================================================================
+	// NEW ARRIVALS - Most recently created products
+	// =============================================================================
+	$newArrivals = [];
+	$newStmt = $pdo->prepare(
+		"SELECT p.product_id, p.name, p.price, p.images, p.created_at
+		 FROM products p
+		 WHERE p.status = 'active'
+		 ORDER BY p.created_at DESC
+		 LIMIT 12"
+	);
+	$newStmt->execute();
+	$newArrivals = $newStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+	// =============================================================================
+	// POPULAR PRODUCTS - Based on recent views (last 30 days)
+	// =============================================================================
+	$popularProducts = [];
+	try {
+		$popularStmt = $pdo->prepare(
+			"SELECT p.product_id, p.name, p.price, p.images, COALESCE(v.views_30d, 0) AS views_30d
+			 FROM products p
+			 LEFT JOIN (
+				SELECT pv.product_id, COUNT(*) AS views_30d
+				FROM product_views pv
+				WHERE pv.viewed_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+				GROUP BY pv.product_id
+			 ) v ON v.product_id = p.product_id
+			 WHERE p.status = 'active'
+			 ORDER BY views_30d DESC, p.created_at DESC
+			 LIMIT 12"
+		);
+		$popularStmt->execute();
+		$popularProducts = $popularStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+	} catch (Throwable $e) {
+		$popularProducts = [];
 	}
-	// Chunk into pages of 4 to match homepage pagination
-	$bestSellingProductsPages = array_chunk($bestSellingDataFlat, 4);
 	
 } catch (PDOException $e) {
 	// Log error and fall back to empty array
@@ -237,8 +274,6 @@ try {
         }
     </style>
     <script>
-        // Provide best selling products (paged) from the database to homepage JS
-        window.bestSellingProductsData = <?php echo json_encode($bestSellingProductsPages, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
         window.currencySymbol = '<?php echo addslashes(getCurrencySymbol()); ?>';
         window.currencyPosition = '<?php echo getCurrencyPosition(); ?>';
     </script>
@@ -248,8 +283,8 @@ try {
     <nav class="bg-white text-black py-2">
       <div class="container mx-auto px-4">
         <div class="flex justify-end space-x-6 text-sm">
-          <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
-          <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
+          <a href="testimonials.php" class="hover:text-emerald-400 transition-colors">Review</a>
+          <a href="faq.php" class="hover:text-emerald-400 transition-colors">Help</a>
 				<?php if (!empty($_SESSION['user_id'])): ?>
             <a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
           <?php else: ?>
@@ -403,16 +438,35 @@ try {
     </section>
 
 
-	<!-- Promo banner -->
+    <!-- Promo banner (live) -->
     <section class="py-8 bg-gradient-to-r from-black to-gray-800">
       <div class="container mx-auto px-4">
         <div class="text-center text-white">
-          <h3 class="font-heading text-2xl font-bold mb-2">🔥 Limited Time Offer!</h3>
-          <p class="text-lg mb-4">Get 20% OFF on all gym equipment + FREE shipping on orders over $100</p>
-          <div class="flex justify-center items-center space-x-4">
-            <span class="bg-white text-emerald-600 px-4 py-2 rounded-lg font-bold">Use Code: FITFUEL20</span>
-            <a href="shop.php" class="bg-white text-emerald-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">Shop Now</a>
-          </div>
+          <?php if (!empty($activePromo)): ?>
+            <h3 class="font-heading text-2xl font-bold mb-2">🔥 Limited Time Offer!</h3>
+            <p class="text-lg mb-4">
+              <?php
+                $desc = '';
+                if ($activePromo['discount_type'] === 'percentage') {
+                    $desc = 'Get ' . (float)$activePromo['discount_value'] . '% OFF';
+                } else {
+                    $desc = 'Save ' . getCurrencySymbol() . number_format((float)$activePromo['discount_value'], 2);
+                }
+                if (!empty($activePromo['minimum_amount'])) {
+                    $desc .= ' on orders over ' . getCurrencySymbol() . number_format((float)$activePromo['minimum_amount'], 2);
+                }
+                echo htmlspecialchars($desc);
+              ?>
+            </p>
+            <div class="flex justify-center items-center space-x-4">
+              <span class="bg-white text-emerald-600 px-4 py-2 rounded-lg font-bold">Use Code: <?php echo htmlspecialchars($activePromo['code']); ?></span>
+              <a href="shop.php" class="bg-white text-emerald-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">Shop Now</a>
+            </div>
+          <?php else: ?>
+            <h3 class="font-heading text-2xl font-bold mb-2">Welcome to FitFuel</h3>
+            <p class="text-lg mb-4">Discover great deals on equipment, supplements, and more.</p>
+            <a href="shop.php" class="inline-block bg-white text-emerald-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">Shop Now</a>
+          <?php endif; ?>
         </div>
       </div>
     </section>
@@ -457,20 +511,127 @@ try {
       </div>
     </section>
 
-    <!-- Best Selling Products -->
+    <!-- Best Rated Products (from reviews) -->
     <section class="py-16 bg-slate-50">
       <div class="container mx-auto px-4">
         <div class="text-center mb-12">
           <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">Best Selling Products</h2>
-          <p class="text-xl text-slate-600">Top-performing items based on actual sales data</p>
+          <p class="text-xl text-slate-600">Top-rated items based on reviews and stars</p>
         </div>
-        <div id="best-selling-products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
-        <div class="pagination">
-          <button onclick="changePage('prev')" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
-          <button onclick="goToPage(1)" class="page-btn active" data-page="1">1</button>
-          <button onclick="goToPage(2)" class="page-btn" data-page="2">2</button>
-          <button onclick="goToPage(3)" class="page-btn" data-page="3">3</button>
-          <button onclick="changePage('next')" id="next-btn"><i class="fas fa-chevron-right"></i></button>
+        <div class="relative">
+          <div id="best-rated-carousel" class="overflow-hidden">
+            <div class="flex transition-transform duration-500 ease-in-out" style="transform: translateX(0);">
+              <?php foreach ($bestRated as $row): 
+                $imgs = json_decode($row['images'] ?: '[]', true); 
+                $img = is_array($imgs) && !empty($imgs) ? ltrim($imgs[0], '/') : 'img/placeholder.svg';
+              ?>
+                <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 px-4">
+                  <a href="product_detail.php?id=<?php echo (int)$row['product_id']; ?>" class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow block">
+                    <div class="relative">
+                      <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" class="w-full h-64 object-cover">
+                      <span class="absolute top-4 left-4 bg-emerald-500 text-white px-2 py-1 rounded text-sm font-semibold">★ <?php echo number_format((float)$row['avg_rating'], 1); ?> (<?php echo (int)$row['review_count']; ?>)</span>
+                    </div>
+                    <div class="p-6">
+                      <h3 class="font-semibold text-lg text-slate-800 mb-2"><?php echo htmlspecialchars($row['name']); ?></h3>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-emerald-600"><?php echo getCurrencySymbol() . number_format((float)$row['price'], 2); ?></span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
+          <button onclick="slideCarousel('best-rated', 'prev')" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10 -ml-4">
+            <i class="fas fa-chevron-left text-emerald-600"></i>
+          </button>
+          <button onclick="slideCarousel('best-rated', 'next')" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10 -mr-4">
+            <i class="fas fa-chevron-right text-emerald-600"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">New Arrivals</h2>
+          <p class="text-xl text-slate-600">Fresh picks recently added to our store</p>
+        </div>
+        <div class="relative">
+          <div id="new-arrivals-carousel" class="overflow-hidden">
+            <div class="flex transition-transform duration-500 ease-in-out" style="transform: translateX(0);">
+              <?php foreach ($newArrivals as $row): 
+                $imgs = json_decode($row["images"] ?: '[]', true); 
+                $img = is_array($imgs) && !empty($imgs) ? ltrim($imgs[0], '/') : 'img/placeholder.svg';
+              ?>
+                <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 px-4">
+                  <a href="product_detail.php?id=<?php echo (int)$row['product_id']; ?>" class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow block">
+                    <div class="relative">
+                      <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" class="w-full h-64 object-cover">
+                      <span class="absolute top-4 left-4 bg-black text-white px-2 py-1 rounded text-sm font-semibold">New</span>
+                    </div>
+                    <div class="p-6">
+                      <h3 class="font-semibold text-lg text-slate-800 mb-2"><?php echo htmlspecialchars($row['name']); ?></h3>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-emerald-600"><?php echo getCurrencySymbol() . number_format((float)$row['price'], 2); ?></span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
+          <button onclick="slideCarousel('new-arrivals', 'prev')" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10 -ml-4">
+            <i class="fas fa-chevron-left text-emerald-600"></i>
+          </button>
+          <button onclick="slideCarousel('new-arrivals', 'next')" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10 -mr-4">
+            <i class="fas fa-chevron-right text-emerald-600"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Products (by clicks) -->
+    <section class="py-16 bg-slate-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="font-heading text-4xl font-bold text-slate-800 mb-4">Popular Products</h2>
+          <p class="text-xl text-slate-600">Trending now based on recent views</p>
+        </div>
+        <div class="relative">
+          <div id="popular-carousel" class="overflow-hidden">
+            <div class="flex transition-transform duration-500 ease-in-out" style="transform: translateX(0);">
+              <?php foreach ($popularProducts as $row): 
+                $imgs = json_decode($row['images'] ?: '[]', true); 
+                $img = is_array($imgs) && !empty($imgs) ? ltrim($imgs[0], '/') : 'img/placeholder.svg';
+              ?>
+                <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 px-4">
+                  <a href="product_detail.php?id=<?php echo (int)$row['product_id']; ?>" class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow block">
+                    <div class="relative">
+                      <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" class="w-full h-64 object-cover">
+                      <?php if (!empty($row['views_30d'])): ?>
+                        <span class="absolute top-4 left-4 bg-emerald-500 text-white px-2 py-1 rounded text-sm font-semibold"><?php echo (int)$row['views_30d']; ?> views</span>
+                      <?php endif; ?>
+                    </div>
+                    <div class="p-6">
+                      <h3 class="font-semibold text-lg text-slate-800 mb-2"><?php echo htmlspecialchars($row['name']); ?></h3>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-emerald-600"><?php echo getCurrencySymbol() . number_format((float)$row['price'], 2); ?></span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
+          <button onclick="slideCarousel('popular', 'prev')" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10 -ml-4">
+            <i class="fas fa-chevron-left text-emerald-600"></i>
+          </button>
+          <button onclick="slideCarousel('popular', 'next')" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10 -mr-4">
+            <i class="fas fa-chevron-right text-emerald-600"></i>
+          </button>
         </div>
       </div>
     </section>
@@ -595,67 +756,81 @@ try {
       </div>
     </section>
 
-    <!-- Newsletter -->
-    <section class="py-16 bg-emerald-600">
-      <div class="container mx-auto px-4 text-center">
-        <h2 class="font-heading text-3xl font-bold text-white mb-4">Stay Updated</h2>
-        <p class="text-emerald-100 mb-8 text-lg">Get the latest fitness tips, product updates, and exclusive offers</p>
-        <div class="max-w-md mx-auto flex">
-				<input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-emerald-300">
-          <button class="bg-slate-800 text-white px-6 py-3 rounded-r-lg hover:bg-slate-700 transition-colors">Subscribe</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-white py-12">
-      <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 class="font-heading text-2xl font-bold text-White-400 mb-4">FitFuel</h3>
-            <p class="text-slate-300 mb-4">Your ultimate destination for premium fitness equipment, supplements, and accessories.</p>
-            <div class="flex space-x-4">
-              <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-facebook text-xl"></i></a>
-              <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-instagram text-xl"></i></a>
-              <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-twitter text-xl"></i></a>
-              <a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors"><i class="fab fa-youtube text-xl"></i></a>
-            </div>
-          </div>
-          <div>
-            <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
-            <ul class="space-y-2">
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">About Us</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Contact</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Blog</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">FAQs</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-semibold text-lg mb-4">Categories</h4>
-            <ul class="space-y-2">
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Gym Equipment</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Supplements</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Accessories</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Apparel</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-semibold text-lg mb-4">Customer Service</h4>
-            <ul class="space-y-2">
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Shipping Info</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Returns</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Size Guide</a></li>
-              <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Track Order</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="border-t border-slate-700 mt-8 pt-8 text-center">
-				<p class="text-slate-300">&copy; <?php echo date('Y'); ?> FitFuel. All rights reserved. | Privacy Policy | Terms of Service</p>
-        </div>
-      </div>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
 
 	<script src="JS/index.js"></script>
+	
+	<!-- Product Carousel Navigation -->
+	<script>
+		const carouselPositions = {
+			'best-rated': 0,
+			'new-arrivals': 0,
+			'popular': 0
+		};
+
+		function slideCarousel(carouselId, direction) {
+			const carousel = document.getElementById(carouselId + '-carousel');
+			if (!carousel) return;
+
+			const container = carousel.querySelector('.flex');
+			if (!container) return;
+
+			const items = container.children;
+			if (!items || items.length === 0) return;
+
+			// Get item width (responsive)
+			const firstItem = items[0];
+			const itemWidth = firstItem.offsetWidth;
+			// Calculate gap from computed style
+			const itemStyle = window.getComputedStyle(firstItem);
+			const paddingLeft = parseFloat(itemStyle.paddingLeft) || 16;
+			const paddingRight = parseFloat(itemStyle.paddingRight) || 16;
+			const gap = paddingLeft + paddingRight;
+			
+			// Calculate how many items to show at once based on screen size
+			let itemsPerSlide = 4; // Default for desktop (lg:w-1/4)
+			const visibleWidth = carousel.offsetWidth;
+			const singleItemWidth = itemWidth + gap;
+			
+			// Detect screen size
+			if (window.innerWidth < 640) {
+				itemsPerSlide = 1; // Mobile: 1 item
+			} else if (window.innerWidth < 1024) {
+				itemsPerSlide = 2; // Tablet: 2 items (sm:w-1/2)
+			}
+			// Desktop (lg) shows 4 items
+			
+			const moveDistance = singleItemWidth * itemsPerSlide;
+
+			// Calculate max position
+			const totalWidth = container.scrollWidth;
+			const maxPosition = Math.max(0, totalWidth - visibleWidth);
+
+			// Update position
+			if (direction === 'next') {
+				carouselPositions[carouselId] = Math.min(
+					carouselPositions[carouselId] + moveDistance,
+					maxPosition
+				);
+			} else {
+				carouselPositions[carouselId] = Math.max(
+					carouselPositions[carouselId] - moveDistance,
+					0
+				);
+			}
+
+			// Apply transform
+			container.style.transform = `translateX(-${carouselPositions[carouselId]}px)`;
+		}
+
+		// Initialize carousel positions on load
+		document.addEventListener('DOMContentLoaded', function() {
+			// Reset all carousels to start position
+			Object.keys(carouselPositions).forEach(id => {
+				carouselPositions[id] = 0;
+			});
+		});
+	</script>
 	
 	<!-- Profile Dropdown JavaScript -->
 	<script>

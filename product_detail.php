@@ -55,6 +55,26 @@ try {
     }
     $all_images = array_merge($all_images, $additional_images);
     
+    // Record a product view for popularity analytics
+    try {
+        // Create table if it doesn't exist (idempotent)
+        $pdo->exec("CREATE TABLE IF NOT EXISTS product_views (
+            view_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            product_id BIGINT UNSIGNED NOT NULL,
+            user_id BIGINT UNSIGNED NULL,
+            viewed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (view_id),
+            KEY product_id (product_id),
+            KEY viewed_at (viewed_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+
+        $viewerId = !empty($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : null;
+        $ins = $pdo->prepare("INSERT INTO product_views (product_id, user_id) VALUES (?, ?)");
+        $ins->execute([$product_id, $viewerId]);
+    } catch (Throwable $e) {
+        // Non-fatal: ignore tracking errors
+    }
+
 } catch (PDOException $e) {
     header('Location: shop.php');
     exit;
@@ -104,8 +124,8 @@ if (!empty($_SESSION['user_id'])) {
     <nav class="bg-white text-black py-2">
         <div class="container mx-auto px-4">
             <div class="flex justify-end space-x-6 text-sm">
-                <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
+                <a href="testimonials.php" class="hover:text-emerald-400 transition-colors">Review</a>
+                <a href="faq.php" class="hover:text-emerald-400 transition-colors">Help</a>
                 <?php if (!empty($_SESSION['user_id'])): ?>
                     <a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
                 <?php else: ?>
