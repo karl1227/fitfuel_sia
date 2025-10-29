@@ -2,6 +2,7 @@
 require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/currency_helper.php';
+require_once '../includes/admin_sidebar.php';
 
 // Check role-based access for orders module (view_order is part of orders)
 requireAccess('orders');
@@ -55,6 +56,19 @@ $itemsQuery = "
 $itemsStmt = $pdo->prepare($itemsQuery);
 $itemsStmt->execute([$order_id]);
 $order_items = $itemsStmt->fetchAll();
+
+// Fetch returns for this order - refresh after potential updates
+$returnsQuery = "
+    SELECT r.*, p.name as product_name, oi.quantity
+    FROM returns r
+    JOIN products p ON r.product_id = p.product_id
+    JOIN order_items oi ON r.order_item_id = oi.order_item_id
+    WHERE r.order_id = ?
+    ORDER BY r.created_at DESC
+";
+$returnsStmt = $pdo->prepare($returnsQuery);
+$returnsStmt->execute([$order_id]);
+$returns = $returnsStmt->fetchAll();
 
 // Handle form submissions
 $message = null;
@@ -201,72 +215,7 @@ if ($order['shipping_address']) {
         </div>
     </header>
     
-    <aside class="fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto">
-        <nav class="p-4">
-            <ul class="space-y-2">
-                <li>
-                    <a href="dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-th-large text-gray-600"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="product.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-cube text-gray-600"></i>
-                        <span>Products</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="orders.php" class="sidebar-item active flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-shopping-cart text-gray-600"></i>
-                        <span>Orders</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="inventory.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-archive text-gray-600"></i>
-                        <span>Inventory</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="users.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-users text-gray-600"></i>
-                        <span>Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="analytics.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-chart-line text-gray-600"></i>
-                        <span>Analytics</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="content.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-file-alt text-gray-600"></i>
-                        <span>Contents</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="audit_logs.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-history text-gray-600"></i>
-                        <span>Audit Trail</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-bell text-gray-600"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-800">
-                        <i class="fas fa-cog text-gray-600"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </aside>
+    <?php renderAdminSidebar('orders'); ?>
     
     <main class="ml-64 pt-24 pb-6 px-6">
         <!-- Breadcrumb -->
@@ -631,6 +580,105 @@ if ($order['shipping_address']) {
                         <?php endif; ?>
                     </div>
                 </div>
+                
+                <!-- Returns & Refunds -->
+                <?php if (!empty($returns)): ?>
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-900">
+                            <i class="fas fa-undo mr-2"></i>
+                            Returns & Refunds (<?= count($returns) ?>)
+                        </h2>
+                        <a href="returns.php?order_id=<?= $order_id ?>" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                            <i class="fas fa-cog mr-2"></i>
+                            Manage Returns
+                        </a>
+                    </div>
+                    <div class="space-y-4">
+                        <?php foreach ($returns as $return): ?>
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-start justify-between mb-2">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900"><?= htmlspecialchars($return['product_name']) ?></h3>
+                                    <p class="text-sm text-gray-600">Return ID: <?= $return['return_id'] ?></p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold <?php
+                                    $statusColors = [
+                                        'pending' => 'bg-yellow-100 text-yellow-800',
+                                        'approved' => 'bg-green-100 text-green-800',
+                                        'rejected' => 'bg-red-100 text-red-800',
+                                        'processing' => 'bg-blue-100 text-blue-800',
+                                        'completed' => 'bg-gray-100 text-gray-800'
+                                    ];
+                                    echo $statusColors[$return['status']] ?? 'bg-gray-100 text-gray-800';
+                                ?>">
+                                    <?= ucfirst($return['status']) ?>
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 text-sm mt-3">
+                                <div>
+                                    <span class="text-gray-600">Type:</span>
+                                    <span class="text-gray-900 font-medium"><?= ucfirst($return['return_type']) ?></span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-600">Refund Amount:</span>
+                                    <span class="text-gray-900 font-medium">
+                                        <?= $return['refund_amount'] ? formatCurrency($return['refund_amount']) : '—' ?>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-600">Refund Status:</span>
+                                    <span class="px-2 py-1 text-xs rounded-full <?php
+                                        $refundStatusColors = [
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'processed' => 'bg-blue-100 text-blue-800',
+                                            'completed' => 'bg-green-100 text-green-800'
+                                        ];
+                                        $refundStatus = $return['refund_status'] ?? 'pending';
+                                        echo $refundStatusColors[$refundStatus] ?? 'bg-gray-100 text-gray-800';
+                                    ?>">
+                                        <?= ucfirst($refundStatus) ?>
+                                    </span>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-gray-600">Reason:</span>
+                                    <p class="text-gray-900 mt-1"><?= nl2br(htmlspecialchars($return['return_reason'])) ?></p>
+                                </div>
+                                <?php if (!empty($return['admin_notes'])): ?>
+                                <div class="col-span-2">
+                                    <span class="text-gray-600">Admin Notes:</span>
+                                    <p class="text-gray-900 mt-1"><?= nl2br(htmlspecialchars($return['admin_notes'])) ?></p>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="mt-3 flex items-center justify-between">
+                                <span class="text-xs text-gray-500">
+                                    Requested: <?= date('M d, Y g:i A', strtotime($return['created_at'])) ?>
+                                </span>
+                                <a href="returns.php?order_id=<?= $order_id ?>" class="text-xs text-blue-600 hover:text-blue-800 hover:underline">
+                                    Manage Return <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php else: ?>
+                <!-- No Returns Message -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold text-gray-900">
+                            <i class="fas fa-undo mr-2"></i>
+                            Returns & Refunds
+                        </h2>
+                        <a href="returns.php?order_id=<?= $order_id ?>" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                            <i class="fas fa-cog mr-2"></i>
+                            Manage Returns
+                        </a>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">No return or refund requests for this order.</p>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </main>

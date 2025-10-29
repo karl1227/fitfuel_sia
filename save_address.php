@@ -174,10 +174,24 @@ try {
             echo json_encode(['success' => false, 'message' => 'Failed to create address']);
             exit();
         }
+        
+        // Get the newly created address_id
+        $address_id = $pdo->lastInsertId();
     }
     
     $pdo->commit();
-    echo json_encode(['success' => true, 'message' => 'Address saved successfully']);
+    
+    // Return address_id in response (for new addresses or edited ones)
+    $response = ['success' => true, 'message' => 'Address saved successfully'];
+    if (!$is_edit) {
+        $response['address_id'] = $address_id;
+        $response['is_default'] = $is_default;
+    } else {
+        $response['address_id'] = $address_id; // edited address_id
+        $response['is_default'] = $is_default;
+    }
+    
+    echo json_encode($response);
     
 } catch (Throwable $e) {
     if (isset($pdo)) {

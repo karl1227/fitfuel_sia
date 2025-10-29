@@ -25,6 +25,7 @@ error_log("Process checkout request received: " . json_encode($input));
 
 $user_id = $_SESSION['user_id'];
 $payment_method = $input['payment_method'];
+$selected_address_id = isset($input['selected_address_id']) ? (int)$input['selected_address_id'] : 0;
 $promo_code = isset($input['promo_code']) ? strtoupper(trim($input['promo_code'])) : '';
 $selected_items = isset($input['selected_items']) ? $input['selected_items'] : [];
 
@@ -69,11 +70,17 @@ try {
         }
     }
     
-    // Get user's default shipping address
-    $address_sql = "SELECT * FROM shipping_addresses WHERE user_id = ? AND is_default = 1 LIMIT 1";
-    $address_stmt = $pdo->prepare($address_sql);
-    $address_stmt->execute([$user_id]);
-    $shipping_address = $address_stmt->fetch();
+    // Get user's selected shipping address or fallback to default
+    if ($selected_address_id > 0) {
+        $address_stmt = $pdo->prepare("SELECT * FROM shipping_addresses WHERE user_id = ? AND address_id = ? LIMIT 1");
+        $address_stmt->execute([$user_id, $selected_address_id]);
+        $shipping_address = $address_stmt->fetch();
+    } else {
+        $address_sql = "SELECT * FROM shipping_addresses WHERE user_id = ? AND is_default = 1 LIMIT 1";
+        $address_stmt = $pdo->prepare($address_sql);
+        $address_stmt->execute([$user_id]);
+        $shipping_address = $address_stmt->fetch();
+    }
     
     if (!$shipping_address) {
         $pdo->rollBack();

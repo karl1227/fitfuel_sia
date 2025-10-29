@@ -274,6 +274,152 @@ if (!empty($_SESSION['user_id'])) {
                     </div>
                 </div>
             </div>
+            
+            <!-- Reviews Section -->
+            <?php
+            // Get review statistics
+            $reviewStatsStmt = $pdo->prepare("SELECT 
+                COUNT(*) as total_reviews,
+                AVG(rating) as average_rating,
+                SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) as rating_5,
+                SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) as rating_4,
+                SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) as rating_3,
+                SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) as rating_2,
+                SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as rating_1
+                FROM reviews WHERE product_id = ? AND status = 'approved'");
+            $reviewStatsStmt->execute([$product_id]);
+            $review_stats = $reviewStatsStmt->fetch();
+            
+            // Get reviews
+            $reviewsStmt = $pdo->prepare("SELECT r.*, u.username, u.profile_picture,
+                                        (SELECT COUNT(*) FROM review_images ri WHERE ri.review_id = r.review_id) as image_count
+                                        FROM reviews r 
+                                        JOIN users u ON r.user_id = u.user_id
+                                        WHERE r.product_id = ? AND r.status = 'approved'
+                                        ORDER BY r.created_at DESC LIMIT 10");
+            $reviewsStmt->execute([$product_id]);
+            $reviews = $reviewsStmt->fetchAll();
+            
+            $avg_rating = round($review_stats['average_rating'] ?? 0, 1);
+            $total_reviews = (int)($review_stats['total_reviews'] ?? 0);
+            ?>
+            
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Product Ratings</h2>
+                
+                <!-- Overall Rating Summary -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Average Rating -->
+                        <div class="text-center md:text-left">
+                            <div class="text-4xl font-bold text-gray-900 mb-2">
+                                <?= $avg_rating ?> out of 5
+                            </div>
+                            <div class="flex justify-center md:justify-start gap-1 mb-2">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <i class="fas fa-star <?= $i <= round($avg_rating) ? 'text-red-500' : 'text-gray-300' ?>"></i>
+                                <?php endfor; ?>
+                            </div>
+                            <p class="text-sm text-gray-600">Based on <?= $total_reviews ?> reviews</p>
+                        </div>
+                        
+                        <!-- Rating Breakdown -->
+                        <div class="md:col-span-2">
+                            <?php 
+                            $rating_counts = [
+                                5 => (int)$review_stats['rating_5'] ?? 0,
+                                4 => (int)$review_stats['rating_4'] ?? 0,
+                                3 => (int)$review_stats['rating_3'] ?? 0,
+                                2 => (int)$review_stats['rating_2'] ?? 0,
+                                1 => (int)$review_stats['rating_1'] ?? 0
+                            ];
+                            
+                            for ($i = 5; $i >= 1; $i--): 
+                                $count = $rating_counts[$i];
+                                $percentage = $total_reviews > 0 ? ($count / $total_reviews) * 100 : 0;
+                            ?>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-sm w-16"><?= $i ?> Star</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-red-500" style="width: <?= $percentage ?>%"></div>
+                                    </div>
+                                    <span class="text-sm text-gray-600 w-16">(<?= $count ?>)</span>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Individual Reviews -->
+                <div class="space-y-4">
+                    <?php if (empty($reviews)): ?>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+                            <i class="fas fa-star text-4xl text-gray-300 mb-3"></i>
+                            <p class="text-gray-600">No reviews yet. Be the first to review this product!</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($reviews as $review): 
+                            // Get review images
+                            $reviewImagesStmt = $pdo->prepare("SELECT image_path FROM review_images WHERE review_id = ? ORDER BY upload_order");
+                            $reviewImagesStmt->execute([$review['review_id']]);
+                            $review_images = $reviewImagesStmt->fetchAll(PDO::FETCH_COLUMN);
+                            
+                            $profile_pic = 'img/placeholder-user.png'; // Default fallback
+                            if (!empty($review['profile_picture'])) {
+                                $profile_path = $review['profile_picture'];
+                                // If it's already a full URL, use it as is
+                                if (str_starts_with($profile_path, 'http://') || str_starts_with($profile_path, 'https://')) {
+                                    $profile_pic = $profile_path;
+                                } elseif (str_starts_with($profile_path, 'uploads/profile/')) {
+                                    // Already has the path prefix
+                                    $profile_pic = $profile_path;
+                                } else {
+                                    // Add path prefix
+                                    $profile_pic = 'uploads/profile/' . $profile_path;
+                                }
+                            }
+                        ?>
+                            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                                <div class="flex items-start gap-4">
+                                    <img src="<?= htmlspecialchars($profile_pic) ?>" alt="<?= htmlspecialchars($review['username']) ?>" class="w-12 h-12 rounded-full object-cover border">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <h3 class="font-semibold text-gray-900"><?= htmlspecialchars($review['username']) ?></h3>
+                                            <span class="text-sm text-gray-500"><?= date('M d, Y', strtotime($review['created_at'])) ?></span>
+                                            <?php if ($review['is_verified_purchase']): ?>
+                                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Verified Purchase</span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="flex items-center gap-1 mb-2">
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <i class="fas fa-star <?= $i <= $review['rating'] ? 'text-red-500' : 'text-gray-300' ?>"></i>
+                                            <?php endfor; ?>
+                                        </div>
+                                        <?php if (!empty($review['review_text'])): ?>
+                                            <p class="text-gray-700 mb-3"><?= nl2br(htmlspecialchars($review['review_text'])) ?></p>
+                                        <?php endif; ?>
+                                        
+                                        <?php if (!empty($review_images)): ?>
+                                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+                                                <?php foreach ($review_images as $img): ?>
+                                                    <img src="<?= htmlspecialchars($img) ?>" alt="Review image" class="w-full h-24 object-cover rounded-lg border">
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($review['helpful_count'] > 0): ?>
+                                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                <i class="far fa-thumbs-up"></i>
+                                                <span><?= $review['helpful_count'] ?> helpful</span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
     </main>
 

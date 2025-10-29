@@ -32,7 +32,10 @@ function status_pill($status) {
         case 'shipped':    return ['To Receive',  'bg-sky-100 text-sky-800'];
         case 'delivered':  return ['Completed',   'bg-emerald-100 text-emerald-800'];
         case 'cancelled':  return ['Cancelled',   'bg-red-100 text-red-800'];
-        case 'returned':   return ['Return',      'bg-slate-200 text-slate-700'];
+        case 'to_return':  return ['To Return',   'bg-orange-100 text-orange-800'];
+        case 'to_refund':  return ['To Refund',   'bg-orange-100 text-orange-800'];
+        case 'returned':   return ['Returned',    'bg-slate-200 text-slate-700'];
+        case 'refunded':   return ['Refunded',    'bg-slate-200 text-slate-700'];
         default:           return [ucfirst($status),'bg-slate-100 text-slate-700'];
     }
 }
@@ -94,7 +97,10 @@ try {
             o.order_id, o.custom_order_id, o.total_amount, o.status, o.created_at,
             COUNT(oi.order_item_id) as item_count,
             p.name as first_product_name,
-            p.images as first_product_images
+            p.images as first_product_images,
+            (SELECT COUNT(*) FROM returns r WHERE r.order_id = o.order_id) AS returns_count,
+            (SELECT r.return_type FROM returns r WHERE r.order_id = o.order_id ORDER BY r.created_at DESC LIMIT 1) AS return_type,
+            (SELECT r.status FROM returns r WHERE r.order_id = o.order_id ORDER BY r.created_at DESC LIMIT 1) AS return_status
         FROM orders o
         LEFT JOIN order_items oi ON oi.order_id = o.order_id
         LEFT JOIN products p ON p.product_id = oi.product_id
@@ -125,12 +131,27 @@ $counts = array_fill_keys(array_keys($tabMap), 0);
 $cards = [];
 foreach ($rows as $r) {
     $statusKey = strtolower($r['status']);
-    if ($statusKey === 'processing')       $tabKey = 'to_ship';
+    $hasReturn = (int)($r['returns_count'] ?? 0) > 0;
+    $return_type = $r['return_type'] ?? null;
+    $return_status = $r['return_status'] ?? null;
+    
+    // Determine display status based on return request
+    $display_status = $r['status'];
+    if ($hasReturn) {
+        $tabKey = 'return';
+        // Check if return is pending or approved
+        if ($return_status === 'pending') {
+            // Show "To Return" or "To Refund" based on return_type
+            $display_status = ($return_type === 'refund') ? 'to_refund' : 'to_return';
+        } elseif (in_array($return_status, ['approved', 'processing', 'completed'])) {
+            // Show "Returned" or "Refunded" based on return_type
+            $display_status = ($return_type === 'refund') ? 'refunded' : 'returned';
+        }
+    } elseif ($statusKey === 'processing')    $tabKey = 'to_ship';
     elseif ($statusKey === 'shipped')       $tabKey = 'to_receive';
     elseif ($statusKey === 'pending')       $tabKey = 'to_pay';
     elseif ($statusKey === 'delivered')     $tabKey = 'completed';
     elseif ($statusKey === 'cancelled')     $tabKey = 'cancelled';
-    elseif ($statusKey === 'returned')      $tabKey = 'return';
     else                                    $tabKey = 'all';
 
     // Get first item details for display
@@ -140,11 +161,10 @@ foreach ($rows as $r) {
     
     // Get the first image from the first product
     $first_image = first_image($first_product_images);
-
-    $cards[] = [
+  $cards[] = [
         'order_id'        => (int)$r['order_id'],
         'custom_order_id' => $r['custom_order_id'],
-        'status'          => $r['status'],
+        'status'          => $display_status,
         'tabKey'          => $tabKey,
         'created_at'      => $r['created_at'],
         'product_name'    => $first_product_name,
@@ -157,6 +177,7 @@ foreach ($rows as $r) {
     $counts['all']++;
     foreach ($tabMap as $tab => $statuses) {
         if ($tab === 'all') continue;
+        if ($tab === 'return' && $hasReturn) { $counts['return']++; continue; }
         if (in_array($statusKey, $statuses, true)) $counts[$tab]++;
     }
 }

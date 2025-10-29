@@ -66,8 +66,19 @@ try {
       set_flash('error', 'Order not found or not yours.');
     } else {
       $st = strtolower(trim($own['status']));
-      if ($st !== 'pending') {
-        set_flash('error', 'Only orders in "To Pay" can be cancelled.');
+      $shippedStatuses = ['processing', 'shipped', 'delivered', 'returned', 'refunded', 'cancelled'];
+      
+      // Check for return requests
+      $returnCheckStmt = $pdo->prepare("SELECT COUNT(*) FROM returns WHERE order_id = ?");
+      $returnCheckStmt->execute([$post_order_id]);
+      $hasReturnRequest = (int)$returnCheckStmt->fetchColumn() > 0;
+      
+      if ($hasReturnRequest) {
+        set_flash('error', 'Cannot cancel order with pending return/refund requests.');
+      } elseif (in_array($st, $shippedStatuses, true)) {
+        set_flash('error', 'Only orders that haven\'t been shipped can be cancelled.');
+      } elseif ($st !== 'pending') {
+        set_flash('error', 'Only orders in "To Pay" status can be cancelled.');
       } else {
         $pdo->prepare("UPDATE orders SET status='cancelled' WHERE order_id = ? LIMIT 1")->execute([$post_order_id]);
         set_flash('success', 'Order '.$own['custom_order_id'].' has been cancelled.');
@@ -84,7 +95,9 @@ try {
   if (!$order) die("Order not found or you don't have permission to view it.");
 
   /* ---------- Fetch items ---------- */
-  $items_stmt = $pdo->prepare("SELECT oi.*, p.name, p.images 
+  $items_stmt = $pdo->prepare("SELECT oi.*, p.name, p.images, p.product_id,
+                               (SELECT COUNT(*) FROM reviews r WHERE r.order_item_id = oi.order_item_id) as review_exists,
+                               (SELECT COUNT(*) FROM returns ret WHERE ret.order_item_id = oi.order_item_id) as return_exists
                                FROM order_items oi
                                LEFT JOIN products p ON oi.product_id = p.product_id
                                WHERE oi.order_id = ?");
@@ -211,10 +224,50 @@ if ($shipping_fee === null) {
 }
 
 $banner      = status_banner_text($order['status']);
-$can_cancel  = (strtolower(trim($order['status'])) === 'pending');
+// Check if order has return requests
+$hasReturnRequest = false;
+try {
+    $returnCheckStmt = $pdo->prepare("SELECT COUNT(*) FROM returns WHERE order_id = ?");
+    $returnCheckStmt->execute([$order['order_id']]);
+    $hasReturnRequest = (int)$returnCheckStmt->fetchColumn() > 0;
+} catch (Exception $e) {}
+
+// Derive latest return details to drive UI (payment text/status cues)
+$latestReturnType = null; $latestReturnStatus = null;
+if ($hasReturnRequest) {
+    try {
+        $lr = $pdo->prepare("SELECT return_type, status FROM returns WHERE order_id = ? ORDER BY created_at DESC LIMIT 1");
+        $lr->execute([$order['order_id']]);
+        $row = $lr->fetch();
+        if ($row) { $latestReturnType = $row['return_type'] ?? null; $latestReturnStatus = $row['status'] ?? null; }
+    } catch (Exception $e) {}
+}
+
+// Only allow cancel if:
+// 1. Status is 'pending' (not shipped yet)
+// 2. Order has NOT been shipped (status is not processing, shipped, delivered)
+// 3. No return requests exist
+// 4. Status is not returned or refunded
+$orderStatus = strtolower(trim($order['status']));
+$shippedStatuses = ['processing', 'shipped', 'delivered', 'returned', 'refunded'];
+$can_cancel = ($orderStatus === 'pending' && 
+               !in_array($orderStatus, $shippedStatuses, true) && 
+               !$hasReturnRequest);
 [$recipient,$phone,$addr_full] = build_delivery_info($order);
 $maps_query  = $addr_full !== '' ? 'https://www.google.com/maps/search/?api=1&query='.urlencode($addr_full) : '';
-$pay_text    = !empty($order['payment_method']) ? payment_text($order['payment_method']) : '';
+
+// Payment/return banner text: suppress payment method if in return/refund flow
+if ($hasReturnRequest) {
+    if ($latestReturnStatus === 'pending') {
+        $pay_text = ($latestReturnType === 'refund') ? 'To Refund (pending)' : 'To Return (pending)';
+    } elseif (in_array($latestReturnStatus, ['approved','processing','completed'])) {
+        $pay_text = ($latestReturnType === 'refund') ? 'Refunded' : 'Returned';
+    } else {
+        $pay_text = '';
+    }
+} else {
+    $pay_text = !empty($order['payment_method']) ? payment_text($order['payment_method']) : '';
+}
 
 $computed_total = $items_subtotal + $shipping_fee + $other_fee - $discount_amount - $voucher_discount;
 $display_total  = $total_amount; // authoritative total from DB
@@ -349,17 +402,50 @@ $display_total  = $total_amount; // authoritative total from DB
             <?php foreach ($items as $item): 
               $img = first_image($item['images'] ?? '') ?: 'img/Featured/1.png';
               $line_total = (float)$item['price'] * (int)$item['quantity'];
+              $order_status_key = strtolower(trim($order['status']));
+              $is_post_delivery = in_array($order_status_key, ['delivered','returned','refunded'], true);
+              $has_review = isset($item['review_exists']) && (int)$item['review_exists'] > 0;
+              $has_return = isset($item['return_exists']) && (int)$item['return_exists'] > 0;
             ?>
-              <div class="flex items-center border-b pb-4">
-                <img src="<?= htmlspecialchars($img) ?>" class="w-16 h-16 rounded object-cover mr-4" alt="Product">
-                <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-slate-800 line-clamp-1"><?= htmlspecialchars($item['name']) ?></h3>
-                  <p class="text-gray-600">Qty: <?= (int)$item['quantity'] ?></p>
+              <div class="border-b pb-4">
+                <div class="flex items-center mb-3">
+                  <img src="<?= htmlspecialchars($img) ?>" class="w-16 h-16 rounded object-cover mr-4" alt="Product">
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-semibold text-slate-800 line-clamp-1"><?= htmlspecialchars($item['name']) ?></h3>
+                    <p class="text-gray-600">Qty: <?= (int)$item['quantity'] ?></p>
+                    <?php if ($has_review || $has_return): ?>
+                      <div class="flex gap-2 mt-1">
+                        <?php if ($has_review): ?>
+                          <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Reviewed</span>
+                        <?php endif; ?>
+                        <?php if ($has_return): ?>
+                          <span class="text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">Return Requested</span>
+                        <?php endif; ?>
+                      </div>
+                    <?php endif; ?>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-semibold"><?= formatCurrency($line_total) ?></p>
+                    <p class="text-sm text-gray-500"><?= formatCurrency((float)$item['price']) ?> each</p>
+                  </div>
                 </div>
-                <div class="text-right">
-                  <p class="font-semibold"><?= formatCurrency($line_total) ?></p>
-                  <p class="text-sm text-gray-500"><?= formatCurrency((float)$item['price']) ?> each</p>
+                
+                <?php if ($is_post_delivery): ?>
+                <div class="flex gap-2 ml-20">
+                  <a href="review_submit.php?order_item_id=<?= (int)$item['order_item_id'] ?>&product_id=<?= (int)$item['product_id'] ?>" 
+                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors <?= $has_review ? 'opacity-50 cursor-not-allowed pointer-events-none' : '' ?>"
+                     title="<?= $has_review ? 'You have already reviewed this item' : 'Review this specific item' ?>">
+                    <i class="fa-solid fa-star"></i>
+                    <?= $has_review ? 'Already Reviewed' : 'Review Product' ?>
+                  </a>
+                  <a href="return_request.php?order_item_id=<?= (int)$item['order_item_id'] ?>&product_id=<?= (int)$item['product_id'] ?>" 
+                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-orange-300 text-orange-700 hover:bg-orange-50 transition-colors <?= ($has_return || $has_review) ? 'opacity-50 cursor-not-allowed pointer-events-none' : '' ?>"
+                     title="<?= $has_review ? 'Cannot return after review' : ($has_return ? 'Return already requested for this item' : 'Request return for this specific item') ?>">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                    <?= $has_return ? 'Return Requested' : ($has_review ? 'Cannot Return (Already Reviewed)' : 'Request Return') ?>
+                  </a>
                 </div>
+                <?php endif; ?>
               </div>
             <?php endforeach; ?>
 

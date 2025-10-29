@@ -30,6 +30,13 @@ function renderAdminSidebar($current_page = 'dashboard') {
             'accessible_to' => ['admin', 'staff']
         ],
         [
+            'module' => 'returns',
+            'href' => 'returns.php',
+            'icon' => 'fa-undo',
+            'text' => 'Returns & Refunds',
+            'accessible_to' => ['admin', 'staff']
+        ],
+        [
             'module' => 'inventory',
             'href' => 'inventory.php',
             'icon' => 'fa-archive',

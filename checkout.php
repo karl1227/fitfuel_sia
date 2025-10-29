@@ -46,12 +46,19 @@ try {
         exit();
     }
 
-    /* ========== 4) Default shipping address ========== */
-    $address_sql = "SELECT * FROM shipping_addresses WHERE user_id = ? AND is_default = 1 LIMIT 1";
-    $address_stmt = $pdo->prepare($address_sql);
-    $address_stmt->execute([$user_id]);
-    $default_address = $address_stmt->fetch();
-
+    /* ========== 4) Load shipping address (selected or default) ========== */
+    $selected_address_id = isset($_GET['address_id']) ? (int)$_GET['address_id'] : 0;
+    if ($selected_address_id > 0) {
+        $address_stmt = $pdo->prepare("SELECT * FROM shipping_addresses WHERE user_id = ? AND address_id = ? LIMIT 1");
+        $address_stmt->execute([$user_id, $selected_address_id]);
+        $default_address = $address_stmt->fetch();
+    }
+    if (empty($default_address)) {
+        $address_sql = "SELECT * FROM shipping_addresses WHERE user_id = ? AND is_default = 1 LIMIT 1";
+        $address_stmt = $pdo->prepare($address_sql);
+        $address_stmt->execute([$user_id]);
+        $default_address = $address_stmt->fetch();
+    }
     if (!$default_address) {
         $address_sql = "SELECT * FROM shipping_addresses WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         $address_stmt = $pdo->prepare($address_sql);
@@ -147,7 +154,7 @@ $total = $subtotal + $shipping_fee + $tax_amount;
       <div class="flex justify-end space-x-6 text-sm">
         <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
         <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
-        <a href="#" class="hover:text-emerald-400 transition-colors">Account</a>
+        <a href="profile.php" class="hover:text-emerald-400 transition-colors">Account</a>
         <a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
       </div>
     </div>
@@ -219,8 +226,8 @@ $total = $subtotal + $shipping_fee + $tax_amount;
           <div class="bg-white rounded-lg shadow-lg p-6">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-xl font-semibold text-slate-800">Delivery Address</h2>
-              <button onclick="openAddressModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
-                <i class="fas fa-edit mr-2"></i> Edit Address
+              <button onclick="openAddressPicker()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                <i class="fas fa-map-marker-alt mr-2"></i> Change Address
               </button>
             </div>
 
@@ -250,14 +257,22 @@ $total = $subtotal + $shipping_fee + $tax_amount;
                       ?>
                     </p>
                   </div>
-                  <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full">Default</span>
+                  <?php 
+                    $isDefault = (int)($default_address['is_default'] ?? 0) === 1;
+                    $selId = isset($selected_address_id) ? (int)$selected_address_id : 0;
+                    $addrId = (int)($default_address['address_id'] ?? 0);
+                    if ($isDefault && ($selId === 0 || $selId === $addrId)) { ?>
+                      <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full">Default</span>
+                  <?php } elseif ($selId > 0 && $selId === $addrId && !$isDefault) { ?>
+                      <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Selected</span>
+                  <?php } ?>
                 </div>
               </div>
             <?php else: ?>
               <div class="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
                 <i class="fas fa-map-marker-alt text-gray-400 text-4xl mb-4"></i>
                 <p class="text-gray-500 mb-4">No delivery address found</p>
-                <button onclick="openAddressModal()" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                <button onclick="openAddressModalCreate()" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
                   Add Address
                 </button>
               </div>
@@ -402,19 +417,41 @@ $total = $subtotal + $shipping_fee + $tax_amount;
     </div>
   </div>
 
-  <!-- Address Modal -->
+  <!-- Address Picker Modal (list + actions) -->
+  <div id="addressPicker" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-slate-800">Select a delivery address</h3>
+            <button onclick="closeAddressPicker()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+          </div>
+          <div id="addressList" class="space-y-3">
+            <div class="text-gray-500">Loading addresses…</div>
+          </div>
+          <div class="mt-4 flex justify-end gap-2">
+            <button onclick="openAddressModalCreate()" id="addAddressBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Add New Address</button>
+            <button onclick="closeAddressPicker()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Address Modal (Add/Edit) -->
   <div id="addressModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
           <div class="flex items-center justify-between mb-6">
-            <h3 class="text-xl font-semibold text-slate-800">Edit Delivery Address</h3>
+            <h3 id="addressModalTitle" class="text-xl font-semibold text-slate-800">Edit Delivery Address</h3>
             <button onclick="closeAddressModal()" class="text-gray-400 hover:text-gray-600">
               <i class="fas fa-times text-xl"></i>
             </button>
           </div>
 
           <form id="addressForm" onsubmit="saveAddress(event)">
+            <input type="hidden" id="address_id_hidden">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-semibold text-slate-800 mb-2">Full Name *</label>
@@ -464,6 +501,11 @@ $total = $subtotal + $shipping_fee + $tax_amount;
               <input type="text" name="street_address" required autocomplete="address-line1"
                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                      value="<?php echo htmlspecialchars($default_address['address_line1'] ?? ''); ?>">
+            </div>
+
+            <div class="flex items-center space-x-2 mb-6">
+              <input type="checkbox" id="is_default_checkbox" name="is_default" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+              <label for="is_default_checkbox" class="text-sm text-slate-700">Set as default address</label>
             </div>
 
             <div class="flex justify-end space-x-3">
@@ -523,6 +565,98 @@ $total = $subtotal + $shipping_fee + $tax_amount;
 
   <!-- ===== Page JS (at the end) ===== -->
   <script>
+let editingAddress = null; // holds current address being edited from picker
+
+function renderAddressList(addresses){
+  const wrap = document.getElementById('addressList');
+  if(!addresses || addresses.length===0){
+    wrap.innerHTML = `<div class="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+      <i class=\"fas fa-map-marker-alt text-gray-400 text-4xl mb-3\"></i>
+      <p class=\"text-gray-500\">No saved addresses yet</p></div>`;
+    const addBtn = document.getElementById('addAddressBtn');
+    addBtn.disabled = false; addBtn.classList.remove('hidden');
+    return;
+  }
+  const addBtn = document.getElementById('addAddressBtn');
+  const reachedMax = addresses.length >= 3;
+  addBtn.disabled = reachedMax;
+  if (reachedMax) addBtn.classList.add('hidden'); else addBtn.classList.remove('hidden');
+  wrap.innerHTML = addresses.map(a=>`
+    <div class=\"border border-gray-200 rounded-lg p-4\">
+      <div class=\"flex items-start justify-between\">
+        <div class=\"flex-1\">
+          <div class=\"flex items-center gap-2\">
+            <h4 class=\"font-semibold text-slate-800\">${a.full_name||''}</h4>
+            ${a.is_default==1?'<span class=\"bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full\">Default</span>':''}
+          </div>
+          <div class=\"text-sm text-gray-600 mt-1\">${a.phone||''}</div>
+          <div class=\"text-sm text-gray-600\">${a.address_line1||''}${a.address_line2?(', '+a.address_line2):''}${a.address_line3?(', '+a.address_line3):''}</div>
+          <div class=\"text-sm text-gray-600\">${(a.city||'')}${a.state?(', '+a.state):''} ${a.postal_code||''}</div>
+        </div>
+        <div class=\"flex items-center gap-2\">
+          <button onclick=\"useAddress(${a.address_id})\" class=\"px-3 py-1 bg-emerald-600 text-white rounded hover:bg-emerald-700\">Use</button>
+          <button onclick=\"editAddressFromPicker(${a.address_id})\" class=\"px-3 py-1 border rounded hover:bg-gray-50\">Edit</button>
+          <button onclick=\"deleteAddress(${a.address_id})\" class=\"px-3 py-1 border rounded text-red-700 border-red-600 hover:bg-red-50\">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddressPicker(){
+  document.getElementById('addressPicker').classList.remove('hidden');
+  document.body.style.overflow='hidden';
+  fetch('get_addresses.php').then(r=>r.json()).then(d=>{
+    if(d.success){ renderAddressList(d.addresses||[]); } else { document.getElementById('addressList').innerHTML = `<div class='text-red-600'>${d.message||'Failed to load addresses'}</div>`; }
+  }).catch(()=>{ document.getElementById('addressList').innerHTML = `<div class='text-red-600'>Network error</div>`; });
+}
+function closeAddressPicker(){ document.getElementById('addressPicker').classList.add('hidden'); document.body.style.overflow=''; }
+function openAddressModalCreate(){ 
+  editingAddress=null; 
+  document.getElementById('addressModalTitle').textContent='Add Address'; 
+  document.getElementById('address_id_hidden').value='';
+  document.getElementById('is_default_checkbox').checked=false; // New addresses not default by default
+  openAddressModal(); 
+}
+function editAddressFromPicker(addressId){
+  fetch('get_addresses.php').then(r=>r.json()).then(d=>{
+    if(!d.success) return alert(d.message||'Error fetching addresses');
+    const a=(d.addresses||[]).find(x=>x.address_id==addressId); if(!a) return;
+    editingAddress=a; document.getElementById('addressModalTitle').textContent='Edit Address';
+    document.querySelector('#addressForm [name="full_name"]').value=a.full_name||'';
+    document.querySelector('#addressForm [name="phone"]').value=a.phone||'';
+    document.querySelector('#addressForm [name="postal_code"]').value=a.postal_code||'';
+    document.querySelector('#addressForm [name="street_address"]').value=a.address_line1||'';
+    document.getElementById('is_default_checkbox').checked=(a.is_default==1);
+    document.getElementById('address_id_hidden').value=a.address_id;
+    openAddressModal();
+    // PSGC preselect if you have codes stored
+  });
+}
+function useAddress(addressId){
+  // Use for this checkout only: redirect with address_id param, keep selected_items
+  const url = new URL(window.location.href);
+  url.searchParams.set('address_id', addressId);
+  // keep selected_items if present
+  window.location.href = url.toString();
+}
+
+function deleteAddress(addressId){
+  if (!confirm('Delete this address? This action cannot be undone.')) return;
+  fetch('delete_address.php',{
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address_id:addressId})
+  }).then(r=>r.json()).then(d=>{
+    if(d.success){
+      // Refresh the list in picker
+      fetch('get_addresses.php').then(r=>r.json()).then(res=>{
+        if(res.success){ renderAddressList(res.addresses||[]); }
+        else { alert(res.message||'Failed to refresh addresses'); }
+      }).catch(()=> alert('Network error while refreshing addresses'));
+    } else {
+      alert(d.message||'Error deleting address');
+    }
+  }).catch(()=> alert('Network error while deleting address'));
+}
 /* ===== PSGC address loader (handles NCR & district-based cities) ===== */
 const PSGC = "https://psgc.gitlab.io/api";
 
@@ -633,7 +767,11 @@ async function loadBarangays(cityOrMuniCode) {
 /* ===== Modal + actions ===== */
 function openAddressModal(){ 
   document.getElementById('addressModal').classList.remove('hidden'); 
-  document.body.style.overflow='hidden'; 
+  document.body.style.overflow='hidden';
+  // Ensure checkbox is unchecked if no address_id (creating new address)
+  if (!document.getElementById('address_id_hidden').value) {
+    document.getElementById('is_default_checkbox').checked = false;
+  }
 }
 function closeAddressModal(){ 
   document.getElementById('addressModal').classList.add('hidden'); 
@@ -656,12 +794,14 @@ function saveAddress(event) {
     phone: formData.get('phone'),
     postal_code: formData.get('postal_code'),
     street_address: formData.get('street_address'),
-    is_default: 1,
+    is_default: formData.get('is_default') ? 1 : 0,
     region_name: region.name,   region_code: region.code,
     province_name: province.name, province_code: province.code,
     city_muni_name: city.name,  city_muni_code: city.code,
     barangay_name: barangay.name, barangay_code: barangay.code
   };
+  const editId = document.getElementById('address_id_hidden').value;
+  if (editId) addressData.address_id = editId;
 
   fetch('save_address.php', {
     method: 'POST',
@@ -670,8 +810,20 @@ function saveAddress(event) {
   })
   .then(r => r.json())
   .then(d => {
-    if (d.success) { closeAddressModal(); location.reload(); }
-    else { alert('Error saving address: ' + (d.message || 'Unknown error')); }
+    if (d.success) {
+      closeAddressModal();
+      // If new address was created, redirect with address_id to auto-select it
+      // If editing and it's the selected address, keep it selected
+      const url = new URL(window.location.href);
+      if (d.address_id) {
+        url.searchParams.set('address_id', d.address_id);
+      }
+      // Preserve selected_items if present (it's already in URL, so it stays)
+      // Just ensure it's properly encoded if needed
+      window.location.href = url.toString();
+    } else {
+      alert('Error saving address: ' + (d.message || 'Unknown error'));
+    }
   })
   .catch(() => { alert('Error saving address'); });
 }
@@ -712,7 +864,8 @@ function processCheckout(){
     body:JSON.stringify({
       payment_method: method,
       promo_code: document.getElementById('promo_code').value.trim(),
-      selected_items: <?php echo json_encode($selected_items); ?>
+      selected_items: <?php echo json_encode($selected_items); ?>,
+      selected_address_id: <?php echo isset($_GET['address_id']) ? (int)$_GET['address_id'] : 0; ?>
     })
   })
   .then(r=>r.json())

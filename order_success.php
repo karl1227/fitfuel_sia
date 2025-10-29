@@ -218,13 +218,38 @@ if (isset($_SESSION['user_id'])) {
                         
                         <?php if ($shipping_address): ?>
                             <div class="space-y-2">
-                                <p class="font-semibold"><?php echo htmlspecialchars($shipping_address['full_name']); ?></p>
-                                <p class="text-gray-600"><?php echo htmlspecialchars($shipping_address['phone']); ?></p>
+                                <p class="font-semibold"><?php echo htmlspecialchars($shipping_address['full_name'] ?? ''); ?></p>
+                                <p class="text-gray-600"><?php echo htmlspecialchars($shipping_address['phone'] ?? ''); ?></p>
                                 <p class="text-gray-600">
-                                    <?php echo htmlspecialchars($shipping_address['address']); ?><br>
-                                    <?php echo htmlspecialchars($shipping_address['city']); ?>, 
-                                    <?php echo htmlspecialchars($shipping_address['state']); ?> 
-                                    <?php echo htmlspecialchars($shipping_address['postal_code']); ?>
+                                    <?php 
+                                    // Build address from address_line1, address_line2, address_line3
+                                    $addr_parts = [];
+                                    if (!empty($shipping_address['address_line1'])) {
+                                        $addr_parts[] = $shipping_address['address_line1'];
+                                    }
+                                    if (!empty($shipping_address['address_line2'])) {
+                                        $addr_parts[] = $shipping_address['address_line2'];
+                                    }
+                                    if (!empty($shipping_address['address_line3'])) {
+                                        $addr_parts[] = $shipping_address['address_line3'];
+                                    }
+                                    echo htmlspecialchars(implode(', ', $addr_parts));
+                                    ?><br>
+                                    <?php 
+                                    $city = $shipping_address['city'] ?? '';
+                                    $state = $shipping_address['state'] ?? '';
+                                    $postal = $shipping_address['postal_code'] ?? '';
+                                    if ($city && $state) {
+                                        echo htmlspecialchars($city) . ', ' . htmlspecialchars($state);
+                                    } elseif ($city) {
+                                        echo htmlspecialchars($city);
+                                    } elseif ($state) {
+                                        echo htmlspecialchars($state);
+                                    }
+                                    if ($postal) {
+                                        echo ' ' . htmlspecialchars($postal);
+                                    }
+                                    ?>
                                 </p>
                             </div>
                         <?php endif; ?>

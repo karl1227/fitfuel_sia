@@ -158,25 +158,58 @@ try {
 	if ($action === 'approve_return') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
 		$reason = trim($_POST['return_reason'] ?? '');
-		$refund = (float)($_POST['refund_amount'] ?? 0);
+		$refundAmountStr = trim($_POST['refund_amount'] ?? '');
+		// Check if refund amount was provided (even if it's 0)
+		$refundProvided = $refundAmountStr !== '';
+		$refund = $refundProvided ? (float)$refundAmountStr : null;
 		
-		// Get order info for audit log
-		$orderStmt = $pdo->prepare("SELECT total_amount, status FROM orders WHERE order_id = ?");
-		$orderStmt->execute([$orderId]);
-		$orderInfo = $orderStmt->fetch();
-		
-		$stmt = $pdo->prepare("UPDATE orders SET status = 'returned', payment_status = CASE WHEN refund_amount IS NULL OR refund_amount = 0 THEN 'refunded' ELSE payment_status END, return_reason = ?, refund_amount = ? WHERE order_id = ?");
-		$stmt->execute([$reason ?: null, $refund ?: null, $orderId]);
-		
-		// Log return approval
-		if ($refund > 0) {
-			$auditLogger->logOrderRefund($orderId, $refund, "Return approved: $reason");
+		// Update the returns table entries for this order
+		// This updates all returns for the order when admin edits return management fields
+		$pdo->beginTransaction();
+		try {
+			// Check if returns table exists and has any returns for this order
+			$checkReturnsStmt = $pdo->prepare("SELECT COUNT(*) FROM returns WHERE order_id = ?");
+			$checkReturnsStmt->execute([$orderId]);
+			$returnCount = $checkReturnsStmt->fetchColumn();
+			
+			if ($returnCount > 0) {
+				// Update all returns for this order with the new reason and refund amount
+				// Only update if values are provided (non-empty)
+				if ($reason || $refundProvided) {
+					$updateReturnsStmt = $pdo->prepare("UPDATE returns SET 
+						return_reason = CASE WHEN ? != '' THEN ? ELSE return_reason END,
+						refund_amount = CASE WHEN ? IS NOT NULL THEN ? ELSE refund_amount END,
+						admin_notes = CASE WHEN (? != '' OR ? IS NOT NULL) THEN CONCAT(COALESCE(admin_notes, ''), 
+							CASE WHEN admin_notes IS NOT NULL AND admin_notes != '' THEN '\n' ELSE '' END,
+							'Updated via Order Edit: ', NOW())
+						ELSE admin_notes END
+						WHERE order_id = ?");
+					$updateReturnsStmt->execute([$reason, $reason, $refund, $refund, $reason, $refund, $orderId]);
+				}
+				
+				// Also update the orders table for backward compatibility
+				// Sum up refund amounts from all returns for the order
+				$sumRefundStmt = $pdo->prepare("SELECT COALESCE(SUM(refund_amount), 0) FROM returns WHERE order_id = ?");
+				$sumRefundStmt->execute([$orderId]);
+				$totalRefund = $sumRefundStmt->fetchColumn();
+				
+				$updateOrderStmt = $pdo->prepare("UPDATE orders SET 
+					return_reason = CASE WHEN ? != '' THEN ? ELSE return_reason END,
+					refund_amount = ?
+					WHERE order_id = ?");
+				$updateOrderStmt->execute([$reason, $reason, $totalRefund, $orderId]);
+			} else {
+				// If no returns exist, just update the orders table (legacy behavior)
+				$stmt = $pdo->prepare("UPDATE orders SET return_reason = ?, refund_amount = ? WHERE order_id = ?");
+				$stmt->execute([$reason ?: null, $refund ?: null, $orderId]);
+			}
+			
+			$pdo->commit();
+			$message = 'Return management updated successfully.';
+		} catch (Exception $e) {
+			$pdo->rollBack();
+			$error = 'Error updating return management: ' . $e->getMessage();
 		}
-		
-		// Restore stock when return is approved
-		restoreStockControl($pdo, $orderId, (int)($_SESSION['user_id'] ?? 0));
-		
-		$message = 'Return approved and stock restored.';
 	}
 	if ($action === 'reject_return') {
 		$orderId = (int)($_POST['order_id'] ?? 0);
@@ -263,7 +296,14 @@ if ($search !== '') { $where[] = '(u.username LIKE ? OR u.email LIKE ? OR o.orde
 if ($filterDate !== '') { $where[] = 'DATE(o.created_at) = ?'; $params[] = $filterDate; }
 $whereSql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
 
-$sql = "SELECT o.*, u.username, u.email FROM orders o JOIN users u ON u.user_id = o.user_id $whereSql ORDER BY o.created_at DESC LIMIT 500";
+$sql = "SELECT o.*, u.username, u.email,
+        (SELECT return_reason FROM returns WHERE order_id = o.order_id ORDER BY created_at DESC LIMIT 1) as return_reason,
+        (SELECT COALESCE(SUM(refund_amount), 0) FROM returns WHERE order_id = o.order_id) as refund_amount
+        FROM orders o 
+        JOIN users u ON u.user_id = o.user_id 
+        $whereSql 
+        ORDER BY o.created_at DESC 
+        LIMIT 500";
 $stm = $pdo->prepare($sql);
 $stm->execute($params);
 $orders = $stm->fetchAll();

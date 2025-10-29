@@ -357,6 +357,34 @@ if (!empty($_SESSION['user_id'])) {
                     <?php echo htmlspecialchars($product['name']); ?>
                   </a>
                 </h3>
+                
+                <!-- Star Rating -->
+                <?php 
+                // Get rating data safely
+                try {
+                  $ratingStmt = $pdo->prepare("SELECT average_rating, total_reviews FROM products WHERE product_id = ?");
+                  $ratingStmt->execute([$product['product_id']]);
+                  $ratingData = $ratingStmt->fetch();
+                  if ($ratingData && !empty($ratingData['total_reviews']) && $ratingData['total_reviews'] > 0): 
+                ?>
+                  <div class="flex items-center gap-2 mb-3">
+                    <div class="flex items-center">
+                      <?php 
+                      $avg_rating = round($ratingData['average_rating'] ?? 0, 1);
+                      for ($i = 1; $i <= 5; $i++): 
+                      ?>
+                        <i class="fas fa-star text-sm <?= $i <= $avg_rating ? 'text-red-500' : 'text-gray-300' ?>"></i>
+                      <?php endfor; ?>
+                    </div>
+                    <span class="text-sm text-gray-600">(<?= $ratingData['total_reviews'] ?>)</span>
+                  </div>
+                <?php 
+                  endif;
+                } catch (Exception $e) {
+                  // Rating columns don't exist yet - silently skip
+                }
+                ?>
+                
                 <p class="text-slate-600 mb-4 flex-grow line-clamp-3"><?php echo htmlspecialchars($product['description']); ?></p>
 
                 <div class="flex items-end justify-between mt-auto">

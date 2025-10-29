@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 28, 2025 at 06:50 PM
+-- Generation Time: Oct 29, 2025 at 09:17 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -342,7 +342,15 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (288, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-28 17:47:52'),
 (289, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-28 17:47:53'),
 (290, 4, 'admin', 'order_cancel', 'orders', 'Order cancelled', NULL, '{\"cancelled\":true,\"reason\":\"\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 24, 'order', 'high', 'success', '2025-10-28 17:48:16'),
-(291, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-28 17:49:34');
+(291, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-28 17:49:34'),
+(292, 4, 'admin', 'order_refund', 'orders', 'Order refunded: ₱1,000.00 - Return approved: User didn\'t like it', NULL, '{\"refund_amount\":1000,\"reason\":\"Return approved: User didn\'t like it\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 26, 'order', 'high', 'success', '2025-10-29 06:58:41'),
+(293, 4, 'admin', 'order_refund', 'orders', 'Order refunded: ₱1,950.00 - Return approved: User didn\'t like it', NULL, '{\"refund_amount\":1950,\"reason\":\"Return approved: User didn\'t like it\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 26, 'order', 'high', 'success', '2025-10-29 06:58:51'),
+(294, 14, 'karlblockstock', 'order_create', 'orders', 'New order created', NULL, '{\"user_id\":14,\"payment_method\":\"cod\",\"total_amount\":290,\"custom_order_id\":\"FF-20251029-29NPF\",\"items_count\":1}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 27, 'order', 'medium', 'success', '2025-10-29 07:30:14'),
+(295, 14, 'karlblockstock', 'order_create', 'orders', 'New order created', NULL, '{\"user_id\":14,\"payment_method\":\"cod\",\"total_amount\":5830,\"custom_order_id\":\"FF-20251029-XDF1B\",\"items_count\":6}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 28, 'order', 'medium', 'success', '2025-10-29 07:42:50'),
+(296, 14, 'karlblockstock', 'order_create', 'orders', 'New order created', NULL, '{\"user_id\":14,\"payment_method\":\"paypal\",\"total_amount\":1600,\"custom_order_id\":\"FF-20251029-FSZQM\",\"items_count\":1}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 29, 'order', 'medium', 'success', '2025-10-29 07:43:32'),
+(297, 14, 'karlblockstock', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"karlblockstock\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-29 07:45:54'),
+(298, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 08:04:30'),
+(299, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 08:13:00');
 
 -- --------------------------------------------------------
 
@@ -396,11 +404,11 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (127, 15, 143, 3, '2025-10-05 12:04:11'),
 (128, 15, 144, 2, '2025-10-05 12:04:13'),
 (129, 15, 145, 2, '2025-10-05 12:04:14'),
-(132, 14, 143, 7, '2025-10-05 14:41:41'),
 (135, 24, 143, 3, '2025-10-27 08:10:09'),
 (137, 24, 144, 3, '2025-10-27 08:14:16'),
-(141, 14, 144, 1, '2025-10-27 09:28:34'),
-(142, 14, 146, 1, '2025-10-27 09:28:35');
+(148, 14, 161, 1, '2025-10-29 08:02:37'),
+(149, 14, 144, 1, '2025-10-29 08:02:37'),
+(150, 14, 143, 1, '2025-10-29 08:02:38');
 
 -- --------------------------------------------------------
 
@@ -505,7 +513,17 @@ INSERT INTO `inventory` (`inventory_id`, `product_id`, `change_type`, `quantity`
 (23, 151, 'adjustment', 100, NULL, 4, '2025-10-01 16:17:14'),
 (24, 144, 'stock_out', 1, 26, 14, '2025-10-14 14:25:06'),
 (25, 145, 'stock_out', 1, 26, 14, '2025-10-14 14:25:06'),
-(26, 161, 'stock_in', 100, 24, 4, '2025-10-28 17:48:16');
+(26, 161, 'stock_in', 100, 24, 4, '2025-10-28 17:48:16'),
+(27, 144, 'stock_in', 1, 26, 4, '2025-10-29 06:55:02'),
+(28, 145, 'stock_in', 1, 26, 4, '2025-10-29 06:55:02'),
+(29, 146, 'stock_out', 1, 27, 14, '2025-10-29 07:30:14'),
+(30, 143, 'stock_out', 2, 28, 14, '2025-10-29 07:42:50'),
+(31, 144, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
+(32, 147, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
+(33, 145, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
+(34, 149, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
+(35, 150, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
+(36, 154, 'stock_out', 1, 29, 14, '2025-10-29 07:43:32');
 
 -- --------------------------------------------------------
 
@@ -549,7 +567,10 @@ INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payme
 (23, 'FF-20250925-A0EVR', 15, 'pending', 'paypal', 'pending', '5JG15145VU699244U', '{\"full_name\":\"Nina Landicho\",\"phone\":\"09123456789\",\"address_line1\":\"Testing St. Hehe\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 4060.00, '2025-09-28', NULL, NULL, 1, '2025-09-25 04:01:38', '2025-09-25 04:01:49'),
 (24, 'FF-20250928-U0SM3', 17, 'cancelled', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address_line1\":\"225 bulubok st.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"\",\"state\":\"\",\"postal_code\":\"1860\",\"country\":\"Philippines\"}', 280100.00, '2025-10-02', NULL, NULL, 0, '2025-09-28 19:26:44', '2025-10-28 17:48:16'),
 (25, 'FF-20250930-UJFM9', 17, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Michelle Angeles\",\"phone\":\"09084742498\",\"address_line1\":\"225 bulubok st.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"\",\"state\":\"\",\"postal_code\":\"1860\",\"country\":\"Philippines\"}', 7030.00, '2025-10-03', NULL, NULL, 1, '2025-09-30 10:53:31', '2025-09-30 10:53:31'),
-(26, 'FF-20251014-JBIUU', 14, 'pending', 'paypal', 'pending', '4AJ187538K314382S', '{\"full_name\":\"Emman Cutie\",\"phone\":\"09123456789\",\"address_line1\":\"R. Tolentino\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Angono\",\"state\":\"Rizal\",\"postal_code\":\"1940\",\"country\":\"Philippines\"}', 1950.00, '2025-10-17', NULL, NULL, 1, '2025-10-14 14:25:06', '2025-10-14 14:25:08');
+(26, 'FF-20251014-JBIUU', 14, 'returned', 'paypal', 'refunded', '4AJ187538K314382S', '{\"full_name\":\"Emman Cutie\",\"phone\":\"09123456789\",\"address\":\"\",\"city\":\"Angono\",\"state\":\"Rizal\",\"postal_code\":\"1940\"}', 1950.00, '2025-10-17', 'I don\'t like this item!', 1950.00, 0, '2025-10-14 14:25:06', '2025-10-29 08:10:24'),
+(27, 'FF-20251029-29NPF', 14, 'delivered', 'cod', 'paid', NULL, '{\"full_name\":\"Emman Cutie\",\"phone\":\"09123456789\",\"address\":\"\",\"city\":\"Camalig\",\"state\":\"Albay\",\"postal_code\":\"2003\"}', 290.00, '2025-11-01', NULL, NULL, 1, '2025-10-29 07:30:14', '2025-10-29 07:34:23'),
+(28, 'FF-20251029-XDF1B', 14, 'returned', 'cod', 'paid', NULL, '{\"full_name\":\"Karl Cutie\",\"phone\":\"09765000555\",\"address_line1\":\"Testing Karl\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Infanta\",\"state\":\"Quezon\",\"postal_code\":\"1930\",\"country\":\"Philippines\"}', 5830.00, '2025-11-01', 'I don\'t like this item. I want to return it.', 700.00, 1, '2025-10-29 07:42:50', '2025-10-29 08:11:38'),
+(29, 'FF-20251029-FSZQM', 14, 'pending', 'paypal', 'pending', '4JT246156A538015A', '{\"full_name\":\"Karl Testing\",\"phone\":\"09765700300\",\"address_line1\":\"R. Testing St.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Angono\",\"state\":\"Rizal\",\"postal_code\":\"1940\",\"country\":\"Philippines\"}', 1600.00, '2025-11-01', NULL, NULL, 1, '2025-10-29 07:43:32', '2025-10-29 07:43:36');
 
 -- --------------------------------------------------------
 
@@ -562,38 +583,48 @@ CREATE TABLE `order_items` (
   `order_id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `quantity` int(11) NOT NULL,
-  `price` decimal(10,2) NOT NULL
+  `price` decimal(10,2) NOT NULL,
+  `return_requested` tinyint(1) NOT NULL DEFAULT 0,
+  `review_submitted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `order_items`
 --
 
-INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(18, 12, 144, 3, 650.00),
-(19, 13, 143, 1, 990.00),
-(20, 13, 161, 1, 2800.00),
-(21, 13, 144, 1, 650.00),
-(22, 13, 145, 1, 1200.00),
-(23, 13, 146, 1, 190.00),
-(24, 13, 147, 1, 750.00),
-(25, 14, 143, 1, 990.00),
-(26, 14, 144, 1, 650.00),
-(28, 16, 161, 1, 2800.00),
-(29, 17, 143, 1, 990.00),
-(30, 17, 144, 2, 650.00),
-(31, 18, 161, 1, 2800.00),
-(32, 19, 161, 1, 2800.00),
-(33, 20, 144, 1, 650.00),
-(34, 20, 149, 1, 450.00),
-(35, 21, 146, 1, 190.00),
-(36, 21, 147, 1, 750.00),
-(37, 22, 144, 1, 650.00),
-(38, 23, 143, 4, 990.00),
-(39, 24, 161, 100, 2800.00),
-(40, 25, 143, 7, 990.00),
-(41, 26, 144, 1, 650.00),
-(42, 26, 145, 1, 1200.00);
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`, `return_requested`, `review_submitted`) VALUES
+(18, 12, 144, 3, 650.00, 0, 0),
+(19, 13, 143, 1, 990.00, 0, 0),
+(20, 13, 161, 1, 2800.00, 0, 0),
+(21, 13, 144, 1, 650.00, 0, 0),
+(22, 13, 145, 1, 1200.00, 0, 0),
+(23, 13, 146, 1, 190.00, 0, 0),
+(24, 13, 147, 1, 750.00, 0, 0),
+(25, 14, 143, 1, 990.00, 0, 0),
+(26, 14, 144, 1, 650.00, 0, 0),
+(28, 16, 161, 1, 2800.00, 0, 0),
+(29, 17, 143, 1, 990.00, 0, 0),
+(30, 17, 144, 2, 650.00, 0, 0),
+(31, 18, 161, 1, 2800.00, 0, 0),
+(32, 19, 161, 1, 2800.00, 0, 0),
+(33, 20, 144, 1, 650.00, 0, 0),
+(34, 20, 149, 1, 450.00, 0, 0),
+(35, 21, 146, 1, 190.00, 0, 0),
+(36, 21, 147, 1, 750.00, 0, 0),
+(37, 22, 144, 1, 650.00, 0, 0),
+(38, 23, 143, 4, 990.00, 0, 0),
+(39, 24, 161, 100, 2800.00, 0, 0),
+(40, 25, 143, 7, 990.00, 0, 0),
+(41, 26, 144, 1, 650.00, 0, 0),
+(42, 26, 145, 1, 1200.00, 0, 0),
+(43, 27, 146, 1, 190.00, 0, 0),
+(44, 28, 143, 2, 990.00, 0, 0),
+(45, 28, 144, 1, 650.00, 1, 0),
+(46, 28, 147, 1, 750.00, 0, 0),
+(47, 28, 145, 1, 1200.00, 0, 0),
+(48, 28, 149, 1, 450.00, 0, 0),
+(49, 28, 150, 1, 700.00, 1, 0),
+(50, 29, 154, 1, 1500.00, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -656,59 +687,66 @@ CREATE TABLE `products` (
   `sale_percentage` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `min_stock_level` int(11) NOT NULL DEFAULT 10
+  `min_stock_level` int(11) NOT NULL DEFAULT 10,
+  `average_rating` decimal(3,2) NOT NULL DEFAULT 0.00,
+  `total_reviews` int(11) NOT NULL DEFAULT 0,
+  `rating_5_count` int(11) NOT NULL DEFAULT 0,
+  `rating_4_count` int(11) NOT NULL DEFAULT 0,
+  `rating_3_count` int(11) NOT NULL DEFAULT 0,
+  `rating_2_count` int(11) NOT NULL DEFAULT 0,
+  `rating_1_count` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `category_id`, `subcategory_id`, `images`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`) VALUES
-(143, 'Weightlifting Gloves', 'Prevent calluses and improve grip with padded gloves designed for comfort and durability.', 990.00, 43, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-10-27 13:14:59', 10),
-(144, 'Wrist Straps', 'Boost your lifting power by reducing grip fatigue which is perfect for deadlifts, rows, and heavy pulls.', 650.00, 99, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:15:14', 10),
-(145, 'Weightlifting Belt', 'Maximize support during heavy lifts. This belt helps stabilize your core and lower back for better performance and safety.', 1200.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:14:41', 10),
-(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 100, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-09-28 18:45:01', 10),
-(147, 'Barbell Pads', 'Protect your joints during intense workouts with durable, cushioned pads ideal for knees, elbows and floors.', 750.00, 100, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:13:58', 10),
-(148, 'Massage Gun', 'Deep tissue massage gun designed to relieve soreness, improve circulation, and promote faster muscle recovery.', 3500.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:16:30', 10),
-(149, 'Gel Pack', 'Gel packs for targeted relief, soothe sore muscles, reduce inflammation, and speed up recovery.', 450.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:16:18', 10),
-(150, 'Compression Sleeves', 'Improve blood flow and reduce muscle fatigue with breathable, supportive compression sleeves.', 700.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:15:47', 10),
-(151, 'Stretching Strap', 'Improve flexibility and mobility with a multi-loop stretching strap, great for yoga, PT, or cool-downs', 400.00, 99, 1, 12, '[\"uploads\\/products\\/68d98e8b997ae_1759088267.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:16:53', 10),
-(152, 'Resistance Band', 'Versatile resistance bands for strength training, stretching, or rehabilitation workouts at home or in the gym.', 300.00, 100, 1, 12, '[\"uploads\\/products\\/68d98eed29421_1759088365.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:15:32', 10),
-(153, 'Shaker Bottle', 'Leak-proof shaker bottle with a mixing ball for smooth protein shakes and supplement drinks anytime.', 350.00, 100, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:18:42', 10),
-(154, 'Duffle Bag', 'Spacious and durable dufflebag with multiple compartments to store your gear, clothes, and shoes in style.', 1500.00, 100, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:17:25', 10),
-(155, 'Meal Prep Box', 'BPA-free and microwave-safe containers to organize your meals and hit your nutrition goals on the go.', 800.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f0aa7b9a_1759088394.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:18:23', 10),
-(156, 'Cooling Towel', 'Stay cool during workouts with a reusable cooling towel. Just wet, wring, and snap to activate.', 450.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f3104011_1759088433.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:17:13', 10),
-(157, 'Electrolyte Tablets', 'Replenish lost electrolytes and stay hydrated during intense workouts. Easy to dissolve and refreshing.', 300.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f49ec6c2_1759088457.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:17:36', 10),
-(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is deal for strength, toning, and full-body workouts.', 3500.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f6e1bc23_1759088494.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:08', 10),
-(159, 'Kettlebell', 'Versatile and durable kettlebell designed for dynamic strength training, conditioning, and cardio.', 1750.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f8d4b0b3_1759088525.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:17', 10),
-(160, 'Barbell', 'Heavy-duty barbell built for Olympic lifts, powerlifting, and general strength training.', 2200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fa68c938_1759088550.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:19:27', 10),
-(161, 'Weight Plates', 'Olympic-sized weight plates made of rubber or steel for safe, balanced, and effective lifting.', 2800.00, 100, 2, 14, '[\"uploads\\/products\\/68d98d6c7d2ba_1759087980.png\"]', 'active', 0, 1, 0, '2025-09-06 14:37:21', '2025-10-28 17:48:16', 10),
-(162, 'Medicine Ball', 'Improve core strength, coordination, and explosive power with a rubber-grip medicine ball.', 1200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fbd84c72_1759088573.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:27', 10),
-(163, 'Jump Rope', 'Lightweight, fast-spinning jump rope designed for cardio, endurance, and coordination training.', 400.00, 0, 2, 15, '[\"uploads\\/products\\/68d98fdbd6626_1759088603.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:21:33', 10),
-(164, 'Parallette Bars', 'Heavy-duty parallettes for advanced calisthenics, handstands, L-sits, and bodyweight training.', 2200.00, 0, 2, 15, '[\"uploads\\/products\\/68d98ffa13dda_1759088634.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:26:16', 10),
-(165, 'Dip Belts', 'Add extra weight to dips or pull-ups with a durable chain dip belt for strength progression.', 1500.00, 0, 2, 15, '[\"uploads\\/products\\/68d990133959e_1759088659.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:50', 10),
-(166, 'Lockable Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 0, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:22:28', 10),
-(167, 'Gymnastic Rings', 'Portable and adjustable rings perfect for bodyweight training, strength, and stability exercises.', 1800.00, 99, 2, 15, '[\"uploads\\/products\\/68d99029daa51_1759088681.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:21:24', 10),
-(168, 'Foam Roller', 'Relieve muscle tension and improve recovery with a high-density foam roller.', 900.00, 0, 2, 16, '[\"uploads\\/products\\/68d9904dd8a36_1759088717.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:25:19', 10),
-(169, 'Massage Stick', 'Portable massage stick to roll out tight muscles, improve blood flow, and ease soreness on the go.', 600.00, 0, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:25:08', 10),
-(170, 'Mobility Ball', 'Target knots and trigger points with a compact mobility ball which is perfect for deep tissue release.', 300.00, 0, 2, 16, '[\"uploads\\/products\\/68d990723b22e_1759088754.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:23:46', 10),
-(171, 'Yoga Strap', 'Improve flexibility and reach deeper stretches with this soft yet durable yoga strap.', 400.00, 0, 2, 16, '[\"uploads\\/products\\/68d990da48353_1759088858.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:23:30', 10),
-(172, 'Yoga Mat', 'Non-slip, cushioned yoga mat for balance, support, and comfort during stretching, yoga, or floor exercises.', 1200.00, 0, 2, 16, '[\"uploads\\/products\\/68d990f0cb86c_1759088880.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:27:06', 10),
-(173, 'FitFuel Whey Protein', 'High-quality whey blend packed with essential amino acids to support muscle recovery and growth.', 2750.00, 0, 3, 17, '[\"uploads\\/products\\/68d99115e0d6c_1759088917.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:25:31', 10),
-(174, 'FitFuel Nitro Tech Whey Protein', 'Advanced formula with creatine and whey isolate, designed for lean muscle building and strength gains.', 2850.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:25:58', 10),
-(175, 'FitFuel Gold Standard Whey Protein', 'The gold standard of protein, 100% whey blend with BCAAs for fast absorption and lean muscle support.', 2950.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:26:21', 10),
-(176, 'FitFuel Whey Blend', 'Clean and fast-digesting protein blend with zero fillers, ideal for muscle maintenance and recovery.', 1550.00, 0, 3, 17, '[\"uploads\\/products\\/68d991d7e13a9_1759089111.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:26:43', 10),
-(177, 'FitFuel Elite 100% Whey Protein', 'Elite-quality whey designed for high-performance athletes, rich in protein and low in sugar and fat.', 3190.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:27:00', 10),
-(178, 'FitFuel VAPORX5 Muscle Tech', 'All-in-one pre-workout delivering explosive energy, enhanced focus, and superior muscle pumps.', 1250.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:27:41', 10),
-(179, 'FitFuel Cellucor C4', 'Popular pre-workout with just the right kick, contains beta-alanine, creatine, and caffeine for energy and endurance.', 1550.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:28:04', 10),
-(180, 'FitFuel Outrage Ultra‑Stim Pre‑Workout', 'Ultra-intense stimulant pre-workout designed to push your performance and alertness to the limit.', 1300.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:28:38', 10),
-(181, 'FitFuel Dr. Jekyll Pre‐Workout', 'Low-stim formula with a focus on strength, pump, and performance which is ideal for late-night sessions.', 1650.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:29:06', 10),
-(182, 'FitFuel Nitraflex Extreme Sport', 'Hardcore energy and testosterone-boosting pre-workout to power through your toughest training days.', 1650.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:29:23', 10),
-(183, 'FitFuel Multivitamins Tablet', 'Multivitamins to help support overall health and energy.', 400.00, 0, 3, 19, '[\"uploads\\/products\\/68d9927dc4ea2_1759089277.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:30:04', 10),
-(184, 'Pharex Vitamin Tablet', 'Essential vitamins to keep your body strong and active every day.', 140.00, 0, 3, 19, '[\"uploads\\/products\\/68d992980d0d0_1759089304.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:31:06', 10),
-(185, 'BioTechUSA B-Complex Food Supplement', 'Boost your energy and metabolism with this B-vitamin complex.', 950.00, 0, 3, 19, '[\"uploads\\/products\\/68d9920c15598_1759089164.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:31:33', 10),
-(186, 'FitFuel Vitamin C 500mg', 'Helps to keep your immune system strong and supports daily health with a good dose of vitamin C. (90 tablets)', 550.00, 0, 3, 19, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:32:10', 10),
-(187, 'maxvit Multivitamins', 'Balanced vitamins designed to support your daily wellness needs.', 150.00, 0, 3, 19, '[\"uploads\\/products\\/68d9924560834_1759089221.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:30:36', 10);
+INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `category_id`, `subcategory_id`, `images`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`, `average_rating`, `total_reviews`, `rating_5_count`, `rating_4_count`, `rating_3_count`, `rating_2_count`, `rating_1_count`) VALUES
+(143, 'Weightlifting Gloves', 'Prevent calluses and improve grip with padded gloves designed for comfort and durability.', 990.00, 41, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-10-29 07:53:05', 10, 5.00, 1, 1, 0, 0, 0, 0),
+(144, 'Wrist Straps', 'Boost your lifting power by reducing grip fatigue which is perfect for deadlifts, rows, and heavy pulls.', 650.00, 99, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(145, 'Weightlifting Belt', 'Maximize support during heavy lifts. This belt helps stabilize your core and lower back for better performance and safety.', 1200.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:37:50', 10, 5.00, 1, 1, 0, 0, 0, 0),
+(147, 'Barbell Pads', 'Protect your joints during intense workouts with durable, cushioned pads ideal for knees, elbows and floors.', 750.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(148, 'Massage Gun', 'Deep tissue massage gun designed to relieve soreness, improve circulation, and promote faster muscle recovery.', 3500.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:16:30', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(149, 'Gel Pack', 'Gel packs for targeted relief, soothe sore muscles, reduce inflammation, and speed up recovery.', 450.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 08:02:24', 10, 5.00, 1, 1, 0, 0, 0, 0),
+(150, 'Compression Sleeves', 'Improve blood flow and reduce muscle fatigue with breathable, supportive compression sleeves.', 700.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(151, 'Stretching Strap', 'Improve flexibility and mobility with a multi-loop stretching strap, great for yoga, PT, or cool-downs', 400.00, 99, 1, 12, '[\"uploads\\/products\\/68d98e8b997ae_1759088267.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:16:53', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(152, 'Resistance Band', 'Versatile resistance bands for strength training, stretching, or rehabilitation workouts at home or in the gym.', 300.00, 100, 1, 12, '[\"uploads\\/products\\/68d98eed29421_1759088365.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:15:32', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(153, 'Shaker Bottle', 'Leak-proof shaker bottle with a mixing ball for smooth protein shakes and supplement drinks anytime.', 350.00, 100, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:18:42', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(154, 'Duffle Bag', 'Spacious and durable dufflebag with multiple compartments to store your gear, clothes, and shoes in style.', 1500.00, 99, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:43:32', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(155, 'Meal Prep Box', 'BPA-free and microwave-safe containers to organize your meals and hit your nutrition goals on the go.', 800.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f0aa7b9a_1759088394.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:18:23', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(156, 'Cooling Towel', 'Stay cool during workouts with a reusable cooling towel. Just wet, wring, and snap to activate.', 450.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f3104011_1759088433.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:17:13', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(157, 'Electrolyte Tablets', 'Replenish lost electrolytes and stay hydrated during intense workouts. Easy to dissolve and refreshing.', 300.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f49ec6c2_1759088457.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:17:36', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is deal for strength, toning, and full-body workouts.', 3500.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f6e1bc23_1759088494.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:08', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(159, 'Kettlebell', 'Versatile and durable kettlebell designed for dynamic strength training, conditioning, and cardio.', 1750.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f8d4b0b3_1759088525.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:17', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(160, 'Barbell', 'Heavy-duty barbell built for Olympic lifts, powerlifting, and general strength training.', 2200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fa68c938_1759088550.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:19:27', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(161, 'Weight Plates', 'Olympic-sized weight plates made of rubber or steel for safe, balanced, and effective lifting.', 2800.00, 100, 2, 14, '[\"uploads\\/products\\/68d98d6c7d2ba_1759087980.png\"]', 'active', 0, 1, 0, '2025-09-06 14:37:21', '2025-10-28 17:48:16', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(162, 'Medicine Ball', 'Improve core strength, coordination, and explosive power with a rubber-grip medicine ball.', 1200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fbd84c72_1759088573.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:27', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(163, 'Jump Rope', 'Lightweight, fast-spinning jump rope designed for cardio, endurance, and coordination training.', 400.00, 0, 2, 15, '[\"uploads\\/products\\/68d98fdbd6626_1759088603.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:21:33', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(164, 'Parallette Bars', 'Heavy-duty parallettes for advanced calisthenics, handstands, L-sits, and bodyweight training.', 2200.00, 0, 2, 15, '[\"uploads\\/products\\/68d98ffa13dda_1759088634.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:26:16', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(165, 'Dip Belts', 'Add extra weight to dips or pull-ups with a durable chain dip belt for strength progression.', 1500.00, 0, 2, 15, '[\"uploads\\/products\\/68d990133959e_1759088659.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(166, 'Lockable Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 0, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:22:28', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(167, 'Gymnastic Rings', 'Portable and adjustable rings perfect for bodyweight training, strength, and stability exercises.', 1800.00, 99, 2, 15, '[\"uploads\\/products\\/68d99029daa51_1759088681.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:21:24', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(168, 'Foam Roller', 'Relieve muscle tension and improve recovery with a high-density foam roller.', 900.00, 0, 2, 16, '[\"uploads\\/products\\/68d9904dd8a36_1759088717.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:25:19', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(169, 'Massage Stick', 'Portable massage stick to roll out tight muscles, improve blood flow, and ease soreness on the go.', 600.00, 0, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:25:08', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(170, 'Mobility Ball', 'Target knots and trigger points with a compact mobility ball which is perfect for deep tissue release.', 300.00, 0, 2, 16, '[\"uploads\\/products\\/68d990723b22e_1759088754.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:23:46', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(171, 'Yoga Strap', 'Improve flexibility and reach deeper stretches with this soft yet durable yoga strap.', 400.00, 0, 2, 16, '[\"uploads\\/products\\/68d990da48353_1759088858.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:23:30', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(172, 'Yoga Mat', 'Non-slip, cushioned yoga mat for balance, support, and comfort during stretching, yoga, or floor exercises.', 1200.00, 0, 2, 16, '[\"uploads\\/products\\/68d990f0cb86c_1759088880.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:27:06', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(173, 'FitFuel Whey Protein', 'High-quality whey blend packed with essential amino acids to support muscle recovery and growth.', 2750.00, 0, 3, 17, '[\"uploads\\/products\\/68d99115e0d6c_1759088917.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:25:31', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(174, 'FitFuel Nitro Tech Whey Protein', 'Advanced formula with creatine and whey isolate, designed for lean muscle building and strength gains.', 2850.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:25:58', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(175, 'FitFuel Gold Standard Whey Protein', 'The gold standard of protein, 100% whey blend with BCAAs for fast absorption and lean muscle support.', 2950.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:26:21', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(176, 'FitFuel Whey Blend', 'Clean and fast-digesting protein blend with zero fillers, ideal for muscle maintenance and recovery.', 1550.00, 0, 3, 17, '[\"uploads\\/products\\/68d991d7e13a9_1759089111.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:26:43', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(177, 'FitFuel Elite 100% Whey Protein', 'Elite-quality whey designed for high-performance athletes, rich in protein and low in sugar and fat.', 3190.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:27:00', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(178, 'FitFuel VAPORX5 Muscle Tech', 'All-in-one pre-workout delivering explosive energy, enhanced focus, and superior muscle pumps.', 1250.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:27:41', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(179, 'FitFuel Cellucor C4', 'Popular pre-workout with just the right kick, contains beta-alanine, creatine, and caffeine for energy and endurance.', 1550.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:28:04', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(180, 'FitFuel Outrage Ultra‑Stim Pre‑Workout', 'Ultra-intense stimulant pre-workout designed to push your performance and alertness to the limit.', 1300.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:28:38', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(181, 'FitFuel Dr. Jekyll Pre‐Workout', 'Low-stim formula with a focus on strength, pump, and performance which is ideal for late-night sessions.', 1650.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:29:06', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(182, 'FitFuel Nitraflex Extreme Sport', 'Hardcore energy and testosterone-boosting pre-workout to power through your toughest training days.', 1650.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:29:23', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(183, 'FitFuel Multivitamins Tablet', 'Multivitamins to help support overall health and energy.', 400.00, 0, 3, 19, '[\"uploads\\/products\\/68d9927dc4ea2_1759089277.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:30:04', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(184, 'Pharex Vitamin Tablet', 'Essential vitamins to keep your body strong and active every day.', 140.00, 0, 3, 19, '[\"uploads\\/products\\/68d992980d0d0_1759089304.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:31:06', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(185, 'BioTechUSA B-Complex Food Supplement', 'Boost your energy and metabolism with this B-vitamin complex.', 950.00, 0, 3, 19, '[\"uploads\\/products\\/68d9920c15598_1759089164.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:31:33', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(186, 'FitFuel Vitamin C 500mg', 'Helps to keep your immune system strong and supports daily health with a good dose of vitamin C. (90 tablets)', 550.00, 0, 3, 19, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:32:10', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(187, 'maxvit Multivitamins', 'Balanced vitamins designed to support your daily wellness needs.', 150.00, 0, 3, 19, '[\"uploads\\/products\\/68d9924560834_1759089221.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:30:36', 10, 0.00, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -754,6 +792,103 @@ INSERT INTO `promo_codes` (`promo_id`, `code`, `description`, `discount_type`, `
 (1, 'WELCOME10', 'Welcome discount for new customers', 'percentage', 10.00, 500.00, 200.00, 100, 0, 1, '2025-09-11 02:58:54', '2026-09-11 02:58:54', '2025-09-10 18:58:54', '2025-09-10 18:58:54'),
 (2, 'SAVE50', 'Fixed discount for orders above 1000', 'fixed', 50.00, 1000.00, NULL, 50, 0, 1, '2025-09-11 02:58:54', '2026-03-11 02:58:54', '2025-09-10 18:58:54', '2025-09-10 18:58:54'),
 (3, 'FITNESS20', 'Fitness enthusiast discount', 'percentage', 20.00, 800.00, 300.00, 200, 0, 1, '2025-09-11 02:58:54', '2025-12-11 02:58:54', '2025-09-10 18:58:54', '2025-09-10 18:58:54');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `returns`
+--
+
+CREATE TABLE `returns` (
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `order_item_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `return_reason` text NOT NULL,
+  `return_type` enum('return','refund') NOT NULL DEFAULT 'return',
+  `status` enum('pending','approved','rejected','processing','completed') NOT NULL DEFAULT 'pending',
+  `admin_notes` text DEFAULT NULL,
+  `refund_amount` decimal(10,2) DEFAULT NULL,
+  `refund_status` enum('pending','processed','completed') NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `returns`
+--
+
+INSERT INTO `returns` (`return_id`, `order_id`, `order_item_id`, `product_id`, `user_id`, `return_reason`, `return_type`, `status`, `admin_notes`, `refund_amount`, `refund_status`, `created_at`, `updated_at`) VALUES
+(1, 26, 41, 144, 14, 'I don\'t like this item!', 'return', 'approved', 'Updated via Order Edit: 2025-10-29 16:10:24', 1950.00, 'processed', '2025-10-29 06:32:34', '2025-10-29 08:10:24'),
+(3, 28, 49, 150, 14, 'I don\'t like this item. I want to return it.', 'return', 'approved', 'Updated via Order Edit: 2025-10-29 16:11:38\nUpdated via Order Edit: 2025-10-29 16:11:47', 700.00, 'processed', '2025-10-29 07:55:34', '2025-10-29 08:11:47'),
+(4, 28, 45, 144, 14, 'I wanna return it', 'return', 'pending', NULL, NULL, 'pending', '2025-10-29 08:13:24', '2025-10-29 08:13:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_images`
+--
+
+CREATE TABLE `return_images` (
+  `return_image_id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `upload_order` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `review_id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `order_item_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `rating` tinyint(1) UNSIGNED NOT NULL,
+  `review_text` text DEFAULT NULL,
+  `is_verified_purchase` tinyint(1) NOT NULL DEFAULT 1,
+  `helpful_count` int(11) NOT NULL DEFAULT 0,
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'approved',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`review_id`, `order_id`, `order_item_id`, `product_id`, `user_id`, `rating`, `review_text`, `is_verified_purchase`, `helpful_count`, `status`, `created_at`, `updated_at`) VALUES
+(2, 27, 43, 146, 14, 5, 'Amazing product! FitFuel is the best!!!', 1, 0, 'approved', '2025-10-29 07:37:50', '2025-10-29 07:37:50'),
+(3, 28, 44, 143, 14, 5, 'Nice gloves, very nice quality. Fast delivery.', 1, 0, 'approved', '2025-10-29 07:53:05', '2025-10-29 07:53:05'),
+(4, 28, 48, 149, 14, 5, 'Nice product, it works to me', 1, 0, 'approved', '2025-10-29 08:02:24', '2025-10-29 08:02:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review_images`
+--
+
+CREATE TABLE `review_images` (
+  `review_image_id` bigint(20) UNSIGNED NOT NULL,
+  `review_id` bigint(20) UNSIGNED NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `upload_order` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `review_images`
+--
+
+INSERT INTO `review_images` (`review_image_id`, `review_id`, `image_path`, `upload_order`, `created_at`) VALUES
+(3, 2, 'uploads/reviews/review_2_1_1761723470.webp', 1, '2025-10-29 07:37:50'),
+(4, 2, 'uploads/reviews/review_2_2_1761723470.webp', 2, '2025-10-29 07:37:50');
 
 -- --------------------------------------------------------
 
@@ -834,15 +969,15 @@ INSERT INTO `shipping_addresses` (`address_id`, `user_id`, `full_name`, `phone`,
 (4, 17, 'Michelle Angeles', '09084742498', '225 bulubok st.', NULL, NULL, NULL, NULL, '1860', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 1, '2025-09-23 16:51:18', '2025-09-27 17:27:47'),
 (5, 17, 'Michelle Angeles', '09123456789', 'Sample Street 123', NULL, NULL, 'Quezon City', 'National Capital Region', '1100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 0, '2025-09-24 09:11:17', '2025-09-27 17:27:47'),
 (6, 17, 'Michelle Angeles', '09123456789', 'Sample Street 123', 'Unit 2B', 'Landmark XYZ', 'Quezon City', 'National Capital Region', '1100', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Philippines', 0, '2025-09-24 09:20:07', '2025-09-26 20:58:17'),
-(11, 14, 'Karl Test', '09765700300', 'R. Testing St.', NULL, NULL, 'Angono', 'CALABARZON', '1940', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-24 17:33:45', '2025-09-24 17:35:33'),
-(12, 14, 'Emman Cutie', '09123456789', 'R. Tolentino', NULL, NULL, 'Angono', 'CALABARZON', '1940', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 1, '2025-09-24 17:35:30', '2025-09-24 17:44:03'),
-(13, 14, 'Karl Cutie', '09123456789', 'R. Tolentino St', NULL, NULL, 'Angono', 'CALABARZON', '1930', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-24 17:42:10', '2025-09-24 17:44:03'),
+(11, 14, 'Karl Testing', '09765700300', 'R. Testing St.', NULL, NULL, 'Angono', 'CALABARZON', '1940', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 1, '2025-09-24 17:33:45', '2025-10-29 07:27:05'),
 (14, 15, 'Karl Blockstock', '09765725123', 'R. Tolentino St. Brgy San Isidro', NULL, NULL, 'Angono', 'CALABARZON', '1930', '045801009', 'San Isidro', '045801000', 'Angono', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-09-25 03:53:20', '2025-09-25 03:53:20'),
 (15, 15, 'Emman Cutie', '09123456789', 'Testing St. Hahahaha', NULL, NULL, 'City of Legazpi', 'Bicol Region', '0122', '050506033', 'Bgy. 34 - Oro Site-Magallanes St. (Pob.)', '050506000', 'City of Legazpi', '050500000', 'Albay', '050000000', 'Bicol Region', 'Philippines', 0, '2025-09-25 03:55:37', '2025-09-25 03:57:01'),
 (16, 15, 'Nina Landicho', '09123456789', 'Testing St. Hehe', NULL, NULL, 'City of Manila', 'NCR', '1012', '133901106', 'Barangay 106', '133900000', 'City of Manila', '', 'Not applicable', '130000000', 'NCR', 'Philippines', 1, '2025-09-25 03:56:45', '2025-09-25 03:57:01'),
 (17, 20, 'Kenn Dacanay', '09765123456', 'Testing St.', NULL, NULL, 'San Mateo', 'CALABARZON', '1940', '045811001', 'Ampid I', '045811000', 'San Mateo', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 1, '2025-10-13 05:44:20', '2025-10-13 05:44:22'),
 (18, 20, '123', '123', '123', NULL, NULL, 'San Mateo', 'CALABARZON', '123', '045811001', 'Ampid I', '045811000', 'San Mateo', '045800000', 'Rizal', '040000000', 'CALABARZON', 'Philippines', 0, '2025-10-13 05:44:36', '2025-10-13 05:44:36'),
-(19, 20, '123', '123', '123', NULL, NULL, 'City of Vigan', 'Ilocos Region', '123', '012934001', 'Ayusan Norte', '012934000', 'City of Vigan', '012900000', 'Ilocos Sur', '010000000', 'Ilocos Region', 'Philippines', 0, '2025-10-13 05:44:44', '2025-10-13 05:44:44');
+(19, 20, '123', '123', '123', NULL, NULL, 'City of Vigan', 'Ilocos Region', '123', '012934001', 'Ayusan Norte', '012934000', 'City of Vigan', '012900000', 'Ilocos Sur', '010000000', 'Ilocos Region', 'Philippines', 0, '2025-10-13 05:44:44', '2025-10-13 05:44:44'),
+(20, 14, 'Emman Cutie', '09123456789', 'Testing Emman CutiePie XD', NULL, NULL, 'Camalig', 'Bicol Region', '2003', '050502009', 'Bongabong', '050502000', 'Camalig', '050500000', 'Albay', '050000000', 'Bicol Region', 'Philippines', 0, '2025-10-29 07:23:09', '2025-10-29 07:27:05'),
+(22, 14, 'Karl Cutie', '09765000555', 'Testing Karl', NULL, NULL, 'Infanta', 'CALABARZON', '1930', '045620004', 'Amolongin', '045620000', 'Infanta', '045600000', 'Quezon', '040000000', 'CALABARZON', 'Philippines', 0, '2025-10-29 07:29:46', '2025-10-29 07:29:46');
 
 -- --------------------------------------------------------
 
@@ -943,7 +1078,7 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `
 (11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-10-27 08:09:42', '2025-10-27 08:09:42', NULL, NULL, NULL, NULL, NULL),
 (12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL, NULL, NULL),
 (13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-10-02 10:03:25', '2025-10-02 10:03:25', NULL, NULL, NULL, NULL, NULL),
-(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-28 17:18:06', '2025-10-28 17:18:06', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
+(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-29 07:45:54', '2025-10-29 07:45:54', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
 (15, 'karlblockstock1', 'karlblockstock27@gmail.com', '09765725123', '2003-12-27', NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-10-05 13:59:13', '2025-10-05 13:59:13', 'Karl', 'Blockstock', 'uploads/profile/u15_1759665921_6906177e.jpg', '434570', '2025-10-05 16:04:13'),
 (16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL, NULL, NULL),
 (17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', NULL, '$2y$10$t2.GNMloV5cZ9NQIiQfAJ.KMMBrTNcr.3dxPl9WwOnJ5Aqi9BaNqG', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-24 09:02:09', '2025-09-24 08:47:32', 'Michelle', 'Angeles', 'uploads/profile/u17_1758702327_45104a57.jpg', NULL, NULL),
@@ -1189,6 +1324,41 @@ ALTER TABLE `promo_codes`
   ADD KEY `valid_until` (`valid_until`);
 
 --
+-- Indexes for table `returns`
+--
+ALTER TABLE `returns`
+  ADD PRIMARY KEY (`return_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `order_item_id` (`order_item_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `status` (`status`);
+
+--
+-- Indexes for table `return_images`
+--
+ALTER TABLE `return_images`
+  ADD PRIMARY KEY (`return_image_id`),
+  ADD KEY `return_id` (`return_id`);
+
+--
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`review_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `order_item_id` (`order_item_id`);
+
+--
+-- Indexes for table `review_images`
+--
+ALTER TABLE `review_images`
+  ADD PRIMARY KEY (`review_image_id`),
+  ADD KEY `review_id` (`review_id`);
+
+--
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
@@ -1272,7 +1442,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=292;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=300;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -1284,7 +1454,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
+  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1302,19 +1472,19 @@ ALTER TABLE `contents`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `order_promo_codes`
@@ -1347,16 +1517,40 @@ ALTER TABLE `promo_codes`
   MODIFY `promo_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `returns`
+--
+ALTER TABLE `returns`
+  MODIFY `return_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `return_images`
+--
+ALTER TABLE `return_images`
+  MODIFY `return_image_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `review_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `review_images`
+--
+ALTER TABLE `review_images`
+  MODIFY `review_image_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=764;
+  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=788;
 
 --
 -- AUTO_INCREMENT for table `shipping_addresses`
 --
 ALTER TABLE `shipping_addresses`
-  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `shipping_fees`
@@ -1456,6 +1650,34 @@ ALTER TABLE `products`
 --
 ALTER TABLE `product_images`
   ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `returns`
+--
+ALTER TABLE `returns`
+  ADD CONSTRAINT `fk_returns_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_returns_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_returns_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `return_images`
+--
+ALTER TABLE `return_images`
+  ADD CONSTRAINT `fk_return_images_return` FOREIGN KEY (`return_id`) REFERENCES `returns` (`return_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `fk_reviews_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_reviews_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_reviews_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `review_images`
+--
+ALTER TABLE `review_images`
+  ADD CONSTRAINT `fk_review_images_review` FOREIGN KEY (`review_id`) REFERENCES `reviews` (`review_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `shipping_addresses`
