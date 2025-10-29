@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Handle additional images upload
             $additional_images = [];
             if (isset($_FILES['additional_images'])) {
-                $upload_dir = '../uploads/products/';
+                $upload_dir = '../uploads/products/additional_images/';
                 if (!is_dir($upload_dir)) {
                     mkdir($upload_dir, 0777, true);
                 }
@@ -67,12 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         if (in_array($file_extension, $allowed_extensions)) {
                             $file_size = $_FILES['additional_images']['size'][$i];
-                            if ($file_size <= 2 * 1024 * 1024) { // 2MB limit
+                            if ($file_size <= 8 * 1024 * 1024) { // 8MB limit
                                 $file_name = uniqid() . '_' . time() . '_' . $i . '.' . $file_extension;
                                 $file_path = $upload_dir . $file_name;
                                 
                                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $file_path)) {
-                                    $additional_images[] = 'uploads/products/' . $file_name;
+                                    $additional_images[] = 'uploads/products/additional_images/' . $file_name;
                                     $uploaded_count++;
                                 }
                             }
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Handle additional images upload
             $new_additional_images = [];
             if (isset($_FILES['additional_images'])) {
-                $upload_dir = '../uploads/products/';
+                $upload_dir = '../uploads/products/additional_images/';
                 if (!is_dir($upload_dir)) {
                     mkdir($upload_dir, 0777, true);
                 }
@@ -164,12 +164,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         if (in_array($file_extension, $allowed_extensions)) {
                             $file_size = $_FILES['additional_images']['size'][$i];
-                            if ($file_size <= 2 * 1024 * 1024) { // 2MB limit
+                            if ($file_size <= 8 * 1024 * 1024) { // 8MB limit
                                 $file_name = uniqid() . '_' . time() . '_' . $i . '.' . $file_extension;
                                 $file_path = $upload_dir . $file_name;
                                 
                                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $file_path)) {
-                                    $new_additional_images[] = 'uploads/products/' . $file_name;
+                                    $new_additional_images[] = 'uploads/products/additional_images/' . $file_name;
                                     $uploaded_count++;
                                 }
                             }
@@ -568,10 +568,10 @@ if (isset($_GET['edit'])) {
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
-                                            <button onclick="editProduct(<?php echo $product['product_id']; ?>)" class="text-blue-600 hover:text-blue-900">
+                                            <button onclick="editProduct(<?php echo intval($product['product_id']); ?>)" class="text-blue-600 hover:text-blue-900" type="button">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button onclick="deleteProduct(<?php echo $product['product_id']; ?>, '<?php echo htmlspecialchars($product['name']); ?>')" class="text-red-600 hover:text-red-900">
+                                            <button data-product-id="<?php echo intval($product['product_id']); ?>" data-product-name="<?php echo htmlspecialchars($product['name'], ENT_QUOTES); ?>" class="delete-product-btn text-red-600 hover:text-red-900" type="button" style="cursor: pointer;">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -612,7 +612,7 @@ if (isset($_GET['edit'])) {
     </main>
 
     <!-- Add/Edit Product Modal -->
-    <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" onclick="if(event.target===this) closeModal()">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto">
                 <div class="p-6">
@@ -717,7 +717,7 @@ if (isset($_GET['edit'])) {
                                     <button type="button" onclick="document.getElementById('additionalImages').click()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors">
                                         <i class="fas fa-upload mr-2"></i>Choose Additional Images
                                     </button>
-                                    <p class="text-sm text-gray-500 mt-2">Upload up to 3 additional images (JPG, PNG, GIF, WebP) - Max 2MB each</p>
+                                    <p class="text-sm text-gray-500 mt-2">Upload up to 3 additional images (JPG, PNG, GIF, WebP) - Max 8MB each</p>
                                     <p class="text-xs text-gray-400 mt-1">Drag and drop files here or click to browse</p>
                                 </div>
                             </div>
@@ -738,7 +738,7 @@ if (isset($_GET['edit'])) {
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" onclick="if(event.target===this) closeDeleteModal()">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-lg max-w-md w-full">
                 <div class="p-6">
@@ -767,6 +767,95 @@ if (isset($_GET['edit'])) {
     </div>
 
     <script>
+        // Define deleteProduct function
+        function deleteProduct(productId, productName) {
+            try {
+                const deleteProductId = document.getElementById('deleteProductId');
+                const deleteProductName = document.getElementById('deleteProductName');
+                const deleteModal = document.getElementById('deleteModal');
+                
+                if (!deleteProductId || !deleteProductName || !deleteModal) {
+                    setTimeout(function() {
+                        deleteProduct(productId, productName);
+                    }, 100);
+                    return;
+                }
+                
+                deleteProductId.value = productId || '';
+                deleteProductName.textContent = productName || 'this product';
+                
+                // Remove hidden class and force visibility
+                deleteModal.classList.remove('hidden');
+                
+                // Force display with proper flexbox for centering
+                // The modal container should be flex to center its children
+                deleteModal.style.setProperty('display', 'flex', 'important');
+                deleteModal.style.setProperty('align-items', 'center', 'important');
+                deleteModal.style.setProperty('justify-content', 'center', 'important');
+                deleteModal.style.setProperty('visibility', 'visible', 'important');
+                deleteModal.style.setProperty('opacity', '1', 'important');
+                deleteModal.style.setProperty('z-index', '50', 'important');
+                deleteModal.style.setProperty('position', 'fixed', 'important');
+                deleteModal.style.setProperty('top', '0', 'important');
+                deleteModal.style.setProperty('left', '0', 'important');
+                deleteModal.style.setProperty('right', '0', 'important');
+                deleteModal.style.setProperty('bottom', '0', 'important');
+            } catch (error) {
+                console.error('Error in deleteProduct:', error);
+                alert('Error opening delete confirmation: ' + (error.message || 'Unknown error'));
+            }
+        }
+        
+        // Make it globally accessible
+        window.deleteProduct = deleteProduct;
+        
+        // Attach event listeners for delete buttons using event delegation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Use event delegation - catches clicks on button OR icon inside
+            document.addEventListener('click', function(e) {
+                // Check if clicked element is delete button or icon inside delete button
+                let deleteBtn = e.target.closest('.delete-product-btn');
+                
+                // If clicked on icon, find parent button
+                if (!deleteBtn && e.target.closest('i.fa-trash')) {
+                    deleteBtn = e.target.closest('i.fa-trash').closest('.delete-product-btn');
+                    if (!deleteBtn) {
+                        // Try finding button by going up the DOM
+                        let parent = e.target.parentElement;
+                        while (parent && !deleteBtn) {
+                            if (parent.classList && parent.classList.contains('delete-product-btn')) {
+                                deleteBtn = parent;
+                            }
+                            parent = parent.parentElement;
+                        }
+                    }
+                }
+                
+                if (deleteBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const productId = deleteBtn.getAttribute('data-product-id');
+                    const productName = deleteBtn.getAttribute('data-product-name');
+                    if (productId) {
+                        deleteProduct(parseInt(productId), productName || 'this product');
+                    }
+                }
+            });
+        });
+        
+        // Ensure functions are available globally
+        window.editProduct = function(productId) {
+            try {
+                if (productId) {
+                    window.location.href = '?edit=' + encodeURIComponent(productId);
+                }
+            } catch (error) {
+                console.error('Error in editProduct:', error);
+                alert('Error opening edit mode. Please try again.');
+            }
+        };
+        
+        
         const subcategories = <?php echo json_encode($subcategories); ?>;
         
         function openAddModal() {
@@ -814,29 +903,38 @@ if (isset($_GET['edit'])) {
             const preview = document.getElementById('additionalImagesPreview');
             const files = Array.from(input.files);
             
-            // Limit to 3 images
-            if (additionalImages.length + files.length > 3) {
+            // Check total count including existing
+            const currentCount = additionalImages.length;
+            if (currentCount + files.length > 3) {
                 alert('Maximum 3 additional images allowed');
+                input.value = ''; // Clear the input
                 return;
             }
             
             files.forEach((file, index) => {
-                if (file.size > 2 * 1024 * 1024) {
-                    alert(`File ${file.name} is too large. Maximum size is 2MB.`);
+                if (file.size > 8 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Maximum size is 8MB.`);
                     return;
                 }
                 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageId = 'temp_' + Date.now() + '_' + index;
-                    additionalImages.push({
-                        id: imageId,
-                        file: file,
-                        preview: e.target.result
-                    });
-                    updateAdditionalImagesPreview();
-                };
-                reader.readAsDataURL(file);
+                // Check if file already exists to avoid duplicates
+                const fileExists = additionalImages.some(img => 
+                    img.file.name === file.name && img.file.size === file.size
+                );
+                
+                if (!fileExists) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageId = 'temp_' + Date.now() + '_' + index;
+                        additionalImages.push({
+                            id: imageId,
+                            file: file,
+                            preview: e.target.result
+                        });
+                        updateAdditionalImagesPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
         }
         
@@ -862,16 +960,23 @@ if (isset($_GET['edit'])) {
             updateAdditionalImagesPreview();
         }
         
-        function removeExistingAdditionalImage(imageId, imagePath) {
-            deletedImageIds.push(imageId);
-            document.getElementById('deletedImages').value = JSON.stringify(deletedImageIds);
-            
-            // Remove from DOM
-            const element = document.getElementById('existing-img-' + imageId);
-            if (element) {
-                element.remove();
+        window.removeExistingAdditionalImage = function(imageId, imagePath) {
+            try {
+                deletedImageIds.push(imageId);
+                const deletedInput = document.getElementById('deletedImages');
+                if (deletedInput) {
+                    deletedInput.value = JSON.stringify(deletedImageIds);
+                }
+                
+                // Remove from DOM
+                const element = document.getElementById('existing-img-' + imageId);
+                if (element) {
+                    element.remove();
+                }
+            } catch (error) {
+                console.error('Error removing existing additional image:', error);
             }
-        }
+        };
         
         // Drag and Drop Functions
         function handleDragOver(e) {
@@ -901,36 +1006,32 @@ if (isset($_GET['edit'])) {
             }
             
             files.forEach((file, index) => {
-                if (file.size > 2 * 1024 * 1024) {
-                    alert(`File ${file.name} is too large. Maximum size is 2MB.`);
+                if (file.size > 8 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Maximum size is 8MB.`);
                     return;
                 }
                 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageId = 'temp_' + Date.now() + '_' + index;
-                    additionalImages.push({
-                        id: imageId,
-                        file: file,
-                        preview: e.target.result
-                    });
-                    updateAdditionalImagesPreview();
-                };
-                reader.readAsDataURL(file);
+                // Check if file already exists to avoid duplicates
+                const fileExists = additionalImages.some(img => 
+                    img.file.name === file.name && img.file.size === file.size
+                );
+                
+                if (!fileExists) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageId = 'temp_' + Date.now() + '_' + index;
+                        additionalImages.push({
+                            id: imageId,
+                            file: file,
+                            preview: e.target.result
+                        });
+                        updateAdditionalImagesPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
         }
         
-        function editProduct(productId) {
-            // This would typically fetch product data via AJAX
-            // For now, redirect to edit mode
-            window.location.href = `?edit=${productId}`;
-        }
-        
-        function deleteProduct(productId, productName) {
-            document.getElementById('deleteProductId').value = productId;
-            document.getElementById('deleteProductName').textContent = productName;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
         
         function closeModal() {
             document.getElementById('productModal').classList.add('hidden');
@@ -960,9 +1061,23 @@ if (isset($_GET['edit'])) {
             }
         }
         
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-        }
+        window.closeDeleteModal = function() {
+            try {
+                const deleteModal = document.getElementById('deleteModal');
+                if (deleteModal) {
+                    deleteModal.classList.add('hidden');
+                    // Also reset inline styles
+                    deleteModal.style.removeProperty('display');
+                    deleteModal.style.removeProperty('visibility');
+                    deleteModal.style.removeProperty('opacity');
+                }
+            } catch (error) {
+                console.error('Error closing delete modal:', error);
+            }
+        };
+        
+        // Also make it globally accessible
+        closeDeleteModal = window.closeDeleteModal;
         
         function updateSubcategories() {
             const categoryId = document.getElementById('productCategory').value;
@@ -1025,15 +1140,15 @@ if (isset($_GET['edit'])) {
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('modalTitle').textContent = 'Edit Product';
                 document.getElementById('formAction').value = 'edit';
-                document.getElementById('productId').value = <?php echo $edit_product['product_id']; ?>;
-                document.getElementById('productName').value = '<?php echo htmlspecialchars($edit_product['name']); ?>';
-                document.getElementById('productDescription').value = '<?php echo htmlspecialchars($edit_product['description']); ?>';
-                document.getElementById('productPrice').value = <?php echo $edit_product['price']; ?>;
-                document.getElementById('stockValue').textContent = <?php echo $edit_product['stock']; ?>;
-                document.getElementById('productStock').value = <?php echo $edit_product['stock']; ?>;
-                document.getElementById('productCategory').value = <?php echo $edit_product['category_id'] ?? '""'; ?>;
-                document.getElementById('productStatus').value = '<?php echo $edit_product['status']; ?>';
-                document.getElementById('productSalePercentage').value = <?php echo $edit_product['sale_percentage'] ?? 0; ?>;
+                document.getElementById('productId').value = <?php echo intval($edit_product['product_id']); ?>;
+                document.getElementById('productName').value = <?php echo json_encode($edit_product['name']); ?>;
+                document.getElementById('productDescription').value = <?php echo json_encode($edit_product['description'] ?? ''); ?>;
+                document.getElementById('productPrice').value = <?php echo floatval($edit_product['price']); ?>;
+                document.getElementById('stockValue').textContent = <?php echo intval($edit_product['stock']); ?>;
+                document.getElementById('productStock').value = <?php echo intval($edit_product['stock']); ?>;
+                document.getElementById('productCategory').value = <?php echo json_encode($edit_product['category_id'] ?? ''); ?>;
+                document.getElementById('productStatus').value = <?php echo json_encode($edit_product['status']); ?>;
+                document.getElementById('productSalePercentage').value = <?php echo intval($edit_product['sale_percentage'] ?? 0); ?>;
                 
                 // Calculate sale price for editing
                 calculateSalePrice();
@@ -1043,15 +1158,22 @@ if (isset($_GET['edit'])) {
                 $existing_images = json_decode($edit_product['images'] ?: '[]', true);
                 if (!empty($existing_images)): 
                 ?>
-                    const preview = document.getElementById('imagePreview');
-                    preview.innerHTML = `
-                        <div class="relative inline-block">
-                            <img src="../<?php echo htmlspecialchars($existing_images[0]); ?>" class="w-32 h-32 object-cover rounded-lg">
-                            <span class="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-                                <i class="fas fa-check"></i>
-                            </span>
-                        </div>
-                    `;
+                    (function() {
+                        const preview = document.getElementById('imagePreview');
+                        const imgPath = <?php echo json_encode($existing_images[0], JSON_HEX_QUOT | JSON_HEX_APOS); ?>;
+                        const img = document.createElement('img');
+                        img.src = '../' + imgPath;
+                        img.className = 'w-32 h-32 object-cover rounded-lg';
+                        const span = document.createElement('span');
+                        span.className = 'absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs';
+                        span.innerHTML = '<i class="fas fa-check"></i>';
+                        const div = document.createElement('div');
+                        div.className = 'relative inline-block';
+                        div.appendChild(img);
+                        div.appendChild(span);
+                        preview.innerHTML = '';
+                        preview.appendChild(div);
+                    })();
                 <?php endif; ?>
                 
                 // Display existing additional images
@@ -1059,39 +1181,86 @@ if (isset($_GET['edit'])) {
                     const additionalPreview = document.getElementById('additionalImagesPreview');
                     additionalPreview.innerHTML = '';
                     <?php foreach ($edit_additional_images as $img): ?>
-                        const imgDiv = document.createElement('div');
-                        imgDiv.id = 'existing-img-<?php echo $img['id']; ?>';
-                        imgDiv.className = 'relative';
-                        imgDiv.innerHTML = `
-                            <img src="../<?php echo htmlspecialchars($img['image_path']); ?>" class="w-full h-24 object-cover rounded-lg border">
-                            <button type="button" onclick="removeExistingAdditionalImage(<?php echo $img['id']; ?>, '<?php echo htmlspecialchars($img['image_path']); ?>')" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        `;
-                        additionalPreview.appendChild(imgDiv);
+                        (function() {
+                            const imgDiv = document.createElement('div');
+                            imgDiv.id = 'existing-img-<?php echo intval($img['id']); ?>';
+                            imgDiv.className = 'relative';
+                            const imgPath = <?php echo json_encode($img['image_path'], JSON_HEX_QUOT | JSON_HEX_APOS); ?>;
+                            const imgId = <?php echo intval($img['id']); ?>;
+                            
+                            const img = document.createElement('img');
+                            img.src = '../' + imgPath;
+                            img.className = 'w-full h-24 object-cover rounded-lg border';
+                            
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600';
+                            btn.innerHTML = '<i class="fas fa-times"></i>';
+                            btn.onclick = function() {
+                                window.removeExistingAdditionalImage(imgId, imgPath);
+                            };
+                            
+                            imgDiv.appendChild(img);
+                            imgDiv.appendChild(btn);
+                            additionalPreview.appendChild(imgDiv);
+                        })();
                     <?php endforeach; ?>
                 <?php endif; ?>
                 
                 updateSubcategories();
-                document.getElementById('productSubcategory').value = <?php echo $edit_product['subcategory_id'] ?? '""'; ?>;
+                document.getElementById('productSubcategory').value = <?php echo json_encode($edit_product['subcategory_id'] ?? ''); ?>;
                 
                 document.getElementById('productModal').classList.remove('hidden');
             });
         <?php endif; ?>
         
         // Form submission handler for additional images
-        document.getElementById('productForm').addEventListener('submit', function(e) {
-            // Create a FormData object to handle file uploads
-            const formData = new FormData(this);
-            
-            // Add additional images to form data
-            additionalImages.forEach((img, index) => {
-                formData.append('additional_images[]', img.file);
-            });
-            
-            // Remove the original file input to avoid conflicts
-            const originalInput = document.getElementById('additionalImages');
-            originalInput.remove();
+        document.addEventListener('DOMContentLoaded', function() {
+            const productForm = document.getElementById('productForm');
+            if (productForm) {
+                productForm.addEventListener('submit', function(e) {
+                    try {
+                        // Restore files to the file input before submission
+                        const originalInput = document.getElementById('additionalImages');
+                        
+                        if (originalInput && additionalImages && additionalImages.length > 0) {
+                            // Create a new FileList using DataTransfer
+                            if (typeof DataTransfer !== 'undefined') {
+                                try {
+                                    const dataTransfer = new DataTransfer();
+                                    
+                                    additionalImages.forEach((img) => {
+                                        if (img && img.file) {
+                                            dataTransfer.items.add(img.file);
+                                        }
+                                    });
+                                    
+                                    // Assign the files to the input
+                                    originalInput.files = dataTransfer.files;
+                                } catch (transferError) {
+                                    console.warn('DataTransfer not supported, trying alternative method:', transferError);
+                                    // If DataTransfer fails, files might already be in the input from initial selection
+                                    // The form will submit with whatever is in the input
+                                }
+                            }
+                        }
+                        
+                        // Ensure modal closes after successful submission
+                        setTimeout(function() {
+                            const modal = document.getElementById('productModal');
+                            if (modal) {
+                                modal.classList.add('hidden');
+                            }
+                        }, 100);
+                        
+                    } catch (error) {
+                        console.error('Error handling additional images:', error);
+                        // Allow form to submit even if there's an error
+                    }
+                    
+                    // Form will submit normally with files included
+                });
+            }
         });
     </script>
 </body>

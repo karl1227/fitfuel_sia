@@ -420,6 +420,64 @@ if (!empty($_SESSION['user_id'])) {
                     <?php endif; ?>
                 </div>
             </div>
+            
+            <!-- You may also like Section -->
+            <?php
+            // Get related products (same category, excluding current product)
+            try {
+                $related_stmt = $pdo->prepare("
+                    SELECT p.*, c.name AS category_name, sc.name AS subcategory_name
+                    FROM products p
+                    LEFT JOIN categories c ON p.category_id = c.category_id
+                    LEFT JOIN subcategories sc ON p.subcategory_id = sc.subcategory_id
+                    WHERE p.category_id = ? 
+                    AND p.product_id != ? 
+                    AND p.status = 'active'
+                    ORDER BY RAND()
+                    LIMIT 3
+                ");
+                $related_stmt->execute([$product['category_id'], $product_id]);
+                $related_products = $related_stmt->fetchAll();
+            } catch (PDOException $e) {
+                $related_products = [];
+            }
+            ?>
+            
+            <?php if (!empty($related_products)): ?>
+            <div class="mt-16">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">You may also like</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <?php foreach ($related_products as $related): 
+                        $related_images = json_decode($related['images'] ?? '[]', true);
+                        $related_image_url = (!empty($related_images) && is_array($related_images)) ? $related_images[0] : 'img/placeholder.svg';
+                    ?>
+                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                            <a href="product_detail.php?id=<?php echo $related['product_id']; ?>">
+                                <img src="<?php echo htmlspecialchars($related_image_url); ?>" 
+                                     alt="<?php echo htmlspecialchars($related['name']); ?>" 
+                                     class="w-full h-64 object-cover">
+                            </a>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg text-gray-900 mb-1">
+                                    <a href="product_detail.php?id=<?php echo $related['product_id']; ?>" class="hover:text-blue-600 transition-colors">
+                                        <?php echo htmlspecialchars($related['name']); ?>
+                                    </a>
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    <?php echo htmlspecialchars($related['category_name']); ?>
+                                    <?php if ($related['subcategory_name']): ?>
+                                        / <?php echo htmlspecialchars($related['subcategory_name']); ?>
+                                    <?php endif; ?>
+                                </p>
+                                <p class="text-lg font-bold text-gray-900">
+                                    <?php echo formatCurrency($related['price']); ?>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </main>
 

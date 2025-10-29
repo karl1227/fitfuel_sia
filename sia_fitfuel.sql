@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2025 at 09:17 AM
+-- Generation Time: Oct 29, 2025 at 06:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -350,7 +350,110 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (296, 14, 'karlblockstock', 'order_create', 'orders', 'New order created', NULL, '{\"user_id\":14,\"payment_method\":\"paypal\",\"total_amount\":1600,\"custom_order_id\":\"FF-20251029-FSZQM\",\"items_count\":1}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 29, 'order', 'medium', 'success', '2025-10-29 07:43:32'),
 (297, 14, 'karlblockstock', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"karlblockstock\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-29 07:45:54'),
 (298, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 08:04:30'),
-(299, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 08:13:00');
+(299, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 08:13:00'),
+(300, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-10-29 15:45:55'),
+(301, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 15:46:01'),
+(302, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 10 (Stock increase)', '{\"stock\":0}', '{\"stock\":10}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 185, 'product', 'medium', 'success', '2025-10-29 15:50:40'),
+(303, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 10 (Stock increase)', '{\"stock\":0}', '{\"stock\":10}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 165, 'product', 'medium', 'success', '2025-10-29 15:50:47'),
+(304, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 15 (Stock increase)', '{\"stock\":0}', '{\"stock\":15}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 179, 'product', 'medium', 'success', '2025-10-29 15:50:54'),
+(305, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 15 (Stock increase)', '{\"stock\":0}', '{\"stock\":15}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 181, 'product', 'medium', 'success', '2025-10-29 15:51:00'),
+(306, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 30 (Stock increase)', '{\"stock\":0}', '{\"stock\":30}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 173, 'product', 'medium', 'success', '2025-10-29 15:51:05'),
+(307, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 15 (Stock increase)', '{\"stock\":0}', '{\"stock\":15}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 168, 'product', 'medium', 'success', '2025-10-29 15:51:10'),
+(308, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 35 (Stock increase)', '{\"stock\":0}', '{\"stock\":35}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 163, 'product', 'medium', 'success', '2025-10-29 15:51:14'),
+(309, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 35 (Stock increase)', '{\"stock\":0}', '{\"stock\":35}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 176, 'product', 'medium', 'success', '2025-10-29 15:51:23'),
+(310, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 20 (Stock increase)', '{\"stock\":0}', '{\"stock\":20}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 166, 'product', 'medium', 'success', '2025-10-29 15:51:27'),
+(311, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 20 (Stock increase)', '{\"stock\":0}', '{\"stock\":20}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 169, 'product', 'medium', 'success', '2025-10-29 15:51:31'),
+(312, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 20 (Stock increase)', '{\"stock\":0}', '{\"stock\":20}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 187, 'product', 'medium', 'success', '2025-10-29 15:51:37'),
+(313, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 20 (Stock increase)', '{\"stock\":0}', '{\"stock\":20}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 170, 'product', 'medium', 'success', '2025-10-29 15:51:45'),
+(314, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 20 (Stock increase)', '{\"stock\":0}', '{\"stock\":20}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 164, 'product', 'medium', 'success', '2025-10-29 15:51:53'),
+(315, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 30 (Stock increase)', '{\"stock\":0}', '{\"stock\":30}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 172, 'product', 'medium', 'success', '2025-10-29 15:51:57'),
+(316, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 30 (Stock increase)', '{\"stock\":0}', '{\"stock\":30}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 171, 'product', 'medium', 'success', '2025-10-29 15:52:01'),
+(317, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 99 → 100 (Stock increase)', '{\"stock\":99}', '{\"stock\":100}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 147, 'product', 'medium', 'success', '2025-10-29 15:52:12'),
+(318, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 40 (Stock decrease)', '{\"stock\":100}', '{\"stock\":40}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 161, 'product', 'medium', 'success', '2025-10-29 15:52:21'),
+(319, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 50 (Stock decrease)', '{\"stock\":100}', '{\"stock\":50}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 153, 'product', 'medium', 'success', '2025-10-29 15:52:26'),
+(320, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 50 (Stock decrease)', '{\"stock\":100}', '{\"stock\":50}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 162, 'product', 'medium', 'success', '2025-10-29 15:52:30'),
+(321, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 50 (Stock decrease)', '{\"stock\":100}', '{\"stock\":50}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 148, 'product', 'medium', 'success', '2025-10-29 15:52:34'),
+(322, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 80 (Stock decrease)', '{\"stock\":100}', '{\"stock\":80}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 155, 'product', 'medium', 'success', '2025-10-29 15:52:41'),
+(323, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 50 (Stock decrease)', '{\"stock\":100}', '{\"stock\":50}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 158, 'product', 'medium', 'success', '2025-10-29 15:52:50'),
+(324, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 100 → 75 (Stock decrease)', '{\"stock\":100}', '{\"stock\":75}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 147, 'product', 'medium', 'success', '2025-10-29 15:52:54'),
+(325, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":160}', '{\"product_id\":160,\"name\":\"Olympic Barbell\",\"price\":2200,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 160, 'product', 'medium', 'success', '2025-10-29 15:53:32'),
+(326, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 30 (Stock increase)', '{\"stock\":0}', '{\"stock\":30}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 180, 'product', 'medium', 'success', '2025-10-29 15:53:56'),
+(327, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 30 (Stock increase)', '{\"stock\":0}', '{\"stock\":30}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 184, 'product', 'medium', 'success', '2025-10-29 15:53:59'),
+(328, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 15 (Stock increase)', '{\"stock\":0}', '{\"stock\":15}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 175, 'product', 'medium', 'success', '2025-10-29 15:54:04'),
+(329, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 40 (Stock increase)', '{\"stock\":0}', '{\"stock\":40}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 183, 'product', 'medium', 'success', '2025-10-29 15:54:09'),
+(330, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 80 (Stock increase)', '{\"stock\":0}', '{\"stock\":80}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 186, 'product', 'medium', 'success', '2025-10-29 15:54:15'),
+(331, 4, 'admin', 'inventory_adjustment', 'inventory', 'Inventory adjusted: 0 → 10 (Stock increase)', '{\"stock\":0}', '{\"stock\":10}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 177, 'product', 'medium', 'success', '2025-10-29 15:54:22'),
+(332, 4, 'admin', 'user_update', 'users', 'User information updated', '{\"username\":\"emmanthemanager\",\"email\":\"emmanadmin@gmail.com\",\"status\":\"active\",\"role\":\"manager\"}', '{\"username\":\"emmanthemanager\",\"email\":\"emmanadmin@gmail.com\",\"status\":\"active\",\"role\":\"manager\",\"password_changed\":true}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 9, 'user', 'medium', 'success', '2025-10-29 15:55:15'),
+(333, 4, 'admin', 'user_update', 'users', 'User information updated', '{\"username\":\"karltheinventorystaff\",\"email\":\"karladmin@gmail.com\",\"status\":\"active\",\"role\":\"staff\"}', '{\"username\":\"karltheinventorystaff\",\"email\":\"karladmin@gmail.com\",\"status\":\"active\",\"role\":\"staff\",\"password_changed\":true}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 21, 'user', 'medium', 'success', '2025-10-29 15:55:19'),
+(334, 4, 'admin', 'user_update', 'users', 'User information updated', '{\"username\":\"ninatheadmin\",\"email\":\"ninaadmin@gmail.com\",\"status\":\"active\",\"role\":\"admin\"}', '{\"username\":\"ninatheadmin\",\"email\":\"ninaadmin@gmail.com\",\"status\":\"active\",\"role\":\"admin\",\"password_changed\":true}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 23, 'user', 'medium', 'success', '2025-10-29 15:55:24'),
+(335, 4, 'admin', 'user_update', 'users', 'User information updated', '{\"username\":\"michtheadmin\",\"email\":\"michadmin@gmail.com\",\"status\":\"active\",\"role\":\"admin\"}', '{\"username\":\"michtheadmin\",\"email\":\"michadmin@gmail.com\",\"status\":\"active\",\"role\":\"admin\",\"password_changed\":true}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 25, 'user', 'medium', 'success', '2025-10-29 15:55:28'),
+(336, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-29 15:55:32'),
+(337, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":143}', '{\"product_id\":143,\"name\":\"Weightlifting Gloves\",\"price\":990,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-10-29 16:03:26'),
+(338, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":143}', '{\"product_id\":143,\"name\":\"Weightlifting Gloves\",\"price\":990,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-10-29 16:03:31'),
+(339, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 16:03:37'),
+(340, 14, 'karlblockstock', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"karlblockstock\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-29 16:04:23'),
+(341, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 16:07:41'),
+(342, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":143}', '{\"product_id\":143,\"name\":\"Weightlifting Gloves\",\"price\":990,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-10-29 16:08:36'),
+(343, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":143}', '{\"product_id\":143,\"name\":\"Weightlifting Gloves\",\"price\":990,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":1}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-10-29 16:20:20'),
+(344, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":143}', '{\"product_id\":143,\"name\":\"Weightlifting Gloves\",\"price\":990,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":2}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-10-29 16:31:10'),
+(345, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":143}', '{\"product_id\":143,\"name\":\"Weightlifting Gloves\",\"price\":990,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 143, 'product', 'medium', 'success', '2025-10-29 16:31:44'),
+(346, 4, 'admin', 'product_create', 'products', 'Product added successfully', NULL, '{\"product_id\":\"189\",\"name\":\"Cj Product\",\"price\":10000,\"category_id\":1,\"status\":\"inactive\",\"additional_images_count\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 189, 'product', 'medium', 'success', '2025-10-29 16:38:24'),
+(347, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":189}', '{\"product_id\":189,\"name\":\"Cj Product\",\"price\":10000,\"status\":\"inactive\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 189, 'product', 'medium', 'success', '2025-10-29 16:40:53'),
+(348, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":189}', '{\"product_id\":189,\"name\":\"Cj Product\",\"price\":10000,\"status\":\"inactive\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 189, 'product', 'medium', 'success', '2025-10-29 16:40:57'),
+(349, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":189}', '{\"product_id\":189,\"name\":\"Cj Product\",\"price\":19000,\"status\":\"inactive\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 189, 'product', 'medium', 'success', '2025-10-29 16:41:02'),
+(350, 4, 'admin', 'product_delete', 'products', 'Product deleted successfully', '{\"product_id\":189}', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 189, 'product', 'high', 'success', '2025-10-29 16:48:59'),
+(351, 4, 'admin', 'product_create', 'products', 'Product added successfully', NULL, '{\"product_id\":\"190\",\"name\":\"Testing\",\"price\":1220,\"category_id\":3,\"status\":\"inactive\",\"additional_images_count\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 190, 'product', 'medium', 'success', '2025-10-29 16:50:42'),
+(352, 4, 'admin', 'product_delete', 'products', 'Product deleted successfully', '{\"product_id\":190}', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 190, 'product', 'high', 'success', '2025-10-29 16:52:17'),
+(353, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":146}', '{\"product_id\":146,\"name\":\"Chalk Ball\",\"price\":190,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 146, 'product', 'medium', 'success', '2025-10-29 17:05:57'),
+(354, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":146}', '{\"product_id\":146,\"name\":\"Chalk Ball\",\"price\":190,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":3}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 146, 'product', 'medium', 'success', '2025-10-29 17:06:04'),
+(355, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":146}', '{\"product_id\":146,\"name\":\"Chalk Ball\",\"price\":190,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 146, 'product', 'medium', 'success', '2025-10-29 17:06:19'),
+(356, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":147}', '{\"product_id\":147,\"name\":\"Barbell Pads\",\"price\":750,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 147, 'product', 'medium', 'success', '2025-10-29 17:07:03'),
+(357, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":145}', '{\"product_id\":145,\"name\":\"Weightlifting Belt\",\"price\":1200,\"status\":\"active\",\"additional_images_added\":2,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 145, 'product', 'medium', 'success', '2025-10-29 17:07:43'),
+(358, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":144}', '{\"product_id\":144,\"name\":\"Wrist Straps\",\"price\":650,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 144, 'product', 'medium', 'success', '2025-10-29 17:08:37'),
+(359, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":144}', '{\"product_id\":144,\"name\":\"Wrist Straps\",\"price\":650,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 144, 'product', 'medium', 'success', '2025-10-29 17:10:43'),
+(360, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":152}', '{\"product_id\":152,\"name\":\"Resistance Band\",\"price\":300,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 152, 'product', 'medium', 'success', '2025-10-29 17:11:12'),
+(361, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":150}', '{\"product_id\":150,\"name\":\"Compression Sleeves\",\"price\":700,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 150, 'product', 'medium', 'success', '2025-10-29 17:11:45'),
+(362, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":149}', '{\"product_id\":149,\"name\":\"Gel Pack\",\"price\":450,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 149, 'product', 'medium', 'success', '2025-10-29 17:12:09'),
+(363, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":148}', '{\"product_id\":148,\"name\":\"Massage Gun\",\"price\":3500,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 148, 'product', 'medium', 'success', '2025-10-29 17:12:43'),
+(364, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":149}', '{\"product_id\":149,\"name\":\"Gel Pack\",\"price\":450,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":2}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 149, 'product', 'medium', 'success', '2025-10-29 17:14:18'),
+(365, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":156}', '{\"product_id\":156,\"name\":\"Cooling Towel\",\"price\":450,\"status\":\"active\",\"additional_images_added\":2,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 156, 'product', 'medium', 'success', '2025-10-29 17:14:44'),
+(366, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":154}', '{\"product_id\":154,\"name\":\"Duffle Bag\",\"price\":1500,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 154, 'product', 'medium', 'success', '2025-10-29 17:15:07'),
+(367, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":157}', '{\"product_id\":157,\"name\":\"Electrolyte Tablets\",\"price\":300,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 157, 'product', 'medium', 'success', '2025-10-29 17:15:51'),
+(368, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":155}', '{\"product_id\":155,\"name\":\"Meal Prep Box\",\"price\":800,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 155, 'product', 'medium', 'success', '2025-10-29 17:16:23'),
+(369, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":153}', '{\"product_id\":153,\"name\":\"Shaker Bottle\",\"price\":350,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 153, 'product', 'medium', 'success', '2025-10-29 17:16:48'),
+(370, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":160}', '{\"product_id\":160,\"name\":\"Olympic Barbell\",\"price\":2200,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 160, 'product', 'medium', 'success', '2025-10-29 17:17:39'),
+(371, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":158}', '{\"product_id\":158,\"name\":\"Dumbbell Set\",\"price\":14995,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 158, 'product', 'medium', 'success', '2025-10-29 17:18:41'),
+(372, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":159}', '{\"product_id\":159,\"name\":\"Kettlebell\",\"price\":1750,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 159, 'product', 'medium', 'success', '2025-10-29 17:19:27'),
+(373, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":162}', '{\"product_id\":162,\"name\":\"Medicine Ball\",\"price\":1200,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 162, 'product', 'medium', 'success', '2025-10-29 17:19:59');
+INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `module`, `description`, `old_values`, `new_values`, `ip_address`, `user_agent`, `reference_id`, `reference_type`, `severity`, `status`, `created_at`) VALUES
+(374, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":161}', '{\"product_id\":161,\"name\":\"Weight Plates\",\"price\":2800,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 161, 'product', 'medium', 'success', '2025-10-29 17:21:43'),
+(375, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":165}', '{\"product_id\":165,\"name\":\"Dip Belts\",\"price\":1500,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 165, 'product', 'medium', 'success', '2025-10-29 17:22:17'),
+(376, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":167}', '{\"product_id\":167,\"name\":\"Gymnastic Rings\",\"price\":1800,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 167, 'product', 'medium', 'success', '2025-10-29 17:23:03'),
+(377, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":163}', '{\"product_id\":163,\"name\":\"Jump Rope\",\"price\":400,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 163, 'product', 'medium', 'success', '2025-10-29 17:23:37'),
+(378, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":166}', '{\"product_id\":166,\"name\":\"Lockable Pull-up Bar\",\"price\":2500,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 166, 'product', 'medium', 'success', '2025-10-29 17:24:06'),
+(379, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":164}', '{\"product_id\":164,\"name\":\"Parallette Bars\",\"price\":2200,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 164, 'product', 'medium', 'success', '2025-10-29 17:24:47'),
+(380, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":168}', '{\"product_id\":168,\"name\":\"Foam Roller\",\"price\":900,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 168, 'product', 'medium', 'success', '2025-10-29 17:25:29'),
+(381, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":169}', '{\"product_id\":169,\"name\":\"Massage Stick\",\"price\":600,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 169, 'product', 'medium', 'success', '2025-10-29 17:25:55'),
+(382, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":170}', '{\"product_id\":170,\"name\":\"Mobility Ball\",\"price\":300,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 170, 'product', 'medium', 'success', '2025-10-29 17:26:46'),
+(383, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":171}', '{\"product_id\":171,\"name\":\"Yoga Strap\",\"price\":400,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 171, 'product', 'medium', 'success', '2025-10-29 17:27:22'),
+(384, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":172}', '{\"product_id\":172,\"name\":\"Yoga Mat\",\"price\":1200,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 172, 'product', 'medium', 'success', '2025-10-29 17:28:10'),
+(385, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":173}', '{\"product_id\":173,\"name\":\"FitFuel Whey Protein\",\"price\":2750,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 173, 'product', 'medium', 'success', '2025-10-29 17:28:51'),
+(386, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":174}', '{\"product_id\":174,\"name\":\"FitFuel Nitro Tech Whey Protein\",\"price\":2850,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 174, 'product', 'medium', 'success', '2025-10-29 17:29:28'),
+(387, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":175}', '{\"product_id\":175,\"name\":\"FitFuel Gold Standard Whey Protein\",\"price\":2950,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 175, 'product', 'medium', 'success', '2025-10-29 17:30:15'),
+(388, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":176}', '{\"product_id\":176,\"name\":\"FitFuel Whey Blend\",\"price\":1550,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 176, 'product', 'medium', 'success', '2025-10-29 17:30:55'),
+(389, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":177}', '{\"product_id\":177,\"name\":\"FitFuel Elite 100% Whey Protein\",\"price\":3190,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 177, 'product', 'medium', 'success', '2025-10-29 17:31:58'),
+(390, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":178}', '{\"product_id\":178,\"name\":\"FitFuel VAPORX5 Muscle Tech\",\"price\":1250,\"status\":\"active\",\"additional_images_added\":2,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 178, 'product', 'medium', 'success', '2025-10-29 17:32:45'),
+(391, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":179}', '{\"product_id\":179,\"name\":\"FitFuel Cellucor C4\",\"price\":1550,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 179, 'product', 'medium', 'success', '2025-10-29 17:33:13'),
+(392, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":180}', '{\"product_id\":180,\"name\":\"FitFuel Outrage Ultra‑Stim Pre‑Workout\",\"price\":1750,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 180, 'product', 'medium', 'success', '2025-10-29 17:34:05'),
+(393, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":181}', '{\"product_id\":181,\"name\":\"FitFuel Dr. Jekyll Pre‐Workout\",\"price\":1650,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 181, 'product', 'medium', 'success', '2025-10-29 17:34:39'),
+(394, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":182}', '{\"product_id\":182,\"name\":\"FitFuel Nitraflex Extreme Sport\",\"price\":1650,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 182, 'product', 'medium', 'success', '2025-10-29 17:35:10'),
+(395, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":183}', '{\"product_id\":183,\"name\":\"FitFuel Multivitamins Tablet\",\"price\":400,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 183, 'product', 'medium', 'success', '2025-10-29 17:35:50'),
+(396, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":184}', '{\"product_id\":184,\"name\":\"Pharex Vitamin Tablet\",\"price\":140,\"status\":\"active\",\"additional_images_added\":2,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 184, 'product', 'medium', 'success', '2025-10-29 17:36:24'),
+(397, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":185}', '{\"product_id\":185,\"name\":\"BioTechUSA B-Complex Food Supplement\",\"price\":950,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 185, 'product', 'medium', 'success', '2025-10-29 17:37:03'),
+(398, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":186}', '{\"product_id\":186,\"name\":\"FitFuel Vitamin C 500mg\",\"price\":550,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 186, 'product', 'medium', 'success', '2025-10-29 17:37:30'),
+(399, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":187}', '{\"product_id\":187,\"name\":\"maxvit Multivitamins\",\"price\":150,\"status\":\"active\",\"additional_images_added\":3,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 187, 'product', 'medium', 'success', '2025-10-29 17:37:57'),
+(400, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":151}', '{\"product_id\":151,\"name\":\"Stretching Strap\",\"price\":400,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 151, 'product', 'medium', 'success', '2025-10-29 17:40:00'),
+(401, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 17:42:10');
 
 -- --------------------------------------------------------
 
@@ -407,7 +510,7 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (135, 24, 143, 3, '2025-10-27 08:10:09'),
 (137, 24, 144, 3, '2025-10-27 08:14:16'),
 (148, 14, 161, 1, '2025-10-29 08:02:37'),
-(149, 14, 144, 1, '2025-10-29 08:02:37'),
+(149, 14, 144, 6, '2025-10-29 08:02:37'),
 (150, 14, 143, 1, '2025-10-29 08:02:38');
 
 -- --------------------------------------------------------
@@ -523,7 +626,36 @@ INSERT INTO `inventory` (`inventory_id`, `product_id`, `change_type`, `quantity`
 (33, 145, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
 (34, 149, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
 (35, 150, 'stock_out', 1, 28, 14, '2025-10-29 07:42:50'),
-(36, 154, 'stock_out', 1, 29, 14, '2025-10-29 07:43:32');
+(36, 154, 'stock_out', 1, 29, 14, '2025-10-29 07:43:32'),
+(37, 185, 'adjustment', 10, NULL, 4, '2025-10-29 15:50:40'),
+(38, 165, 'adjustment', 10, NULL, 4, '2025-10-29 15:50:47'),
+(39, 179, 'adjustment', 15, NULL, 4, '2025-10-29 15:50:54'),
+(40, 181, 'adjustment', 15, NULL, 4, '2025-10-29 15:51:00'),
+(41, 173, 'adjustment', 30, NULL, 4, '2025-10-29 15:51:05'),
+(42, 168, 'adjustment', 15, NULL, 4, '2025-10-29 15:51:10'),
+(43, 163, 'adjustment', 35, NULL, 4, '2025-10-29 15:51:14'),
+(44, 176, 'adjustment', 35, NULL, 4, '2025-10-29 15:51:23'),
+(45, 166, 'adjustment', 20, NULL, 4, '2025-10-29 15:51:27'),
+(46, 169, 'adjustment', 20, NULL, 4, '2025-10-29 15:51:31'),
+(47, 187, 'adjustment', 20, NULL, 4, '2025-10-29 15:51:37'),
+(48, 170, 'adjustment', 20, NULL, 4, '2025-10-29 15:51:45'),
+(49, 164, 'adjustment', 20, NULL, 4, '2025-10-29 15:51:53'),
+(50, 172, 'adjustment', 30, NULL, 4, '2025-10-29 15:51:57'),
+(51, 171, 'adjustment', 30, NULL, 4, '2025-10-29 15:52:01'),
+(52, 147, 'adjustment', 1, NULL, 4, '2025-10-29 15:52:12'),
+(53, 161, 'adjustment', 60, NULL, 4, '2025-10-29 15:52:21'),
+(54, 153, 'adjustment', 50, NULL, 4, '2025-10-29 15:52:26'),
+(55, 162, 'adjustment', 50, NULL, 4, '2025-10-29 15:52:30'),
+(56, 148, 'adjustment', 50, NULL, 4, '2025-10-29 15:52:34'),
+(57, 155, 'adjustment', 20, NULL, 4, '2025-10-29 15:52:41'),
+(58, 158, 'adjustment', 50, NULL, 4, '2025-10-29 15:52:50'),
+(59, 147, 'adjustment', 25, NULL, 4, '2025-10-29 15:52:54'),
+(60, 180, 'adjustment', 30, NULL, 4, '2025-10-29 15:53:56'),
+(61, 184, 'adjustment', 30, NULL, 4, '2025-10-29 15:53:59'),
+(62, 175, 'adjustment', 15, NULL, 4, '2025-10-29 15:54:04'),
+(63, 183, 'adjustment', 40, NULL, 4, '2025-10-29 15:54:09'),
+(64, 186, 'adjustment', 80, NULL, 4, '2025-10-29 15:54:15'),
+(65, 177, 'adjustment', 10, NULL, 4, '2025-10-29 15:54:22');
 
 -- --------------------------------------------------------
 
@@ -703,50 +835,50 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `category_id`, `subcategory_id`, `images`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`, `average_rating`, `total_reviews`, `rating_5_count`, `rating_4_count`, `rating_3_count`, `rating_2_count`, `rating_1_count`) VALUES
 (143, 'Weightlifting Gloves', 'Prevent calluses and improve grip with padded gloves designed for comfort and durability.', 990.00, 41, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-10-29 07:53:05', 10, 5.00, 1, 1, 0, 0, 0, 0),
-(144, 'Wrist Straps', 'Boost your lifting power by reducing grip fatigue which is perfect for deadlifts, rows, and heavy pulls.', 650.00, 99, 1, 11, '[\"uploads\\/products\\/68bf2201e4d33_1757356545.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(144, 'Wrist Straps', 'Boost your lifting power by reducing grip fatigue which is perfect for deadlifts, rows, and heavy pulls.', 650.00, 99, 1, 11, '[\"uploads\\/products\\/69024a15c0196_1761757717.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:08:37', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (145, 'Weightlifting Belt', 'Maximize support during heavy lifts. This belt helps stabilize your core and lower back for better performance and safety.', 1200.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:37:50', 10, 5.00, 1, 1, 0, 0, 0, 0),
-(147, 'Barbell Pads', 'Protect your joints during intense workouts with durable, cushioned pads ideal for knees, elbows and floors.', 750.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(148, 'Massage Gun', 'Deep tissue massage gun designed to relieve soreness, improve circulation, and promote faster muscle recovery.', 3500.00, 100, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:16:30', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(147, 'Barbell Pads', 'Protect your joints during intense workouts with durable, cushioned pads ideal for knees, elbows and floors.', 750.00, 75, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:52:54', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(148, 'Massage Gun', 'Deep tissue massage gun designed to relieve soreness, improve circulation, and promote faster muscle recovery.', 3500.00, 50, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:52:34', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (149, 'Gel Pack', 'Gel packs for targeted relief, soothe sore muscles, reduce inflammation, and speed up recovery.', 450.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 08:02:24', 10, 5.00, 1, 1, 0, 0, 0, 0),
 (150, 'Compression Sleeves', 'Improve blood flow and reduce muscle fatigue with breathable, supportive compression sleeves.', 700.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(151, 'Stretching Strap', 'Improve flexibility and mobility with a multi-loop stretching strap, great for yoga, PT, or cool-downs', 400.00, 99, 1, 12, '[\"uploads\\/products\\/68d98e8b997ae_1759088267.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:16:53', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(152, 'Resistance Band', 'Versatile resistance bands for strength training, stretching, or rehabilitation workouts at home or in the gym.', 300.00, 100, 1, 12, '[\"uploads\\/products\\/68d98eed29421_1759088365.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:15:32', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(153, 'Shaker Bottle', 'Leak-proof shaker bottle with a mixing ball for smooth protein shakes and supplement drinks anytime.', 350.00, 100, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:18:42', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(151, 'Stretching Strap', 'Improve flexibility and mobility with a multi-loop stretching strap, great for yoga, PT, or cool-downs', 400.00, 99, 1, 12, '[\"uploads\\/products\\/69025170a2be2_1761759600.webp\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:40:00', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(152, 'Resistance Band', 'Versatile resistance bands for strength training, stretching, or rehabilitation workouts at home or in the gym.', 300.00, 100, 1, 12, '[\"uploads\\/products\\/69024ab0c4f08_1761757872.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:11:12', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(153, 'Shaker Bottle', 'Leak-proof shaker bottle with a mixing ball for smooth protein shakes and supplement drinks anytime.', 350.00, 50, 1, 13, '[\"uploads\\/products\\/68bf2003cfd3d_1757356035.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:52:26', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (154, 'Duffle Bag', 'Spacious and durable dufflebag with multiple compartments to store your gear, clothes, and shoes in style.', 1500.00, 99, 1, 13, '[\"uploads\\/products\\/68bf200cdd91c_1757356044.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:43:32', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(155, 'Meal Prep Box', 'BPA-free and microwave-safe containers to organize your meals and hit your nutrition goals on the go.', 800.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f0aa7b9a_1759088394.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:18:23', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(156, 'Cooling Towel', 'Stay cool during workouts with a reusable cooling towel. Just wet, wring, and snap to activate.', 450.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f3104011_1759088433.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:17:13', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(157, 'Electrolyte Tablets', 'Replenish lost electrolytes and stay hydrated during intense workouts. Easy to dissolve and refreshing.', 300.00, 100, 1, 13, '[\"uploads\\/products\\/68d98f49ec6c2_1759088457.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:17:36', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is deal for strength, toning, and full-body workouts.', 3500.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f6e1bc23_1759088494.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:08', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(159, 'Kettlebell', 'Versatile and durable kettlebell designed for dynamic strength training, conditioning, and cardio.', 1750.00, 100, 2, 14, '[\"uploads\\/products\\/68d98f8d4b0b3_1759088525.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:17', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(160, 'Barbell', 'Heavy-duty barbell built for Olympic lifts, powerlifting, and general strength training.', 2200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fa68c938_1759088550.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:19:27', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(161, 'Weight Plates', 'Olympic-sized weight plates made of rubber or steel for safe, balanced, and effective lifting.', 2800.00, 100, 2, 14, '[\"uploads\\/products\\/68d98d6c7d2ba_1759087980.png\"]', 'active', 0, 1, 0, '2025-09-06 14:37:21', '2025-10-28 17:48:16', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(162, 'Medicine Ball', 'Improve core strength, coordination, and explosive power with a rubber-grip medicine ball.', 1200.00, 100, 2, 14, '[\"uploads\\/products\\/68d98fbd84c72_1759088573.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:27', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(163, 'Jump Rope', 'Lightweight, fast-spinning jump rope designed for cardio, endurance, and coordination training.', 400.00, 0, 2, 15, '[\"uploads\\/products\\/68d98fdbd6626_1759088603.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:21:33', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(164, 'Parallette Bars', 'Heavy-duty parallettes for advanced calisthenics, handstands, L-sits, and bodyweight training.', 2200.00, 0, 2, 15, '[\"uploads\\/products\\/68d98ffa13dda_1759088634.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:26:16', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(165, 'Dip Belts', 'Add extra weight to dips or pull-ups with a durable chain dip belt for strength progression.', 1500.00, 0, 2, 15, '[\"uploads\\/products\\/68d990133959e_1759088659.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:20:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(166, 'Lockable Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 0, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:22:28', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(167, 'Gymnastic Rings', 'Portable and adjustable rings perfect for bodyweight training, strength, and stability exercises.', 1800.00, 99, 2, 15, '[\"uploads\\/products\\/68d99029daa51_1759088681.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:21:24', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(168, 'Foam Roller', 'Relieve muscle tension and improve recovery with a high-density foam roller.', 900.00, 0, 2, 16, '[\"uploads\\/products\\/68d9904dd8a36_1759088717.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:25:19', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(169, 'Massage Stick', 'Portable massage stick to roll out tight muscles, improve blood flow, and ease soreness on the go.', 600.00, 0, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:25:08', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(170, 'Mobility Ball', 'Target knots and trigger points with a compact mobility ball which is perfect for deep tissue release.', 300.00, 0, 2, 16, '[\"uploads\\/products\\/68d990723b22e_1759088754.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:23:46', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(171, 'Yoga Strap', 'Improve flexibility and reach deeper stretches with this soft yet durable yoga strap.', 400.00, 0, 2, 16, '[\"uploads\\/products\\/68d990da48353_1759088858.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:23:30', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(172, 'Yoga Mat', 'Non-slip, cushioned yoga mat for balance, support, and comfort during stretching, yoga, or floor exercises.', 1200.00, 0, 2, 16, '[\"uploads\\/products\\/68d990f0cb86c_1759088880.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-27 13:27:06', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(173, 'FitFuel Whey Protein', 'High-quality whey blend packed with essential amino acids to support muscle recovery and growth.', 2750.00, 0, 3, 17, '[\"uploads\\/products\\/68d99115e0d6c_1759088917.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:25:31', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(174, 'FitFuel Nitro Tech Whey Protein', 'Advanced formula with creatine and whey isolate, designed for lean muscle building and strength gains.', 2850.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:25:58', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(175, 'FitFuel Gold Standard Whey Protein', 'The gold standard of protein, 100% whey blend with BCAAs for fast absorption and lean muscle support.', 2950.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:26:21', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(176, 'FitFuel Whey Blend', 'Clean and fast-digesting protein blend with zero fillers, ideal for muscle maintenance and recovery.', 1550.00, 0, 3, 17, '[\"uploads\\/products\\/68d991d7e13a9_1759089111.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:26:43', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(177, 'FitFuel Elite 100% Whey Protein', 'Elite-quality whey designed for high-performance athletes, rich in protein and low in sugar and fat.', 3190.00, 0, 3, 17, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:27:00', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(178, 'FitFuel VAPORX5 Muscle Tech', 'All-in-one pre-workout delivering explosive energy, enhanced focus, and superior muscle pumps.', 1250.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:27:41', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(179, 'FitFuel Cellucor C4', 'Popular pre-workout with just the right kick, contains beta-alanine, creatine, and caffeine for energy and endurance.', 1550.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:28:04', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(180, 'FitFuel Outrage Ultra‑Stim Pre‑Workout', 'Ultra-intense stimulant pre-workout designed to push your performance and alertness to the limit.', 1300.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:28:38', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(181, 'FitFuel Dr. Jekyll Pre‐Workout', 'Low-stim formula with a focus on strength, pump, and performance which is ideal for late-night sessions.', 1650.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:29:06', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(182, 'FitFuel Nitraflex Extreme Sport', 'Hardcore energy and testosterone-boosting pre-workout to power through your toughest training days.', 1650.00, 0, 3, 18, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:29:23', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(183, 'FitFuel Multivitamins Tablet', 'Multivitamins to help support overall health and energy.', 400.00, 0, 3, 19, '[\"uploads\\/products\\/68d9927dc4ea2_1759089277.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:30:04', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(184, 'Pharex Vitamin Tablet', 'Essential vitamins to keep your body strong and active every day.', 140.00, 0, 3, 19, '[\"uploads\\/products\\/68d992980d0d0_1759089304.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:31:06', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(185, 'BioTechUSA B-Complex Food Supplement', 'Boost your energy and metabolism with this B-vitamin complex.', 950.00, 0, 3, 19, '[\"uploads\\/products\\/68d9920c15598_1759089164.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:31:33', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(186, 'FitFuel Vitamin C 500mg', 'Helps to keep your immune system strong and supports daily health with a good dose of vitamin C. (90 tablets)', 550.00, 0, 3, 19, '[]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:32:10', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(187, 'maxvit Multivitamins', 'Balanced vitamins designed to support your daily wellness needs.', 150.00, 0, 3, 19, '[\"uploads\\/products\\/68d9924560834_1759089221.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-28 02:30:36', 10, 0.00, 0, 0, 0, 0, 0, 0);
+(155, 'Meal Prep Box', 'BPA-free and microwave-safe containers to organize your meals and hit your nutrition goals on the go.', 800.00, 80, 1, 13, '[\"uploads\\/products\\/69024be7b9447_1761758183.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:16:23', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(156, 'Cooling Towel', 'Stay cool during workouts with a reusable cooling towel. Just wet, wring, and snap to activate.', 450.00, 100, 1, 13, '[\"uploads\\/products\\/69024b842bf34_1761758084.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:14:44', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(157, 'Electrolyte Tablets', 'Replenish lost electrolytes and stay hydrated during intense workouts. Easy to dissolve and refreshing.', 300.00, 100, 1, 13, '[\"uploads\\/products\\/69024bc70f2b4_1761758151.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:15:51', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(158, 'Dumbbell Set', 'High-quality dumbbells for home or gym use which is deal for strength, toning, and full-body workouts.', 14995.00, 50, 2, 14, '[\"uploads\\/products\\/69024c7150319_1761758321.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:18:41', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(159, 'Kettlebell', 'Versatile and durable kettlebell designed for dynamic strength training, conditioning, and cardio.', 1750.00, 100, 2, 14, '[\"uploads\\/products\\/69024c9f3e983_1761758367.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:19:27', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(160, 'Olympic Barbell', 'Heavy-duty barbell built for Olympic lifts, powerlifting, and general strength training.', 2200.00, 100, 2, 14, '[\"uploads\\/products\\/69024c33792be_1761758259.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:17:39', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(161, 'Weight Plates', 'Olympic-sized weight plates made of rubber or steel for safe, balanced, and effective lifting.', 2800.00, 40, 2, 14, '[\"uploads\\/products\\/69024d27aabd5_1761758503.png\"]', 'active', 0, 1, 0, '2025-09-06 14:37:21', '2025-10-29 17:21:43', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(162, 'Medicine Ball', 'Improve core strength, coordination, and explosive power with a rubber-grip medicine ball.', 1200.00, 50, 2, 14, '[\"uploads\\/products\\/69024cbf50993_1761758399.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:19:59', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(163, 'Jump Rope', 'Lightweight, fast-spinning jump rope designed for cardio, endurance, and coordination training.', 400.00, 35, 2, 15, '[\"uploads\\/products\\/69024d99d9a67_1761758617.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:23:37', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(164, 'Parallette Bars', 'Heavy-duty parallettes for advanced calisthenics, handstands, L-sits, and bodyweight training.', 2200.00, 20, 2, 15, '[\"uploads\\/products\\/69024ddf29c50_1761758687.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:24:47', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(165, 'Dip Belts', 'Add extra weight to dips or pull-ups with a durable chain dip belt for strength progression.', 1500.00, 10, 2, 15, '[\"uploads\\/products\\/69024d490e521_1761758537.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:22:17', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(166, 'Lockable Pull-up Bar', 'Lockable pull-up bar for doorway strength training.', 2500.00, 20, 2, 15, '[\"uploads\\/products\\/68bf20ca4f738_1757356234.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:51:27', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(167, 'Gymnastic Rings', 'Portable and adjustable rings perfect for bodyweight training, strength, and stability exercises.', 1800.00, 99, 2, 15, '[\"uploads\\/products\\/69024d772ab54_1761758583.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:23:03', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(168, 'Foam Roller', 'Relieve muscle tension and improve recovery with a high-density foam roller.', 900.00, 15, 2, 16, '[\"uploads\\/products\\/69024e09f04f4_1761758729.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:25:29', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(169, 'Massage Stick', 'Portable massage stick to roll out tight muscles, improve blood flow, and ease soreness on the go.', 600.00, 20, 2, 16, '[\"uploads\\/products\\/68bf2110b53a7_1757356304.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:51:31', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(170, 'Mobility Ball', 'Target knots and trigger points with a compact mobility ball which is perfect for deep tissue release.', 300.00, 20, 2, 16, '[\"uploads\\/products\\/69024e56840ab_1761758806.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:26:46', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(171, 'Yoga Strap', 'Improve flexibility and reach deeper stretches with this soft yet durable yoga strap.', 400.00, 30, 2, 16, '[\"uploads\\/products\\/69024e7a1d6be_1761758842.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:27:22', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(172, 'Yoga Mat', 'Non-slip, cushioned yoga mat for balance, support, and comfort during stretching, yoga, or floor exercises.', 1200.00, 30, 2, 16, '[\"uploads\\/products\\/69024eaa3d2a0_1761758890.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:28:10', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(173, 'FitFuel Whey Protein', 'High-quality whey blend packed with essential amino acids to support muscle recovery and growth.', 2750.00, 30, 3, 17, '[\"uploads\\/products\\/69024ed34b88b_1761758931.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:28:51', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(174, 'FitFuel Nitro Tech Whey Protein', 'Advanced formula with creatine and whey isolate, designed for lean muscle building and strength gains.', 2850.00, 0, 3, 17, '[\"uploads\\/products\\/69024ef851b3a_1761758968.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:29:28', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(175, 'FitFuel Gold Standard Whey Protein', 'The gold standard of protein, 100% whey blend with BCAAs for fast absorption and lean muscle support.', 2950.00, 15, 3, 17, '[\"uploads\\/products\\/69024f2710311_1761759015.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:30:15', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(176, 'FitFuel Whey Blend', 'Clean and fast-digesting protein blend with zero fillers, ideal for muscle maintenance and recovery.', 1550.00, 35, 3, 17, '[\"uploads\\/products\\/69024f4f37501_1761759055.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:30:55', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(177, 'FitFuel Elite 100% Whey Protein', 'Elite-quality whey designed for high-performance athletes, rich in protein and low in sugar and fat.', 3190.00, 10, 3, 17, '[\"uploads\\/products\\/69024f8e951bf_1761759118.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:31:58', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(178, 'FitFuel VAPORX5 Muscle Tech', 'All-in-one pre-workout delivering explosive energy, enhanced focus, and superior muscle pumps.', 1250.00, 0, 3, 18, '[\"uploads\\/products\\/69024fbd13018_1761759165.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:32:45', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(179, 'FitFuel Cellucor C4', 'Popular pre-workout with just the right kick, contains beta-alanine, creatine, and caffeine for energy and endurance.', 1550.00, 15, 3, 18, '[\"uploads\\/products\\/69024fd961df8_1761759193.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:33:13', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(180, 'FitFuel Outrage Ultra‑Stim Pre‑Workout', 'Ultra-intense stimulant pre-workout designed to push your performance and alertness to the limit.', 1750.00, 30, 3, 18, '[\"uploads\\/products\\/6902500d9b99d_1761759245.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:34:05', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(181, 'FitFuel Dr. Jekyll Pre‐Workout', 'Low-stim formula with a focus on strength, pump, and performance which is ideal for late-night sessions.', 1650.00, 15, 3, 18, '[\"uploads\\/products\\/6902502f2f037_1761759279.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:34:39', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(182, 'FitFuel Nitraflex Extreme Sport', 'Hardcore energy and testosterone-boosting pre-workout to power through your toughest training days.', 1650.00, 0, 3, 18, '[\"uploads\\/products\\/6902504e73451_1761759310.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:35:10', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(183, 'FitFuel Multivitamins Tablet', 'Multivitamins to help support overall health and energy.', 400.00, 40, 3, 19, '[\"uploads\\/products\\/69025076105ec_1761759350.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:35:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(184, 'Pharex Vitamin Tablet', 'Essential vitamins to keep your body strong and active every day.', 140.00, 30, 3, 19, '[\"uploads\\/products\\/690250987f9df_1761759384.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:36:24', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(185, 'BioTechUSA B-Complex Food Supplement', 'Boost your energy and metabolism with this B-vitamin complex.', 950.00, 10, 3, 19, '[\"uploads\\/products\\/690250bf15ca9_1761759423.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:37:03', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(186, 'FitFuel Vitamin C 500mg', 'Helps to keep your immune system strong and supports daily health with a good dose of vitamin C. (90 tablets)', 550.00, 80, 3, 19, '[\"uploads\\/products\\/690250da06b72_1761759450.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:37:30', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(187, 'maxvit Multivitamins', 'Balanced vitamins designed to support your daily wellness needs.', 150.00, 20, 3, 19, '[\"uploads\\/products\\/690250f5bff31_1761759477.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:37:57', 10, 0.00, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -760,6 +892,135 @@ CREATE TABLE `product_images` (
   `image_path` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_images`
+--
+
+INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `created_at`) VALUES
+(4, 143, 'uploads/products/additional_images/6902417017b2d_1761755504_0.png', '2025-10-29 16:31:44'),
+(5, 143, 'uploads/products/additional_images/6902417017cf9_1761755504_1.png', '2025-10-29 16:31:44'),
+(6, 143, 'uploads/products/additional_images/6902417017e5a_1761755504_2.png', '2025-10-29 16:31:44'),
+(10, 146, 'uploads/products/additional_images/6902498bd6a1c_1761757579_0.png', '2025-10-29 17:06:19'),
+(11, 146, 'uploads/products/additional_images/6902498bd6c2a_1761757579_1.png', '2025-10-29 17:06:19'),
+(12, 146, 'uploads/products/additional_images/6902498bd6e4e_1761757579_2.png', '2025-10-29 17:06:19'),
+(13, 147, 'uploads/products/additional_images/690249b714f8d_1761757623_0.png', '2025-10-29 17:07:03'),
+(14, 147, 'uploads/products/additional_images/690249b7151b9_1761757623_1.png', '2025-10-29 17:07:03'),
+(15, 147, 'uploads/products/additional_images/690249b71538f_1761757623_2.png', '2025-10-29 17:07:03'),
+(16, 145, 'uploads/products/additional_images/690249df068dd_1761757663_0.png', '2025-10-29 17:07:43'),
+(17, 145, 'uploads/products/additional_images/690249df06b01_1761757663_1.png', '2025-10-29 17:07:43'),
+(18, 144, 'uploads/products/additional_images/69024a9338cfe_1761757843_0.png', '2025-10-29 17:10:43'),
+(19, 144, 'uploads/products/additional_images/69024a9338f13_1761757843_1.png', '2025-10-29 17:10:43'),
+(20, 144, 'uploads/products/additional_images/69024a93390e6_1761757843_2.png', '2025-10-29 17:10:43'),
+(21, 152, 'uploads/products/additional_images/69024ab0c510b_1761757872_0.png', '2025-10-29 17:11:12'),
+(22, 152, 'uploads/products/additional_images/69024ab0c5380_1761757872_1.png', '2025-10-29 17:11:12'),
+(23, 152, 'uploads/products/additional_images/69024ab0c5606_1761757872_2.png', '2025-10-29 17:11:12'),
+(24, 150, 'uploads/products/additional_images/69024ad1b82fb_1761757905_0.png', '2025-10-29 17:11:45'),
+(25, 150, 'uploads/products/additional_images/69024ad1b84d4_1761757905_1.png', '2025-10-29 17:11:45'),
+(26, 150, 'uploads/products/additional_images/69024ad1b865d_1761757905_2.png', '2025-10-29 17:11:45'),
+(27, 149, 'uploads/products/additional_images/69024ae922281_1761757929_0.png', '2025-10-29 17:12:09'),
+(30, 148, 'uploads/products/additional_images/69024b0bb30ab_1761757963_0.png', '2025-10-29 17:12:43'),
+(31, 148, 'uploads/products/additional_images/69024b0bb37d9_1761757963_1.png', '2025-10-29 17:12:43'),
+(32, 148, 'uploads/products/additional_images/69024b0bb398a_1761757963_2.png', '2025-10-29 17:12:43'),
+(33, 156, 'uploads/products/additional_images/69024b842c27f_1761758084_0.png', '2025-10-29 17:14:44'),
+(34, 156, 'uploads/products/additional_images/69024b842c46a_1761758084_1.png', '2025-10-29 17:14:44'),
+(35, 154, 'uploads/products/additional_images/69024b9b3ae95_1761758107_0.png', '2025-10-29 17:15:07'),
+(36, 154, 'uploads/products/additional_images/69024b9b3b094_1761758107_1.png', '2025-10-29 17:15:07'),
+(37, 154, 'uploads/products/additional_images/69024b9b3b265_1761758107_2.png', '2025-10-29 17:15:07'),
+(38, 157, 'uploads/products/additional_images/69024bc70f575_1761758151_0.png', '2025-10-29 17:15:51'),
+(39, 157, 'uploads/products/additional_images/69024bc70f721_1761758151_1.png', '2025-10-29 17:15:51'),
+(40, 157, 'uploads/products/additional_images/69024bc70ff0f_1761758151_2.png', '2025-10-29 17:15:51'),
+(41, 155, 'uploads/products/additional_images/69024be7b96d4_1761758183_0.png', '2025-10-29 17:16:23'),
+(42, 155, 'uploads/products/additional_images/69024be7b987c_1761758183_1.png', '2025-10-29 17:16:23'),
+(43, 155, 'uploads/products/additional_images/69024be7b9a15_1761758183_2.png', '2025-10-29 17:16:23'),
+(44, 153, 'uploads/products/additional_images/69024c003b8a3_1761758208_0.png', '2025-10-29 17:16:48'),
+(45, 153, 'uploads/products/additional_images/69024c003bbdf_1761758208_1.png', '2025-10-29 17:16:48'),
+(46, 153, 'uploads/products/additional_images/69024c003bec1_1761758208_2.png', '2025-10-29 17:16:48'),
+(47, 160, 'uploads/products/additional_images/69024c337951b_1761758259_0.png', '2025-10-29 17:17:39'),
+(48, 160, 'uploads/products/additional_images/69024c33796d9_1761758259_1.png', '2025-10-29 17:17:39'),
+(49, 160, 'uploads/products/additional_images/69024c337988b_1761758259_2.png', '2025-10-29 17:17:39'),
+(50, 158, 'uploads/products/additional_images/69024c7150b29_1761758321_0.png', '2025-10-29 17:18:41'),
+(51, 158, 'uploads/products/additional_images/69024c7150d2f_1761758321_1.png', '2025-10-29 17:18:41'),
+(52, 158, 'uploads/products/additional_images/69024c7150f92_1761758321_2.png', '2025-10-29 17:18:41'),
+(53, 159, 'uploads/products/additional_images/69024c9f3ec21_1761758367_0.png', '2025-10-29 17:19:27'),
+(54, 159, 'uploads/products/additional_images/69024c9f3ee30_1761758367_1.png', '2025-10-29 17:19:27'),
+(55, 159, 'uploads/products/additional_images/69024c9f3efe0_1761758367_2.png', '2025-10-29 17:19:27'),
+(56, 162, 'uploads/products/additional_images/69024cbf50b9d_1761758399_0.png', '2025-10-29 17:19:59'),
+(57, 162, 'uploads/products/additional_images/69024cbf50d2c_1761758399_1.png', '2025-10-29 17:19:59'),
+(58, 162, 'uploads/products/additional_images/69024cbf50f19_1761758399_2.png', '2025-10-29 17:19:59'),
+(59, 161, 'uploads/products/additional_images/69024d27aae14_1761758503_0.png', '2025-10-29 17:21:43'),
+(60, 161, 'uploads/products/additional_images/69024d27aafd2_1761758503_1.png', '2025-10-29 17:21:43'),
+(61, 161, 'uploads/products/additional_images/69024d27ab1b6_1761758503_2.png', '2025-10-29 17:21:43'),
+(62, 165, 'uploads/products/additional_images/69024d490e7c4_1761758537_0.png', '2025-10-29 17:22:17'),
+(63, 165, 'uploads/products/additional_images/69024d490e967_1761758537_1.png', '2025-10-29 17:22:17'),
+(64, 165, 'uploads/products/additional_images/69024d490eaf0_1761758537_2.png', '2025-10-29 17:22:17'),
+(65, 167, 'uploads/products/additional_images/69024d772ad50_1761758583_0.png', '2025-10-29 17:23:03'),
+(66, 167, 'uploads/products/additional_images/69024d772af28_1761758583_1.png', '2025-10-29 17:23:03'),
+(67, 167, 'uploads/products/additional_images/69024d772b0b8_1761758583_2.png', '2025-10-29 17:23:03'),
+(68, 163, 'uploads/products/additional_images/69024d99d9cb8_1761758617_0.png', '2025-10-29 17:23:37'),
+(69, 163, 'uploads/products/additional_images/69024d99d9ea5_1761758617_1.png', '2025-10-29 17:23:37'),
+(70, 163, 'uploads/products/additional_images/69024d99da0b9_1761758617_2.png', '2025-10-29 17:23:37'),
+(71, 166, 'uploads/products/additional_images/69024db6cfe70_1761758646_0.png', '2025-10-29 17:24:06'),
+(72, 166, 'uploads/products/additional_images/69024db6d00af_1761758646_1.png', '2025-10-29 17:24:06'),
+(73, 166, 'uploads/products/additional_images/69024db6d0693_1761758646_2.png', '2025-10-29 17:24:06'),
+(74, 164, 'uploads/products/additional_images/69024ddf29f19_1761758687_0.png', '2025-10-29 17:24:47'),
+(75, 164, 'uploads/products/additional_images/69024ddf2a0e8_1761758687_1.png', '2025-10-29 17:24:47'),
+(76, 164, 'uploads/products/additional_images/69024ddf2ab5d_1761758687_2.png', '2025-10-29 17:24:47'),
+(77, 168, 'uploads/products/additional_images/69024e09f0c4d_1761758729_0.png', '2025-10-29 17:25:29'),
+(78, 168, 'uploads/products/additional_images/69024e09f0e43_1761758729_1.png', '2025-10-29 17:25:29'),
+(79, 168, 'uploads/products/additional_images/69024e09f108a_1761758729_2.png', '2025-10-29 17:25:29'),
+(80, 169, 'uploads/products/additional_images/69024e23a5f22_1761758755_0.png', '2025-10-29 17:25:55'),
+(81, 169, 'uploads/products/additional_images/69024e23a6123_1761758755_1.png', '2025-10-29 17:25:55'),
+(82, 169, 'uploads/products/additional_images/69024e23a6325_1761758755_2.png', '2025-10-29 17:25:55'),
+(83, 170, 'uploads/products/additional_images/69024e56842ed_1761758806_0.png', '2025-10-29 17:26:46'),
+(84, 170, 'uploads/products/additional_images/69024e5684492_1761758806_1.png', '2025-10-29 17:26:46'),
+(85, 170, 'uploads/products/additional_images/69024e56846bc_1761758806_2.png', '2025-10-29 17:26:46'),
+(86, 171, 'uploads/products/additional_images/69024e7a1d912_1761758842_0.png', '2025-10-29 17:27:22'),
+(87, 171, 'uploads/products/additional_images/69024e7a1db41_1761758842_1.png', '2025-10-29 17:27:22'),
+(88, 171, 'uploads/products/additional_images/69024e7a1dce4_1761758842_2.png', '2025-10-29 17:27:22'),
+(89, 172, 'uploads/products/additional_images/69024eaa3d512_1761758890_0.png', '2025-10-29 17:28:10'),
+(90, 172, 'uploads/products/additional_images/69024eaa3d78f_1761758890_1.png', '2025-10-29 17:28:10'),
+(91, 172, 'uploads/products/additional_images/69024eaa3d988_1761758890_2.png', '2025-10-29 17:28:10'),
+(92, 173, 'uploads/products/additional_images/69024ed34baed_1761758931_0.png', '2025-10-29 17:28:51'),
+(93, 173, 'uploads/products/additional_images/69024ed34bc92_1761758931_1.png', '2025-10-29 17:28:51'),
+(94, 173, 'uploads/products/additional_images/69024ed34be88_1761758931_2.png', '2025-10-29 17:28:51'),
+(95, 174, 'uploads/products/additional_images/69024ef851de5_1761758968_0.png', '2025-10-29 17:29:28'),
+(96, 174, 'uploads/products/additional_images/69024ef852212_1761758968_1.png', '2025-10-29 17:29:28'),
+(97, 174, 'uploads/products/additional_images/69024ef8523b5_1761758968_2.png', '2025-10-29 17:29:28'),
+(98, 175, 'uploads/products/additional_images/69024f2710523_1761759015_0.png', '2025-10-29 17:30:15'),
+(99, 175, 'uploads/products/additional_images/69024f27106b9_1761759015_1.png', '2025-10-29 17:30:15'),
+(100, 175, 'uploads/products/additional_images/69024f27108f0_1761759015_2.png', '2025-10-29 17:30:15'),
+(101, 176, 'uploads/products/additional_images/69024f4f37751_1761759055_0.png', '2025-10-29 17:30:55'),
+(102, 176, 'uploads/products/additional_images/69024f4f37981_1761759055_1.png', '2025-10-29 17:30:55'),
+(103, 176, 'uploads/products/additional_images/69024f4f37b1a_1761759055_2.png', '2025-10-29 17:30:55'),
+(104, 177, 'uploads/products/additional_images/69024f8e958e1_1761759118_0.png', '2025-10-29 17:31:58'),
+(105, 177, 'uploads/products/additional_images/69024f8e95a7b_1761759118_1.png', '2025-10-29 17:31:58'),
+(106, 177, 'uploads/products/additional_images/69024f8e95ce1_1761759118_2.png', '2025-10-29 17:31:58'),
+(107, 178, 'uploads/products/additional_images/69024fbd1325f_1761759165_0.png', '2025-10-29 17:32:45'),
+(108, 178, 'uploads/products/additional_images/69024fbd1340f_1761759165_1.png', '2025-10-29 17:32:45'),
+(109, 179, 'uploads/products/additional_images/69024fd96201d_1761759193_0.png', '2025-10-29 17:33:13'),
+(110, 179, 'uploads/products/additional_images/69024fd9621c1_1761759193_1.png', '2025-10-29 17:33:13'),
+(111, 179, 'uploads/products/additional_images/69024fd962427_1761759193_2.png', '2025-10-29 17:33:13'),
+(112, 180, 'uploads/products/additional_images/6902500d9bc63_1761759245_0.png', '2025-10-29 17:34:05'),
+(113, 180, 'uploads/products/additional_images/6902500d9be51_1761759245_1.png', '2025-10-29 17:34:05'),
+(114, 180, 'uploads/products/additional_images/6902500d9bfe8_1761759245_2.png', '2025-10-29 17:34:05'),
+(115, 181, 'uploads/products/additional_images/6902502f2f26c_1761759279_0.png', '2025-10-29 17:34:39'),
+(116, 181, 'uploads/products/additional_images/6902502f2f3fe_1761759279_1.png', '2025-10-29 17:34:39'),
+(117, 181, 'uploads/products/additional_images/6902502f2f5f6_1761759279_2.png', '2025-10-29 17:34:39'),
+(118, 182, 'uploads/products/additional_images/6902504e7370c_1761759310_0.png', '2025-10-29 17:35:10'),
+(119, 182, 'uploads/products/additional_images/6902504e738c8_1761759310_1.png', '2025-10-29 17:35:10'),
+(120, 182, 'uploads/products/additional_images/6902504e73a6e_1761759310_2.png', '2025-10-29 17:35:10'),
+(121, 183, 'uploads/products/additional_images/6902507610842_1761759350_0.png', '2025-10-29 17:35:50'),
+(122, 183, 'uploads/products/additional_images/6902507610a9e_1761759350_1.png', '2025-10-29 17:35:50'),
+(123, 183, 'uploads/products/additional_images/6902507610ca6_1761759350_2.png', '2025-10-29 17:35:50'),
+(124, 184, 'uploads/products/additional_images/690250987fc4e_1761759384_0.png', '2025-10-29 17:36:24'),
+(125, 184, 'uploads/products/additional_images/690250987fe03_1761759384_1.png', '2025-10-29 17:36:24'),
+(126, 186, 'uploads/products/additional_images/690250da06ded_1761759450_0.png', '2025-10-29 17:37:30'),
+(127, 186, 'uploads/products/additional_images/690250da06fe2_1761759450_1.png', '2025-10-29 17:37:30'),
+(128, 186, 'uploads/products/additional_images/690250da0719f_1761759450_2.png', '2025-10-29 17:37:30'),
+(129, 187, 'uploads/products/additional_images/690250f5c0188_1761759477_0.png', '2025-10-29 17:37:57'),
+(130, 187, 'uploads/products/additional_images/690250f5c036f_1761759477_1.png', '2025-10-29 17:37:57'),
+(131, 187, 'uploads/products/additional_images/690250f5c051b_1761759477_2.png', '2025-10-29 17:37:57');
 
 -- --------------------------------------------------------
 
@@ -1071,23 +1332,23 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`, `otp`, `otp_expiry`) VALUES
 (1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL, NULL, NULL),
 (2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-28 17:30:54', '2025-10-28 17:30:54', NULL, NULL, NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-29 16:07:41', '2025-10-29 16:07:41', NULL, NULL, NULL, NULL, NULL),
 (8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL, NULL, NULL),
-(9, 'emmanthemanager', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$gKM0.DkjmDL7xlkTUEMAduKaY97XhJDUGEpjWAVQ5k4IXFFLCIsn6', NULL, 'manager', 'active', '2025-09-09 04:07:49', '2025-10-27 12:31:10', '2025-10-27 12:31:10', NULL, NULL, NULL, NULL, NULL),
+(9, 'emmanthemanager', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$kSFY7rSwEQmfyeNXtUmf6eWXm/PmBFs1pLJeUYq31iLI6hhi6B/4O', NULL, 'manager', 'active', '2025-09-09 04:07:49', '2025-10-29 15:55:15', '2025-10-27 12:31:10', NULL, NULL, NULL, NULL, NULL),
 (10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL, NULL, NULL),
 (11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-10-27 08:09:42', '2025-10-27 08:09:42', NULL, NULL, NULL, NULL, NULL),
 (12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL, NULL, NULL),
 (13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-10-02 10:03:25', '2025-10-02 10:03:25', NULL, NULL, NULL, NULL, NULL),
-(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-29 07:45:54', '2025-10-29 07:45:54', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
+(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-29 16:04:23', '2025-10-29 16:04:23', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
 (15, 'karlblockstock1', 'karlblockstock27@gmail.com', '09765725123', '2003-12-27', NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-10-05 13:59:13', '2025-10-05 13:59:13', 'Karl', 'Blockstock', 'uploads/profile/u15_1759665921_6906177e.jpg', '434570', '2025-10-05 16:04:13'),
 (16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL, NULL, NULL),
 (17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', NULL, '$2y$10$t2.GNMloV5cZ9NQIiQfAJ.KMMBrTNcr.3dxPl9WwOnJ5Aqi9BaNqG', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-24 09:02:09', '2025-09-24 08:47:32', 'Michelle', 'Angeles', 'uploads/profile/u17_1758702327_45104a57.jpg', NULL, NULL),
 (18, 'emmanuelespeña', 'espena.emman@gmail.com', NULL, NULL, NULL, NULL, '106046174656984709849', 'customer', 'active', '2025-09-27 02:59:56', '2025-10-04 13:07:43', '2025-10-04 13:07:43', NULL, NULL, NULL, NULL, NULL),
 (19, 'Pogiako123', 'Pogiako123@gmail.com', NULL, NULL, NULL, '$2y$10$aSlRx6fSU2liwGMJaORgQ.ke9tSZwTkHlGDs.uejaOLqHhDfW9ZEi', NULL, 'customer', 'active', '2025-10-05 14:10:39', '2025-10-05 14:10:39', NULL, NULL, NULL, NULL, NULL, NULL),
 (20, 'indyiniratake', 'atakeindyinir@gmail.com', NULL, NULL, NULL, NULL, '101975020126837940161', 'customer', 'active', '2025-10-12 18:35:04', '2025-10-13 05:42:37', '2025-10-13 05:42:37', NULL, NULL, NULL, NULL, NULL),
-(21, 'karltheinventorystaff', 'karladmin@gmail.com', NULL, NULL, NULL, '$2y$10$6sulP8mME9ip4TXiAAzGAeeJHqAhmy13UTEdQFFtC0u9T5s0PnWae', NULL, 'staff', 'active', '2025-10-27 12:30:39', '2025-10-27 12:33:04', '2025-10-27 12:33:04', NULL, NULL, NULL, NULL, NULL),
-(23, 'ninatheadmin', 'ninaadmin@gmail.com', NULL, NULL, NULL, '$2y$10$FMwciDyXBZm7W5K7MyH1V.TYufxOruvoUv9seglERpQgiyLupVt3S', NULL, 'admin', 'active', '2025-10-27 12:34:00', '2025-10-27 12:34:00', NULL, NULL, NULL, NULL, NULL, NULL),
-(25, 'michtheadmin', 'michadmin@gmail.com', NULL, NULL, NULL, '$2y$10$tm9II7uznmz/i9vq9lR9MeQs7WAdI4edHs5fhDYx33VcUUxcD7kcO', NULL, 'admin', 'active', '2025-10-27 12:34:26', '2025-10-27 12:34:26', NULL, NULL, NULL, NULL, NULL, NULL);
+(21, 'karltheinventorystaff', 'karladmin@gmail.com', NULL, NULL, NULL, '$2y$10$X84KPrW/Jmy1CSs3PPuiVeTibI2/24eioUK8rKX1oS3fDj8KwCuL2', NULL, 'staff', 'active', '2025-10-27 12:30:39', '2025-10-29 15:55:19', '2025-10-27 12:33:04', NULL, NULL, NULL, NULL, NULL),
+(23, 'ninatheadmin', 'ninaadmin@gmail.com', NULL, NULL, NULL, '$2y$10$gbQMGICZHD9ULS10Wx5g.eRjrPC1ObgVVbajDV64Abf7W.F837CIS', NULL, 'admin', 'active', '2025-10-27 12:34:00', '2025-10-29 15:55:24', NULL, NULL, NULL, NULL, NULL, NULL),
+(25, 'michtheadmin', 'michadmin@gmail.com', NULL, NULL, NULL, '$2y$10$u4yCIXkb/GG3pWKTc3hN3.gzOfmtUOgtYyCdSnuhZoMMMyGGKRDqa', NULL, 'admin', 'active', '2025-10-27 12:34:26', '2025-10-29 15:55:28', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1206,8 +1467,7 @@ CREATE TABLE `wishlist` (
 --
 
 INSERT INTO `wishlist` (`wishlist_id`, `user_id`, `product_id`, `created_at`) VALUES
-(4, 14, 144, '2025-10-27 09:26:59'),
-(5, 14, 161, '2025-10-27 09:27:00');
+(4, 14, 144, '2025-10-27 09:26:59');
 
 --
 -- Indexes for dumped tables
@@ -1442,7 +1702,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=300;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=402;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -1472,7 +1732,7 @@ ALTER TABLE `contents`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -1502,13 +1762,13 @@ ALTER TABLE `password_resets`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
+  MODIFY `product_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
 
 --
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `promo_codes`

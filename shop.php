@@ -73,8 +73,7 @@ try {
     $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // products
-    $sql = "SELECT p.*, c.name AS category_name, sc.name AS subcategory_name,
-                   (SELECT COUNT(*) FROM product_images WHERE product_id = p.product_id) as additional_image_count
+    $sql = "SELECT p.*, c.name AS category_name, sc.name AS subcategory_name
             FROM products p
             LEFT JOIN categories c     ON p.category_id    = c.category_id
             LEFT JOIN subcategories sc ON p.subcategory_id = sc.subcategory_id
@@ -89,6 +88,19 @@ try {
     $products = [];
     $categories = [];
     $error = "Database error: " . $e->getMessage();
+}
+
+/* -------- Get wishlist for current user -------- */
+$wishlisted_products = [];
+if (!empty($_SESSION['user_id'])) {
+    try {
+        $wishlist_stmt = $pdo->prepare("SELECT product_id FROM wishlist WHERE user_id = ?");
+        $wishlist_stmt->execute([$_SESSION['user_id']]);
+        $wishlist_items = $wishlist_stmt->fetchAll(PDO::FETCH_COLUMN);
+        $wishlisted_products = array_flip($wishlist_items); // Use flip for fast lookup
+    } catch (PDOException $e) {
+        $wishlisted_products = [];
+    }
 }
 
 /* -------- Cart count in header -------- */
@@ -344,9 +356,9 @@ if (!empty($_SESSION['user_id'])) {
                     <?php echo (int)$product['sale_percentage']; ?>% OFF
                   </span>
                 <?php endif; ?>
-                <?php if ($product['additional_image_count'] > 0): ?>
-                  <span class="absolute top-4 right-4 bg-blue-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                    <i class="fas fa-images mr-1"></i><?php echo $product['additional_image_count']; ?>
+                <?php if (!empty($_SESSION['user_id']) && isset($wishlisted_products[$product['product_id']])): ?>
+                  <span class="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full">
+                    <i class="fas fa-heart"></i>
                   </span>
                 <?php endif; ?>
               </div>
