@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2025 at 08:34 PM
+-- Generation Time: Oct 30, 2025 at 02:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -478,7 +478,19 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (423, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:24:25'),
 (424, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:25:35'),
 (425, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:25:40'),
-(426, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:25:42');
+(426, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-29 19:25:42'),
+(427, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-10-30 00:24:32'),
+(428, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-30 00:24:38'),
+(429, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-30 00:24:43'),
+(430, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-30 00:24:46'),
+(431, 4, 'admin', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-30 00:25:06'),
+(432, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-30 00:25:36'),
+(433, 14, 'karlblockstock', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"karlblockstock\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 14, 'user', 'low', 'success', '2025-10-30 00:25:46'),
+(434, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-30 00:32:07'),
+(435, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-30 00:42:02'),
+(436, 4, 'admin', 'admin_access', 'admin', 'Admin access: Viewed audit logs - Accessed audit trail page', NULL, '{\"action\":\"Viewed audit logs\",\"details\":\"Accessed audit trail page\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'admin', 'medium', 'success', '2025-10-30 00:42:31'),
+(437, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":144}', '{\"product_id\":144,\"name\":\"Wrist Straps\",\"price\":650,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 144, 'product', 'medium', 'success', '2025-10-30 00:42:59'),
+(438, 4, 'admin', 'product_update', 'products', 'Product updated successfully', '{\"product_id\":148}', '{\"product_id\":148,\"name\":\"Massage Gun\",\"price\":3500,\"status\":\"active\",\"additional_images_added\":0,\"images_deleted\":0}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 148, 'product', 'medium', 'success', '2025-10-30 00:43:13');
 
 -- --------------------------------------------------------
 
@@ -536,7 +548,8 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (137, 24, 144, 3, '2025-10-27 08:14:16'),
 (148, 14, 161, 1, '2025-10-29 08:02:37'),
 (149, 14, 144, 6, '2025-10-29 08:02:37'),
-(150, 14, 143, 1, '2025-10-29 08:02:38');
+(150, 14, 143, 3, '2025-10-29 08:02:38'),
+(151, 14, 175, 1, '2025-10-30 01:32:52');
 
 -- --------------------------------------------------------
 
@@ -719,6 +732,69 @@ INSERT INTO `newsletter_subscribers` (`id`, `email`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `notification_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `link` varchar(500) DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`notification_id`, `user_id`, `type`, `title`, `message`, `link`, `is_read`, `created_at`) VALUES
+(1, 4, 'system', 'Test', 'Hello!', NULL, 1, '2025-10-30 00:31:16'),
+(2, 2, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(3, 10, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(4, 9, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(5, 18, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(6, 13, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(7, 20, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(8, 1, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(9, 8, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(10, 14, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(11, 15, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(12, 11, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(13, 12, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(14, 21, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(15, 17, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(16, 16, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(17, 25, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(18, 23, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(19, 19, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
+(20, 14, 'order_status', 'Order FF-20251029-FSZQM Updated', 'Your order status is now: processing.', 'order_details.php?order_id=29', 0, '2025-10-30 01:55:32');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification_settings`
+--
+
+CREATE TABLE `notification_settings` (
+  `setting_key` varchar(100) NOT NULL,
+  `setting_value` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `notification_settings`
+--
+
+INSERT INTO `notification_settings` (`setting_key`, `setting_value`) VALUES
+('email_order_confirmation_enabled', '1'),
+('notif_order_status_enabled', '1'),
+('notif_promotions_enabled', '1');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `orders`
 --
 
@@ -761,7 +837,7 @@ INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payme
 (26, 'FF-20251014-JBIUU', 14, 'returned', 'paypal', 'refunded', '4AJ187538K314382S', '{\"full_name\":\"Emman Cutie\",\"phone\":\"09123456789\",\"address\":\"\",\"city\":\"Angono\",\"state\":\"Rizal\",\"postal_code\":\"1940\"}', 1950.00, '2025-10-17', 'I don\'t like this item!', 1950.00, 0, '2025-10-14 14:25:06', '2025-10-29 08:10:24'),
 (27, 'FF-20251029-29NPF', 14, 'delivered', 'cod', 'paid', NULL, '{\"full_name\":\"Emman Cutie\",\"phone\":\"09123456789\",\"address\":\"\",\"city\":\"Camalig\",\"state\":\"Albay\",\"postal_code\":\"2003\"}', 290.00, '2025-11-01', NULL, NULL, 1, '2025-10-29 07:30:14', '2025-10-29 07:34:23'),
 (28, 'FF-20251029-XDF1B', 14, 'returned', 'cod', 'paid', NULL, '{\"full_name\":\"Karl Cutie\",\"phone\":\"09765000555\",\"address_line1\":\"Testing Karl\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Infanta\",\"state\":\"Quezon\",\"postal_code\":\"1930\",\"country\":\"Philippines\"}', 5830.00, '2025-11-01', 'I don\'t like this item. I want to return it.', 700.00, 1, '2025-10-29 07:42:50', '2025-10-29 08:11:38'),
-(29, 'FF-20251029-FSZQM', 14, 'pending', 'paypal', 'pending', '4JT246156A538015A', '{\"full_name\":\"Karl Testing\",\"phone\":\"09765700300\",\"address_line1\":\"R. Testing St.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Angono\",\"state\":\"Rizal\",\"postal_code\":\"1940\",\"country\":\"Philippines\"}', 1600.00, '2025-11-01', NULL, NULL, 1, '2025-10-29 07:43:32', '2025-10-29 07:43:36');
+(29, 'FF-20251029-FSZQM', 14, 'processing', 'paypal', 'pending', '4JT246156A538015A', '{\"full_name\":\"Karl Testing\",\"phone\":\"09765700300\",\"address_line1\":\"R. Testing St.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Angono\",\"state\":\"Rizal\",\"postal_code\":\"1940\",\"country\":\"Philippines\"}', 1600.00, '2025-11-01', NULL, NULL, 1, '2025-10-29 07:43:32', '2025-10-30 01:55:32');
 
 -- --------------------------------------------------------
 
@@ -894,11 +970,11 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `category_id`, `subcategory_id`, `images`, `status`, `is_popular`, `is_best_seller`, `sale_percentage`, `created_at`, `updated_at`, `min_stock_level`, `average_rating`, `total_reviews`, `rating_5_count`, `rating_4_count`, `rating_3_count`, `rating_2_count`, `rating_1_count`) VALUES
 (143, 'Weightlifting Gloves', 'Prevent calluses and improve grip with padded gloves designed for comfort and durability.', 990.00, 41, 1, 11, '[\"uploads\\/products\\/68bf1f27d1309_1757355815.jpg\"]', 'active', 1, 0, 20, '2025-09-06 14:37:21', '2025-10-29 07:53:05', 10, 5.00, 1, 1, 0, 0, 0, 0),
-(144, 'Wrist Straps', 'Boost your lifting power by reducing grip fatigue which is perfect for deadlifts, rows, and heavy pulls.', 650.00, 99, 1, 11, '[\"uploads\\/products\\/69024a15c0196_1761757717.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:08:37', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(144, 'Wrist Straps', 'Boost your lifting power by reducing grip fatigue which is perfect for deadlifts, rows, and heavy pulls.', 650.00, 99, 1, 11, '[\"uploads\\/products\\/69024a15c0196_1761757717.png\"]', 'active', 0, 0, 15, '2025-09-06 14:37:21', '2025-10-30 00:42:59', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (145, 'Weightlifting Belt', 'Maximize support during heavy lifts. This belt helps stabilize your core and lower back for better performance and safety.', 1200.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f4f13aa4_1757355855.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:37:50', 10, 5.00, 1, 1, 0, 0, 0, 0),
 (147, 'Barbell Pads', 'Protect your joints during intense workouts with durable, cushioned pads ideal for knees, elbows and floors.', 750.00, 75, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:52:54', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(148, 'Massage Gun', 'Deep tissue massage gun designed to relieve soreness, improve circulation, and promote faster muscle recovery.', 3500.00, 50, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:52:34', 10, 0.00, 0, 0, 0, 0, 0, 0),
+(148, 'Massage Gun', 'Deep tissue massage gun designed to relieve soreness, improve circulation, and promote faster muscle recovery.', 3500.00, 50, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 10, '2025-09-06 14:37:21', '2025-10-30 00:43:13', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (149, 'Gel Pack', 'Gel packs for targeted relief, soothe sore muscles, reduce inflammation, and speed up recovery.', 450.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 08:02:24', 10, 5.00, 1, 1, 0, 0, 0, 0),
 (150, 'Compression Sleeves', 'Improve blood flow and reduce muscle fatigue with breathable, supportive compression sleeves.', 700.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (151, 'Stretching Strap', 'Improve flexibility and mobility with a multi-loop stretching strap, great for yoga, PT, or cool-downs', 400.00, 99, 1, 12, '[\"uploads\\/products\\/69025170a2be2_1761759600.webp\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:40:00', 10, 0.00, 0, 0, 0, 0, 0, 0),
@@ -1111,7 +1187,19 @@ INSERT INTO `product_views` (`view_id`, `product_id`, `user_id`, `viewed_at`) VA
 (10, 146, NULL, '2025-10-29 19:32:48'),
 (11, 153, NULL, '2025-10-29 19:33:04'),
 (12, 153, NULL, '2025-10-29 19:33:05'),
-(13, 153, NULL, '2025-10-29 19:33:06');
+(13, 153, NULL, '2025-10-29 19:33:06'),
+(14, 143, 14, '2025-10-30 00:30:22'),
+(15, 143, 14, '2025-10-30 00:35:12'),
+(16, 143, 14, '2025-10-30 00:35:38'),
+(17, 144, 14, '2025-10-30 00:36:41'),
+(18, 144, 14, '2025-10-30 00:59:31'),
+(19, 161, 14, '2025-10-30 01:11:19'),
+(20, 175, 14, '2025-10-30 01:31:06'),
+(21, 175, 14, '2025-10-30 01:32:42'),
+(22, 174, 14, '2025-10-30 01:32:44'),
+(23, 175, 14, '2025-10-30 01:32:53'),
+(24, 173, 14, '2025-10-30 01:50:41'),
+(25, 145, 14, '2025-10-30 01:53:31');
 
 -- --------------------------------------------------------
 
@@ -1423,14 +1511,14 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`, `otp`, `otp_expiry`) VALUES
 (1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL, NULL, NULL),
 (2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-29 19:25:40', '2025-10-29 19:25:40', NULL, NULL, NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-30 00:25:36', '2025-10-30 00:25:36', NULL, NULL, NULL, NULL, NULL),
 (8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL, NULL, NULL),
 (9, 'emmanthemanager', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$kSFY7rSwEQmfyeNXtUmf6eWXm/PmBFs1pLJeUYq31iLI6hhi6B/4O', NULL, 'manager', 'active', '2025-09-09 04:07:49', '2025-10-29 15:55:15', '2025-10-27 12:31:10', NULL, NULL, NULL, NULL, NULL),
 (10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL, NULL, NULL),
 (11, 'karlchristopherblockstock', 'qkcblockstock@tip.edu.ph', NULL, NULL, NULL, NULL, '115213109204080203270', 'customer', 'active', '2025-09-10 12:09:18', '2025-10-27 08:09:42', '2025-10-27 08:09:42', NULL, NULL, NULL, NULL, NULL),
 (12, 'karlchristopherdenievablockstock', 'kdblockstock9221ant@student.fatima.edu.ph', NULL, NULL, NULL, NULL, '115755974582208244511', 'customer', 'active', '2025-09-10 15:04:41', '2025-09-10 15:04:41', NULL, NULL, NULL, NULL, NULL, NULL),
 (13, 'harizzzx', 'hari.zxc33@gmail.com', NULL, NULL, NULL, NULL, '106813422058620151416', 'customer', 'active', '2025-09-10 15:05:56', '2025-10-02 10:03:25', '2025-10-02 10:03:25', NULL, NULL, NULL, NULL, NULL),
-(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-29 16:04:23', '2025-10-29 16:04:23', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
+(14, 'karlblockstock', 'kcblockstockpogi@gmail.com', '09765725385', '2003-12-27', NULL, NULL, '100385737798619516808', 'customer', 'active', '2025-09-21 15:55:55', '2025-10-30 00:25:46', '2025-10-30 00:25:46', 'Karl', 'Blockstock', 'uploads/profile/u14_1758731950_e8fa2b7e.jpg', NULL, NULL),
 (15, 'karlblockstock1', 'karlblockstock27@gmail.com', '09765725123', '2003-12-27', NULL, NULL, '108103448522066236518', 'customer', 'active', '2025-09-21 16:04:20', '2025-10-05 13:59:13', '2025-10-05 13:59:13', 'Karl', 'Blockstock', 'uploads/profile/u15_1759665921_6906177e.jpg', '434570', '2025-10-05 16:04:13'),
 (16, 'michelleangeles', 'angelesmich09@gmail.com', NULL, NULL, NULL, NULL, '108570352098358224048', 'customer', 'active', '2025-09-23 08:36:00', '2025-09-23 09:12:25', '2025-09-23 09:12:25', NULL, NULL, NULL, NULL, NULL),
 (17, 'mich0303', 'qmasamar@tip.edu.ph', '09123456789', '2003-12-27', NULL, '$2y$10$t2.GNMloV5cZ9NQIiQfAJ.KMMBrTNcr.3dxPl9WwOnJ5Aqi9BaNqG', NULL, 'customer', 'active', '2025-09-23 15:06:02', '2025-09-24 09:02:09', '2025-09-24 08:47:32', 'Michelle', 'Angeles', 'uploads/profile/u17_1758702327_45104a57.jpg', NULL, NULL),
@@ -1623,6 +1711,20 @@ ALTER TABLE `newsletter_subscribers`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`notification_id`),
+  ADD KEY `idx_user_read` (`user_id`,`is_read`),
+  ADD KEY `idx_user_created` (`user_id`,`created_at`);
+
+--
+-- Indexes for table `notification_settings`
+--
+ALTER TABLE `notification_settings`
+  ADD PRIMARY KEY (`setting_key`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
@@ -1808,7 +1910,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=427;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=439;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -1820,7 +1922,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1845,6 +1947,12 @@ ALTER TABLE `inventory`
 --
 ALTER TABLE `newsletter_subscribers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -1886,7 +1994,7 @@ ALTER TABLE `product_images`
 -- AUTO_INCREMENT for table `product_views`
 --
 ALTER TABLE `product_views`
-  MODIFY `view_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `view_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `promo_codes`
@@ -1922,7 +2030,7 @@ ALTER TABLE `review_images`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=824;
+  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=848;
 
 --
 -- AUTO_INCREMENT for table `shipping_addresses`

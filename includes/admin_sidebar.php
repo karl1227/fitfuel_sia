@@ -73,7 +73,7 @@ function renderAdminSidebar($current_page = 'dashboard') {
         ],
         [
             'module' => 'notifications',
-            'href' => '#',
+            'href' => 'notifications.php',
             'icon' => 'fa-bell',
             'text' => 'Notifications',
             'accessible_to' => ['admin', 'manager', 'staff']

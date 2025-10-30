@@ -3,6 +3,7 @@ require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/stock_control.php';
 require_once '../config/audit_logger.php';
+require_once '../config/notifications_helper.php';
 require_once '../config/currency_helper.php';
 require_once '../includes/admin_sidebar.php';
 
@@ -85,6 +86,21 @@ try {
 		if ($oldOrder && $oldOrder['status'] !== $newStatus) {
 			$auditLogger->logOrderStatusChange($orderId, $oldOrder['status'], $newStatus);
 		}
+
+		// Notify user of status change
+		try {
+			if (getNotificationSetting('notif_order_status_enabled','1') === '1') {
+				$uStmt = $pdo->prepare('SELECT user_id, custom_order_id FROM orders WHERE order_id = ?');
+				$uStmt->execute([$orderId]);
+				$owner = $uStmt->fetch(PDO::FETCH_ASSOC);
+				if ($owner) {
+					$title = 'Order ' . ($owner['custom_order_id'] ?? ('#'.$orderId)) . ' Updated';
+					$msg = 'Your order status is now: ' . $newStatus . '.';
+					$link = 'order_details.php?order_id=' . $orderId;
+					createNotification((int)$owner['user_id'], 'order_status', $title, $msg, $link);
+				}
+			}
+		} catch (Throwable $e) { /* ignore user notif errors */ }
 		
 		// Stock control on processing or paid
 		if (in_array($newStatus, ['processing','shipped','delivered'], true)) {
@@ -120,6 +136,23 @@ try {
 				'medium',
 				'success'
 			);
+		}
+		
+		// Notify customer of payment status change (especially important statuses)
+		if ($oldOrder && $oldOrder['payment_status'] !== $paymentStatus && in_array($paymentStatus, ['paid', 'refunded', 'failed'], true)) {
+			try {
+				if (getNotificationSetting('notif_order_status_enabled','1') === '1') {
+					$uStmt = $pdo->prepare('SELECT user_id, custom_order_id FROM orders WHERE order_id = ?');
+					$uStmt->execute([$orderId]);
+					$owner = $uStmt->fetch(PDO::FETCH_ASSOC);
+					if ($owner) {
+						$title = 'Order ' . ($owner['custom_order_id'] ?? ('#'.$orderId)) . ' Payment ' . ucfirst($paymentStatus);
+						$msg = 'Your order payment status has been updated to: ' . ucfirst($paymentStatus) . '.';
+						$link = 'order_details.php?order_id=' . $orderId;
+						createNotification((int)$owner['user_id'], 'order_status', $title, $msg, $link);
+					}
+				}
+			} catch (Throwable $e) { /* ignore notification errors */ }
 		}
 		
 		if ($paymentStatus === 'paid') {
@@ -205,10 +238,10 @@ try {
 			}
 			
 			$pdo->commit();
-			$message = 'Return management updated successfully.';
+			$message = 'Order management updated successfully.';
 		} catch (Exception $e) {
 			$pdo->rollBack();
-			$error = 'Error updating return management: ' . $e->getMessage();
+			$error = 'Error updating order management: ' . $e->getMessage();
 		}
 	}
 	if ($action === 'reject_return') {
@@ -248,6 +281,20 @@ try {
 		
 		// Log order cancellation
 		$auditLogger->logOrderCancel($orderId, $reason);
+		// Notify user cancellation
+		try {
+			if (getNotificationSetting('notif_order_status_enabled','1') === '1') {
+				$uStmt = $pdo->prepare('SELECT user_id, custom_order_id FROM orders WHERE order_id = ?');
+				$uStmt->execute([$orderId]);
+				$owner = $uStmt->fetch(PDO::FETCH_ASSOC);
+				if ($owner) {
+					$title = 'Order ' . ($owner['custom_order_id'] ?? ('#'.$orderId)) . ' Cancelled';
+					$msg = 'Your order has been cancelled.' . ($reason ? (' Reason: ' . $reason) : '');
+					$link = 'my_orders.php';
+					createNotification((int)$owner['user_id'], 'order_status', $title, $msg, $link);
+				}
+			}
+		} catch (Throwable $e) { }
 		
 		// Restore stock if it was deducted
 		restoreStockControl($pdo, $orderId, (int)($_SESSION['user_id'] ?? 0));
@@ -327,63 +374,9 @@ $orders = $stm->fetchAll();
 		.filter-btn { background-color: #f8f9fa; border: 1px solid #e9ecef; color: #374151; }
 		.filter-btn:focus { background-color: #ffffff; border-color: #6c757d; }
 	</style>
-    <script>
-        function toggleUserMenu(){
-            const menu = document.getElementById('userMenu');
-            menu.classList.toggle('hidden');
-        }
-        document.addEventListener('click', function(event) {
-            const userMenu = document.getElementById('userMenu');
-            const userButton = event.target.closest('[onclick="toggleUserMenu()"]');
-            if (!userButton && userMenu && !userMenu.contains(event.target)) {
-                userMenu.classList.add('hidden');
-            }
-        });
-    </script>
 </head>
 <body class="font-body bg-gray-50">
-	<header class="bg-black text-white fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-6">
-		<div class="flex items-center space-x-3">
-            <img src="../img/LOGO-Fitfuel.png" alt="FitFuel Logo" class="w-8 h-8 object-contain">
-            <div class="w-px h-6 bg-white"></div>
-			<h1 class="text-xl font-bold uppercase">Admin</h1>
-		</div>
-		<div class="flex items-center space-x-4">
-			<button class="p-2 hover:bg-gray-800 rounded-lg transition-colors relative">
-				<i class="fas fa-bell text-xl"></i>
-				<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-			</button>
-			<div class="relative">
-				<button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg transition-colors">
-					<div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-						<i class="fas fa-user text-white text-sm"></i>
-					</div>
-					<span class="hidden md:block text-sm"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></span>
-					<i class="fas fa-chevron-down text-xs"></i>
-				</button>
-				<div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-					<div class="px-4 py-2 border-b border-gray-200">
-						<p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></p>
-						<p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></p>
-						<span class="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"><?php echo ucfirst($_SESSION['role'] ?? 'admin'); ?></span>
-					</div>
-					<a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-						<i class="fas fa-user-cog mr-3 text-gray-400"></i>
-						Profile Settings
-					</a>
-					<a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-						<i class="fas fa-cog mr-3 text-gray-400"></i>
-						Preferences
-					</a>
-					<div class="border-t border-gray-200 mt-2"></div>
-					<a href="../logout.php" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-						<i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
-						Logout
-					</a>
-				</div>
-			</div>
-		</div>
-	</header>
+	<?php require_once '../includes/admin_header.php'; ?>
 	<?php renderAdminSidebar('orders'); ?>
 	<main class="ml-64 pt-24 pb-6 px-6">
 		<!-- Page Header -->
@@ -643,7 +636,7 @@ $orders = $stm->fetchAll();
 						<button type="button" onclick="closeOrderModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
 							Cancel
 						</button>
-						<button type="submit" name="action" value="update_status" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+					<button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
 							<i class="fas fa-save mr-1"></i>
 							Save Changes
 						</button>

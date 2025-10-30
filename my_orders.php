@@ -194,8 +194,8 @@ foreach ($rows as $r) {
 <body class="bg-[#f6f6f6] text-slate-700 min-h-screen flex flex-col">
   <nav class="bg-white text-black py-2">
     <div class="container mx-auto px-4 flex justify-end space-x-6 text-sm">
-      <a class="hover:text-emerald-400">Review</a>
-      <a class="hover:text-emerald-400">Help</a>
+      <a href="testimonials.php" class="hover:text-emerald-400">Review</a>
+      <a href="faq.php" class="hover:text-emerald-400">Help</a>
       <a href="logout.php" class="hover:text-emerald-400">Logout</a>
     </div>
   </nav>
@@ -205,8 +205,8 @@ foreach ($rows as $r) {
       <div class="hidden md:flex items-center space-x-8">
         <a href="index.php" class="text-white hover:text-emerald-600">Home</a>
         <a href="shop.php" class="text-white hover:text-emerald-600">Shop</a>
-        <a href="#" class="text-white hover:text-emerald-600">About</a>
-        <a href="#" class="text-white hover:text-emerald-600">Contact</a>
+        <a href="aboutus.php" class="text-white hover:text-emerald-600">About</a>
+        <a href="contact.php" class="text-white hover:text-emerald-600">Contact</a>
       </div>
       <div class="flex items-center space-x-4">
         <a href="cart.php" class="relative p-2 text-white hover:text-emerald-600">
@@ -332,4 +332,5 @@ foreach ($rows as $r) {
     setActiveTab(tabs.find(t=>t.dataset.tab===saved)?saved:'all');
   </script>
 </body>
+<?php include 'includes/footer.php'; ?>
 </html>

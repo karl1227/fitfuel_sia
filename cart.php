@@ -80,8 +80,8 @@ try {
   <nav class="bg-white text-black py-2">
     <div class="container mx-auto px-4">
       <div class="flex justify-end space-x-6 text-sm">
-        <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
-        <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
+        <a href="testimonials.php" class="hover:text-emerald-400 transition-colors">Review</a>
+        <a href="contact.php" class="hover:text-emerald-400 transition-colors">Help</a>
         <a href="profile.php" class="hover:text-emerald-400 transition-colors">Account</a>
         <a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
       </div>
@@ -103,7 +103,7 @@ try {
         <div class="hidden md:flex space-x-8">
           <a href="shop.php" class="font-medium text-white hover:text-emerald-600 transition-colors">Shop</a>
           <a href="shop.php" class="font-medium text-white hover:text-emerald-600 transition-colors">Categories</a>
-          <a href="#" class="font-medium text-white hover:text-emerald-600 transition-colors">About</a>
+          <a href="aboutus.php" class="font-medium text-white hover:text-emerald-600 transition-colors">About</a>
         </div>
 
         <!-- Search and Icons -->
@@ -333,10 +333,9 @@ try {
         <div>
           <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
           <ul class="space-y-2">
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">About Us</a></li>
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Contact</a></li>
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Blog</a></li>
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">FAQs</a></li>
+            <li><a href="aboutus.php" class="text-slate-300 hover:text-emerald-400 transition-colors">About Us</a></li>
+            <li><a href="contact.php" class="text-slate-300 hover:text-emerald-400 transition-colors">Contact</a></li>
+            <li><a href="faq.php" class="text-slate-300 hover:text-emerald-400 transition-colors">FAQs</a></li>
           </ul>
         </div>
 
@@ -353,10 +352,10 @@ try {
         <div>
           <h4 class="font-semibold text-lg mb-4">Customer Service</h4>
           <ul class="space-y-2">
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Shipping Info</a></li>
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Returns</a></li>
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Size Guide</a></li>
-            <li><a href="#" class="text-slate-300 hover:text-emerald-400 transition-colors">Track Order</a></li>
+            <li><a href="faq.php" class="text-slate-300 hover:text-emerald-400 transition-colors">Shipping Info</a></li>
+            <li><a href="faq.php#returns" class="text-slate-300 hover:text-emerald-400 transition-colors">Returns</a></li>
+            <li><a href="faq.php" class="text-slate-300 hover:text-emerald-400 transition-colors">Size Guide</a></li>
+            <li><a href="my_orders.php" class="text-slate-300 hover:text-emerald-400 transition-colors">Track Order</a></li>
           </ul>
         </div>
       </div>

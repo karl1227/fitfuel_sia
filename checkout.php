@@ -152,8 +152,8 @@ $total = $subtotal + $shipping_fee + $tax_amount;
   <nav class="bg-white text-black py-2">
     <div class="container mx-auto px-4">
       <div class="flex justify-end space-x-6 text-sm">
-        <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
-        <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
+        <a href="testimonials.php" class="hover:text-emerald-400 transition-colors">Review</a>
+        <a href="contact.php" class="hover:text-emerald-400 transition-colors">Help</a>
         <a href="profile.php" class="hover:text-emerald-400 transition-colors">Account</a>
         <a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
       </div>
@@ -172,8 +172,8 @@ $total = $subtotal + $shipping_fee + $tax_amount;
         <div class="hidden md:flex items-center space-x-8">
           <a href="index.php" class="text-white hover:text-emerald-600 transition-colors">Home</a>
           <a href="shop.php" class="text-white hover:text-emerald-600 transition-colors">Shop</a>
-          <a href="#" class="text-white hover:text-emerald-600 transition-colors">About</a>
-          <a href="#" class="text-white hover:text-emerald-600 transition-colors">Contact</a>
+          <a href="aboutus.php" class="text-white hover:text-emerald-600 transition-colors">About</a>
+          <a href="contact.php" class="text-white hover:text-emerald-600 transition-colors">Contact</a>
         </div>
         <div class="flex items-center space-x-4">
           <a href="cart.php" class="relative p-2 text-white hover:text-emerald-600 transition-colors">
@@ -226,7 +226,7 @@ $total = $subtotal + $shipping_fee + $tax_amount;
           <div class="bg-white rounded-lg shadow-lg p-6">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-xl font-semibold text-slate-800">Delivery Address</h2>
-              <button onclick="openAddressPicker()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+              <button type="button" onclick="openAddressPicker()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
                 <i class="fas fa-map-marker-alt mr-2"></i> Change Address
               </button>
             </div>
@@ -521,48 +521,6 @@ $total = $subtotal + $shipping_fee + $tax_amount;
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-black text-white py-12 mt-16">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div>
-          <img src="img/LOGO-Fitfuel.png" width="100" height="auto" alt="LOGO" class="mb-4">
-          <p class="text-gray-400">Your ultimate fitness companion for a healthier lifestyle.</p>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-4">Quick Links</h3>
-          <ul class="space-y-2 text-gray-400">
-            <li><a href="index.php" class="hover:text-white transition-colors">Home</a></li>
-            <li><a href="shop.php" class="hover:text-white transition-colors">Shop</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-4">Support</h3>
-          <ul class="space-y-2 text-gray-400">
-            <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Shipping Info</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Returns</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Size Guide</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-4">Connect</h3>
-          <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook text-xl"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-instagram text-xl"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter text-xl"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-youtube text-xl"></i></a>
-          </div>
-        </div>
-      </div>
-      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-        <p>&copy; 2024 FitFuel. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
   <!-- ===== Page JS (at the end) ===== -->
   <script>
 let editingAddress = null; // holds current address being edited from picker
@@ -604,7 +562,12 @@ function renderAddressList(addresses){
 }
 
 function openAddressPicker(){
-  document.getElementById('addressPicker').classList.remove('hidden');
+  const modal = document.getElementById('addressPicker');
+  if (!modal) {
+    console.error('Address picker modal not found');
+    return;
+  }
+  modal.classList.remove('hidden');
   document.body.style.overflow='hidden';
   fetch('get_addresses.php').then(r=>r.json()).then(d=>{
     if(d.success){ renderAddressList(d.addresses||[]); } else { document.getElementById('addressList').innerHTML = `<div class='text-red-600'>${d.message||'Failed to load addresses'}</div>`; }
@@ -953,7 +916,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (pre.barangay && !brgySel.disabled) {
     brgySel.value = pre.barangay;
   }
-});
+  });
   </script>
-</body>
-</html>
+  <?php include 'includes/footer.php'; ?>

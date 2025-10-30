@@ -714,5 +714,7 @@ if (!empty($_SESSION['user_id'])) {
             });
         })();
     </script>
+    <?php include 'includes/chatbot.php'; ?>
 </body>
+<?php include 'includes/footer.php'; ?>
 </html>

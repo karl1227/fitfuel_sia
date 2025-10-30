@@ -142,9 +142,7 @@ if (!empty($_SESSION['user_id'])) {
       <div class="flex justify-end space-x-6 text-sm">
         <a href="testimonials.php" class="hover:text-emerald-400 transition-colors">Review</a>
         <a href="faq.php" class="hover:text-emerald-400 transition-colors">Help</a>
-        <?php if (!empty($_SESSION['user_id'])): ?>
-          <a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
-        <?php else: ?>
+        <?php if (empty($_SESSION['user_id'])): ?>
           <a href="login.php" class="hover:text-emerald-400 transition-colors">Login</a>
         <?php endif; ?>
       </div>
@@ -186,10 +184,30 @@ if (!empty($_SESSION['user_id'])) {
             </button>
           </form>
 
-          <!-- Bell -->
-          <button class="relative p-2 text-white hover:text-emerald-600 transition-colors">
-            <i class="fas fa-bell text-xl"></i>
-          </button>
+          <!-- Notifications (customer) -->
+          <?php if (!empty($_SESSION['user_id'])): ?>
+          <div class="relative">
+            <button id="notif-bell" class="relative p-2.5 text-white hover:text-emerald-600 transition-all duration-200 hover:scale-110" aria-label="Notifications" title="Notifications">
+              <i class="fas fa-bell text-xl"></i>
+              <span id="notif-count" class="hidden absolute top-0 right-0 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 shadow-lg">0</span>
+            </button>
+            <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-96 bg-white text-slate-800 rounded-lg shadow-2xl border border-gray-200 z-[9999] overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
+                <span class="font-semibold text-gray-900 text-base flex items-center">
+                  <i class="fas fa-bell mr-2 text-emerald-600"></i>
+                  Notifications
+                </span>
+                <button id="notif-mark-all" class="text-sm text-emerald-600 hover:text-emerald-700 font-medium px-2 py-1 rounded hover:bg-emerald-50 transition-colors">Mark all read</button>
+              </div>
+              <div id="notif-list" class="max-h-96 overflow-y-auto">
+                <div class="px-4 py-8 text-center text-gray-500">
+                  <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                  <p class="text-sm">Loading notifications...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <?php endif; ?>
 
           <!-- Cart -->
           <a href="cart.php" class="relative p-2 text-white hover:text-emerald-600 transition-colors">
@@ -209,14 +227,13 @@ if (!empty($_SESSION['user_id'])) {
               <i class="fas fa-user text-xl"></i>
             </button>
             <div id="profileDropdown"
-                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 hidden z-50"
-                 role="menu" aria-labelledby="profileBtn">
+                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                 role="menu" aria-labelledby="profileBtn" style="display: none;">
               <?php if (!empty($_SESSION['user_id'])): ?>
                 <a href="profile.php"   class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Account</a>
                 <a href="my_orders.php" class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Purchase</a>
                 <a href="wishlist.php"  class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Wishlist</a>
-                <div class="my-2 border-t border-gray-200"></div>
-                <a href="logout.php"    class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">Logout</a>
+                
               <?php else: ?>
                 <a href="login.php"         class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">Login</a>
                 <a href="registration.php"  class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">Create Account</a>
@@ -339,7 +356,7 @@ if (!empty($_SESSION['user_id'])) {
           <?php foreach ($products as $product): ?>
             <?php
               $images = json_decode($product['images'] ?? '[]', true);
-              $image_url = (!empty($images) && is_array($images)) ? $images[0] : 'img/placeholder.svg';
+              $image_url = (!empty($images) && is_array($images)) ? $images[0] : 'img/placeholder-product.png';
               $on_sale = ((float)$product['sale_percentage'] > 0);
               $price   = (float)$product['price'];
               $final   = $on_sale ? ($price * (1 - $product['sale_percentage']/100)) : $price;
@@ -526,17 +543,17 @@ if (!empty($_SESSION['user_id'])) {
         .catch(() => {});
     }
 
-    // Profile dropdown
+    // Profile dropdown (same behavior as testimonials.php)
     (function () {
       const btn  = document.getElementById('profileBtn');
       const menu = document.getElementById('profileDropdown');
+      const container = document.getElementById('profileMenu');
       if (!btn || !menu) return;
-      const close = () => { menu.classList.add('hidden');  btn.setAttribute('aria-expanded','false'); };
-      const open  = () => { menu.classList.remove('hidden'); btn.setAttribute('aria-expanded','true');  };
-      btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.contains('hidden') ? open() : close(); });
-      document.addEventListener('click', (e) => { const c = document.getElementById('profileMenu'); if (!c.contains(e.target)) close(); });
+      const close = () => { menu.style.display = 'none';  btn.setAttribute('aria-expanded','false'); };
+      const open  = () => { menu.style.display = 'block'; btn.setAttribute('aria-expanded','true');  };
+      btn.addEventListener('click', (e) => { e.stopPropagation(); (menu.style.display === 'none') ? open() : close(); });
+      document.addEventListener('click', (e) => { if (!container.contains(e.target)) close(); });
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
     })();
   </script>
-</body>
-</html>
+  <?php include 'includes/footer.php'; ?>

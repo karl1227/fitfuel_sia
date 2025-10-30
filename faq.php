@@ -59,9 +59,7 @@ try {
 			<div class="flex justify-end space-x-6 text-sm">
 				<a href="testimonials.php" class="hover:text-emerald-400 transition-colors">Review</a>
 				<a href="contact.php" class="hover:text-emerald-400 transition-colors">Help</a>
-				<?php if (!empty($_SESSION['user_id'])): ?>
-					<a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
-				<?php else: ?>
+                <?php if (empty($_SESSION['user_id'])): ?>
 					<a href="login.php" class="hover:text-emerald-400 transition-colors">Login</a>
 				<?php endif; ?>
 			</div>
@@ -81,8 +79,25 @@ try {
 						<input type="text" name="search" placeholder="Search products..." class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
 						<button type="submit" class="absolute right-3 top-3 text-gray-400 hover:text-emerald-600"><i class="fas fa-search"></i></button>
 					</form>
-					<a href="cart.php" class="relative p-2 text-white hover:text-emerald-600 transition-colors"><i class="fas fa-shopping-cart text-xl"></i></a>
-					<a href="login.php" class="p-2 text-white hover:text-emerald-600 transition-colors"><i class="fas fa-user text-xl"></i></a>
+                    <a href="cart.php" class="relative p-2 text-white hover:text-emerald-600 transition-colors"><i class="fas fa-shopping-cart text-xl"></i></a>
+                    <?php if (!empty($_SESSION['user_id'])): ?>
+                    <div class="relative" id="profileMenu">
+                        <button id="profileBtn"
+                                class="p-2 text-white hover:text-emerald-600 transition-colors rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user text-xl"></i>
+                        </button>
+                        <div id="profileDropdown"
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                             role="menu" aria-labelledby="profileBtn" style="display: none;">
+                            <a href="profile.php"   class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Account</a>
+                            <a href="my_orders.php" class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Purchase</a>
+                            <a href="wishlist.php"  class="block px-4 py-2 text-sm text-slate-700 hover:bg-gray-100">My Wishlist</a>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <a href="login.php" class="p-2 text-white hover:text-emerald-600 transition-colors"><i class="fas fa-user text-xl"></i></a>
+                    <?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -120,6 +135,24 @@ try {
 	</section>
 
 	<?php include 'includes/footer.php'; ?>
+
+	<script>
+    // Profile dropdown (copied behavior from testimonials.php)
+    (function(){
+        function init(){
+            var btn  = document.getElementById('profileBtn');
+            var menu = document.getElementById('profileDropdown');
+            var container = document.getElementById('profileMenu');
+            if (!btn || !menu) return;
+            function close(){ menu.style.display = 'none'; btn.setAttribute('aria-expanded','false'); }
+            function open(){ menu.style.display = 'block'; btn.setAttribute('aria-expanded','true'); }
+            btn.addEventListener('click', function(e){ e.stopPropagation(); menu.style.display === 'none' ? open() : close(); });
+            document.addEventListener('click', function(e){ if (!container.contains(e.target)) close(); });
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+    })();
+	</script>
 
 	<script>
 	function toggleFaq(i){

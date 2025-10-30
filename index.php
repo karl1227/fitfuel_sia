@@ -872,7 +872,8 @@ try {
 			});
 		})();
 	</script>
-  </body>
+  <?php include 'includes/chatbot.php'; ?>
+</body>
 </html>
 
 

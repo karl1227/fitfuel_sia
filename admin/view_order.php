@@ -3,6 +3,7 @@ require_once '../admin_auth_check.php';
 require_once '../config/database.php';
 require_once '../config/currency_helper.php';
 require_once '../includes/admin_sidebar.php';
+require_once '../config/notifications_helper.php';
 
 // Check role-based access for orders module (view_order is part of orders)
 requireAccess('orders');
@@ -98,6 +99,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Refresh order data
                 $orderStmt->execute([$order_id]);
                 $order = $orderStmt->fetch();
+
+                // Notify user of status change
+                try {
+                    if (getNotificationSetting('notif_order_status_enabled','1') === '1' && $order) {
+                        $title = 'Order ' . ($order['custom_order_id'] ?? ('#'.$order_id)) . ' Updated';
+                        $msg = 'Your order status is now: ' . $new_status . '.';
+                        $link = 'order_details.php?order_id=' . $order_id;
+                        createNotification((int)$order['user_id'], 'order_status', $title, $msg, $link);
+                    }
+                } catch (Throwable $e) { }
             } else {
                 $error = 'Invalid status values.';
             }
@@ -112,6 +123,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Refresh order data
                 $orderStmt->execute([$order_id]);
                 $order = $orderStmt->fetch();
+
+                // Notify user of cancellation
+                try {
+                    if (getNotificationSetting('notif_order_status_enabled','1') === '1' && $order) {
+                        $title = 'Order ' . ($order['custom_order_id'] ?? ('#'.$order_id)) . ' Cancelled';
+                        $msg = 'Your order has been cancelled.';
+                        $link = 'my_orders.php';
+                        createNotification((int)$order['user_id'], 'order_status', $title, $msg, $link);
+                    }
+                } catch (Throwable $e) { }
             } else {
                 $error = 'Cannot cancel orders that are already processing, shipped, or delivered.';
             }
@@ -172,48 +193,7 @@ if ($order['shipping_address']) {
     </script>
 </head>
 <body class="font-body bg-gray-50">
-    <header class="bg-black text-white fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-6">
-        <div class="flex items-center space-x-3">
-            <img src="../img/LOGO-Fitfuel.png" alt="FitFuel Logo" class="w-8 h-8 object-contain">
-            <div class="w-px h-6 bg-white"></div>
-            <h1 class="text-xl font-bold uppercase">Admin</h1>
-        </div>
-        <div class="flex items-center space-x-4">
-            <button class="p-2 hover:bg-gray-800 rounded-lg transition-colors relative">
-                <i class="fas fa-bell text-xl"></i>
-                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-            </button>
-            <div class="relative">
-                <button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg transition-colors">
-                    <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                        <i class="fas fa-user text-white text-sm"></i>
-                    </div>
-                    <span class="hidden md:block text-sm"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></span>
-                    <i class="fas fa-chevron-down text-xs"></i>
-                </button>
-                <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <div class="px-4 py-2 border-b border-gray-200">
-                        <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></p>
-                        <p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></p>
-                        <span class="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"><?php echo ucfirst($_SESSION['role'] ?? 'admin'); ?></span>
-                    </div>
-                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user-cog mr-3 text-gray-400"></i>
-                        Profile Settings
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-cog mr-3 text-gray-400"></i>
-                        Preferences
-                    </a>
-                    <div class="border-t border-gray-200 mt-2"></div>
-                    <a href="../logout.php" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                        <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
-                        Logout
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
+    <?php require_once '../includes/admin_header.php'; ?>
     
     <?php renderAdminSidebar('orders'); ?>
     

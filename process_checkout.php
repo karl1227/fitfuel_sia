@@ -2,6 +2,7 @@
 session_start();
 require_once 'config/database.php';
 require_once 'config/stock_control.php';
+require_once 'config/notifications_helper.php';
 require_once 'config/audit_logger.php';
 
 header('Content-Type: application/json');
@@ -271,6 +272,20 @@ try {
     
     error_log("Checkout completed successfully. Order ID: $order_id");
     
+    // Create user notification and send confirmation email
+    try {
+        createNotification(
+            $user_id,
+            'order_status',
+            'Order Placed',
+            'Your order ' . $custom_order_id . ' has been placed successfully.',
+            'order_details.php?order_id=' . $order_id
+        );
+        sendOrderConfirmationEmail($user_id, (int)$order_id, (string)$custom_order_id);
+    } catch (Throwable $e) {
+        // Do not fail checkout on notification/email errors
+    }
+
     // Handle payment method
     if ($payment_method === 'paypal') {
         try {

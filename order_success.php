@@ -125,8 +125,8 @@ if (isset($_SESSION['user_id'])) {
     <nav class="bg-white text-black py-2">
         <div class="container mx-auto px-4">
             <div class="flex justify-end space-x-6 text-sm">
-                <a href="#" class="hover:text-emerald-400 transition-colors">Review</a>
-                <a href="#" class="hover:text-emerald-400 transition-colors">Help</a>
+                <a href="testimonials.php" class="hover:text-emerald-400 transition-colors">Review</a>
+                <a href="faq.php" class="hover:text-emerald-400 transition-colors">Help</a>
                 <a href="#" class="hover:text-emerald-400 transition-colors">Account</a>
                 <a href="logout.php" class="hover:text-emerald-400 transition-colors">Logout</a>
             </div>

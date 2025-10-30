@@ -66,8 +66,8 @@ try {
   <nav class="bg-white text-black py-2">
     <div class="container mx-auto px-4">
       <div class="flex justify-end space-x-6 text-sm">
-        <a href="#" class="hover:text-emerald-400">Review</a>
-        <a href="#" class="hover:text-emerald-400">Help</a>
+        <a href="testimonials.php" class="hover:text-emerald-400">Review</a>
+        <a href="faq.php" class="hover:text-emerald-400">Help</a>
         <a href="logout.php" class="hover:text-emerald-400">Logout</a>
       </div>
     </div>
@@ -79,8 +79,8 @@ try {
         <div class="hidden md:flex items-center space-x-8">
           <a href="index.php" class="text-white hover:text-emerald-600">Home</a>
           <a href="shop.php" class="text-white hover:text-emerald-600">Shop</a>
-          <a href="#" class="text-white hover:text-emerald-600">About</a>
-          <a href="#" class="text-white hover:text-emerald-600">Contact</a>
+          <a href="aboutus.php" class="text-white hover:text-emerald-600">About</a>
+          <a href="contact.php" class="text-white hover:text-emerald-600">Contact</a>
         </div>
         <div class="flex items-center space-x-4">
           <a href="cart.php" class="relative p-2 text-white hover:text-emerald-600">

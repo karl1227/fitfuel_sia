@@ -251,7 +251,7 @@ try {
         <div>
           <h4 class="font-semibold mb-3">Support</h4>
           <ul class="space-y-2 text-slate-300 text-sm">
-            <li><a href="#" class="hover:text-emerald-400">Help Center</a></li>
+            <li><a href="faq.php" class="hover:text-emerald-400">Help Center</a></li>
             <li><a href="#" class="hover:text-emerald-400">Shipping & Returns</a></li>
             <li><a href="#" class="hover:text-emerald-400">Privacy Policy</a></li>
             <li><a href="#" class="hover:text-emerald-400">Terms of Service</a></li>
@@ -362,4 +362,5 @@ try {
     }
   </script>
 </body>
+<?php include 'includes/footer.php'; ?>
 </html>

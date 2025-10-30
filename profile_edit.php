@@ -135,8 +135,8 @@ try {
   <!-- top navs -->
   <nav class="bg-white text-black py-2">
     <div class="container mx-auto px-4 flex justify-end space-x-6 text-sm">
-      <a href="#" class="hover:text-emerald-400">Review</a>
-      <a href="#" class="hover:text-emerald-400">Help</a>
+      <a href="testimonials.php" class="hover:text-emerald-400">Review</a>
+      <a href="faq.php" class="hover:text-emerald-400">Help</a>
       <a href="logout.php" class="hover:text-emerald-400">Logout</a>
     </div>
   </nav>
