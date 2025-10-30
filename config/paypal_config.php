@@ -6,8 +6,8 @@
 
 class PayPalConfig {
     // PayPal Sandbox Credentials (for testing)
-    const SANDBOX_CLIENT_ID = 'AT_LSaC3hbNUsLFeUS-Y149YK7AEhblLhpOIhlvwrlYil4GIR_D_Gw90eurBcN4IH5CRj-vEWsQJwUwU';
-    const SANDBOX_CLIENT_SECRET = 'EMqJlOOgVl-7_7iqYiavMWk_1KjRK5WDlkHhsiNf6-PSuJfeQ2Lo4bY84XycAzQckI3j6Z3Bijl5DTuH';
+    const SANDBOX_CLIENT_ID = 'AV6l68EDqFlqQstFqEvMJoAjKDvQ2qGbo4YaQsRqz2LG5xfBqFRt_njCVRSLMupfpCGDR6VZgKuYU0lP';
+    const SANDBOX_CLIENT_SECRET = 'EMNNkNOd49KB8AVdmT0kBb6DGEKjgaLfr25jlb640rawMfyJCbzfJbCylKSvn4MyiYbG8cL_4CW7jyCu';
     
     // PayPal Live Credentials (for production)
     const LIVE_CLIENT_ID = 'YOUR_LIVE_CLIENT_ID_HERE';
