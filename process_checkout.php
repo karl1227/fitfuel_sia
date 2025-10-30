@@ -147,42 +147,86 @@ try {
     
     $total_amount = $subtotal + $shipping_fee - $discount_amount + $tax_amount;
     
+    // If PayPal, do not create the order yet. Create PayPal order and return approval URL.
+    if ($payment_method === 'paypal') {
+        try {
+            require_once 'config/paypal_service.php';
+            $paypalService = new PayPalService();
+            $paypalOrder = $paypalService->createOrder([
+                // Use a temporary reference for PayPal, real order will be created after approval
+                'order_id' => 'TEMP-' . time() . '-' . $user_id,
+                'total_amount' => $total_amount,
+                'subtotal' => $subtotal,
+                'shipping_fee' => $shipping_fee,
+                'discount_amount' => $discount_amount,
+                'items' => $cart_items,
+                'shipping_address' => $shipping_address
+            ]);
+            
+            // Persist pending checkout context in session keyed by PayPal order id
+            if (!isset($_SESSION['pending_paypal'])) { $_SESSION['pending_paypal'] = []; }
+            $_SESSION['pending_paypal'][$paypalOrder['id']] = [
+                'user_id' => $user_id,
+                'selected_items' => $selected_items,
+                'cart_items' => $cart_items,
+                'shipping_address' => $shipping_address,
+                'subtotal' => $subtotal,
+                'shipping_fee' => $shipping_fee,
+                'discount_amount' => $discount_amount,
+                'tax_amount' => $tax_amount,
+                'total_amount' => $total_amount,
+                'promo' => isset($promo) ? ['promo_id' => $promo['promo_id'], 'discount_amount' => $discount_amount, 'code' => $promo_code] : null,
+                'created_at' => time()
+            ];
+            
+            // End the DB transaction without changes
+            $pdo->rollBack();
+            
+            $approvalUrl = '';
+            foreach ($paypalOrder['links'] as $link) {
+                if ($link['rel'] === 'approve') {
+                    $approvalUrl = $link['href'];
+                    break;
+                }
+            }
+            
+            echo json_encode([
+                'success' => true,
+                'message' => 'Redirect to PayPal for approval',
+                'paypal_order_id' => $paypalOrder['id'],
+                'paypal_url' => $approvalUrl
+            ]);
+            exit();
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            error_log("PayPal error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'PayPal payment failed: ' . $e->getMessage()]);
+            exit();
+        }
+    }
+    
+    // Non-PayPal: proceed with normal order creation now
     // Generate custom order ID with shuffled characters
     $order_date = date('Ymd');
-    
-    // Generate unique random 5-character code (letters and numbers)
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $max_attempts = 10; // Prevent infinite loop
+    $max_attempts = 10;
     $attempt = 0;
-    
     do {
         $random_code = '';
         for ($i = 0; $i < 5; $i++) {
             $random_code .= $characters[rand(0, strlen($characters) - 1)];
         }
-        
         $custom_order_id = "FF-{$order_date}-{$random_code}";
-        
-        // Check if this custom_order_id already exists
         $check_sql = "SELECT COUNT(*) as count FROM orders WHERE custom_order_id = ?";
         $check_stmt = $pdo->prepare($check_sql);
         $check_stmt->execute([$custom_order_id]);
         $exists = $check_stmt->fetch()['count'] > 0;
-        
         $attempt++;
     } while ($exists && $attempt < $max_attempts);
-    
-    // If we couldn't generate a unique code, fall back to timestamp-based
     if ($exists) {
         $timestamp = substr(str_replace('.', '', microtime(true)), -5);
         $custom_order_id = "FF-{$order_date}-{$timestamp}";
     }
-    
-    // Create order with custom order ID
-    $order_sql = "INSERT INTO orders 
-                  (user_id, status, payment_method, payment_status, shipping_address, total_amount, estimated_delivery_date, custom_order_id) 
-                  VALUES (?, 'pending', ?, 'pending', ?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY), ?)";
-    
     $shipping_address_text = json_encode([
         'full_name' => $shipping_address['full_name'],
         'phone' => $shipping_address['phone'],
@@ -194,7 +238,9 @@ try {
         'postal_code' => $shipping_address['postal_code'],
         'country' => $shipping_address['country'] ?? 'Philippines'
     ]);
-    
+    $order_sql = "INSERT INTO orders 
+                  (user_id, status, payment_method, payment_status, shipping_address, total_amount, estimated_delivery_date, custom_order_id) 
+                  VALUES (?, 'pending', ?, 'pending', ?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY), ?)";
     $order_stmt = $pdo->prepare($order_sql);
     $result = $order_stmt->execute([
         $user_id,
@@ -203,18 +249,13 @@ try {
         $total_amount,
         $custom_order_id
     ]);
-    
     if (!$result) {
         $pdo->rollBack();
         error_log("Failed to create order");
         echo json_encode(['success' => false, 'message' => 'Failed to create order']);
         exit();
     }
-    
     $order_id = $pdo->lastInsertId();
-    error_log("Order created successfully with ID: $order_id, Custom ID: $custom_order_id");
-    
-    // Log order creation
     $auditLogger = new AuditLogger();
     $auditLogger->logOrderCreate($order_id, [
         'user_id' => $user_id,
@@ -223,8 +264,6 @@ try {
         'custom_order_id' => $custom_order_id,
         'items_count' => count($cart_items)
     ]);
-    
-    // Create order items
     foreach ($cart_items as $item) {
         $order_item_sql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
         $order_item_stmt = $pdo->prepare($order_item_sql);
@@ -234,29 +273,20 @@ try {
             $item['quantity'],
             $item['price']
         ]);
-        
         if (!$result) {
             $pdo->rollBack();
             echo json_encode(['success' => false, 'message' => 'Failed to create order items']);
             exit();
         }
-        
-        // Stock will be deducted after order creation using proper stock control
     }
-    
-    // Record promo code usage if applicable
     if ($promo_code && $discount_amount > 0) {
         $promo_record_sql = "INSERT INTO order_promo_codes (order_id, promo_id, discount_amount) VALUES (?, ?, ?)";
         $promo_record_stmt = $pdo->prepare($promo_record_sql);
         $promo_record_stmt->execute([$order_id, $promo['promo_id'], $discount_amount]);
-        
-        // Update promo code usage count
         $update_promo_sql = "UPDATE promo_codes SET used_count = used_count + 1 WHERE promo_id = ?";
         $update_promo_stmt = $pdo->prepare($update_promo_sql);
         $update_promo_stmt->execute([$promo['promo_id']]);
     }
-    
-    // Clear selected items from cart
     $placeholders = str_repeat('?,', count($selected_items) - 1) . '?';
     $clear_cart_sql = "DELETE ci FROM cart_items ci 
                        JOIN cart c ON ci.cart_id = c.cart_id 
@@ -264,15 +294,8 @@ try {
     $clear_params = array_merge([$user_id], $selected_items);
     $clear_cart_stmt = $pdo->prepare($clear_cart_sql);
     $clear_cart_stmt->execute($clear_params);
-    
-    // Deduct stock using proper stock control system
     deductStockImmediately($pdo, $cart_items, $order_id, $user_id);
-    
     $pdo->commit();
-    
-    error_log("Checkout completed successfully. Order ID: $order_id");
-    
-    // Create user notification and send confirmation email
     try {
         createNotification(
             $user_id,
@@ -282,65 +305,13 @@ try {
             'order_details.php?order_id=' . $order_id
         );
         sendOrderConfirmationEmail($user_id, (int)$order_id, (string)$custom_order_id);
-    } catch (Throwable $e) {
-        // Do not fail checkout on notification/email errors
-    }
-
-    // Handle payment method
-    if ($payment_method === 'paypal') {
-        try {
-            // Include PayPal service
-            require_once 'config/paypal_service.php';
-            
-            // Create PayPal order
-            $paypalService = new PayPalService();
-            $paypalOrder = $paypalService->createOrder([
-                'order_id' => $order_id,
-                'total_amount' => $total_amount,
-                'subtotal' => $subtotal,
-                'shipping_fee' => $shipping_fee,
-                'discount_amount' => $discount_amount,
-                'items' => $cart_items,
-                'shipping_address' => $shipping_address
-            ]);
-            
-            // Store PayPal order ID in database
-            $paypalStmt = $pdo->prepare("UPDATE orders SET payment_reference = ? WHERE order_id = ?");
-            $paypalStmt->execute([$paypalOrder['id'], $order_id]);
-            
-            // Return PayPal approval URL
-            $approvalUrl = '';
-            foreach ($paypalOrder['links'] as $link) {
-                if ($link['rel'] === 'approve') {
-                    $approvalUrl = $link['href'];
-                    break;
-                }
-            }
-            
-            echo json_encode([
-                'success' => true, 
-                'message' => 'PayPal order created successfully',
-                'order_id' => $order_id,
-                'custom_order_id' => $custom_order_id,
-                'paypal_url' => $approvalUrl
-            ]);
-            
-        } catch (Exception $e) {
-            error_log("PayPal error: " . $e->getMessage());
-            echo json_encode([
-                'success' => false, 
-                'message' => 'PayPal payment failed: ' . $e->getMessage()
-            ]);
-        }
-    } else {
-        // Cash on Delivery - order is created and pending
-        echo json_encode([
-            'success' => true, 
-            'message' => 'Order created successfully',
-            'order_id' => $order_id,
-            'custom_order_id' => $custom_order_id
-        ]);
-    }
+    } catch (Throwable $e) {}
+    echo json_encode([
+        'success' => true,
+        'message' => 'Order created successfully',
+        'order_id' => $order_id,
+        'custom_order_id' => $custom_order_id
+    ]);
     
 } catch (PDOException $e) {
     if (isset($pdo)) {

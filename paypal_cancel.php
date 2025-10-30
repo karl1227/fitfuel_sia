@@ -2,27 +2,13 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'customer_auth_check.php';
 
-// PayPal payment was cancelled by user
+// PayPal payment was cancelled by user; ensure we don't persist anything
 $paypal_order_id = $_GET['token'] ?? '';
 
 if (!empty($paypal_order_id)) {
-    try {
-        require_once 'config/database.php';
-        $pdo = getDBConnection();
-        
-        // Find and cancel the order
-        $orderStmt = $pdo->prepare("SELECT * FROM orders WHERE payment_reference = ? AND user_id = ?");
-        $orderStmt->execute([$paypal_order_id, $_SESSION['user_id']]);
-        $order = $orderStmt->fetch();
-        
-        if ($order) {
-            // Update order status to cancelled
-            $updateStmt = $pdo->prepare("UPDATE orders SET status = 'cancelled' WHERE order_id = ?");
-            $updateStmt->execute([$order['order_id']]);
-        }
-        
-    } catch (Exception $e) {
-        error_log("PayPal cancel handler error: " . $e->getMessage());
+    // Clear any pending checkout context so it doesn't leak
+    if (isset($_SESSION['pending_paypal'][$paypal_order_id])) {
+        unset($_SESSION['pending_paypal'][$paypal_order_id]);
     }
 }
 
