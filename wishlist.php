@@ -195,7 +195,7 @@ function first_image($images, $fallback = 'img/placeholder-product.png') {
                     </div>
 
                     <div class="flex space-x-2">
-                      <button onclick="addToCart(<?php echo $item['product_id']; ?>)" 
+                      <button onclick="addToCart(<?php echo $item['product_id']; ?>, this)" 
                               class="flex-1 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors text-sm font-semibold <?php echo !$is_in_stock ? 'opacity-50 cursor-not-allowed' : ''; ?>"
                               <?php echo !$is_in_stock ? 'disabled' : ''; ?>>
                         <i class="fas fa-shopping-cart mr-1"></i>
@@ -251,7 +251,7 @@ function first_image($images, $fallback = 'img/placeholder-product.png') {
     }
   }
 
-  function addToCart(productId) {
+  function addToCart(productId, button = null) {
     <?php if (empty($_SESSION['user_id'])): ?>
       window.location.href = 'login.php';
       return;
@@ -267,6 +267,22 @@ function first_image($images, $fallback = 'img/placeholder-product.png') {
       if (d.success) {
         showNotification('Product added to cart!');
         updateCartCount();
+        // After add to cart, remove from wishlist if button (card) is available
+        if (button) {
+          fetch('remove_from_wishlist.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ product_id: productId })
+          })
+          .then(r => r.json())
+          .then(resp => {
+            if (resp.success) {
+              button.closest('.bg-white').remove();
+              updateEmptyState && updateEmptyState();
+              showNotification('Product removed from wishlist');
+            }
+          });
+        }
       } else {
         showNotification('Error: ' + (d.message || 'Could not add to cart'), 'error');
       }

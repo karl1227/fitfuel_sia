@@ -374,7 +374,7 @@ if (!empty($_SESSION['user_id'])) {
                   </span>
                 <?php endif; ?>
                 <?php if (!empty($_SESSION['user_id']) && isset($wishlisted_products[$product['product_id']])): ?>
-                  <span class="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full">
+                  <span class="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full" data-wishlist-id="<?php echo $product['product_id']; ?>">
                     <i class="fas fa-heart"></i>
                   </span>
                 <?php endif; ?>
@@ -489,7 +489,7 @@ if (!empty($_SESSION['user_id'])) {
     }
 
     // Add to cart
-    function addToCart(productId) {
+    function addToCart(productId, button = null) {
       <?php if (empty($_SESSION['user_id'])): ?>
         window.location.href = 'login.php';
         return;
@@ -505,6 +505,26 @@ if (!empty($_SESSION['user_id'])) {
         if (d.success) {
           showNotification('Product added to cart!');
           updateCartCount();
+
+          // Attempt to remove from wishlist if it's been wishlisted (update UI if present)
+          <?php if (!empty($_SESSION['user_id'])): ?>
+          if (document.querySelector('[data-wishlist-id="'+productId+'"]')) {
+            fetch('remove_from_wishlist.php', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ product_id: productId })
+            })
+            .then(resp => resp.json())
+            .then(data => {
+              if (data.success) {
+                // Remove wishlist badge/icon if present
+                var icon = document.querySelector('[data-wishlist-id="'+productId+'"]');
+                if (icon) icon.remove();
+              }
+            });
+          }
+          <?php endif; ?>
+
         } else {
           showNotification('Error: ' + (d.message || 'Could not add to cart'), 'error');
         }

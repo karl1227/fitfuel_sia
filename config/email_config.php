@@ -10,28 +10,16 @@ require_once __DIR__ . '/../PHPMailer/src/Exception.php';
 function getMailer(): PHPMailer {
 	$mail = new PHPMailer(true);
 
-	$useSmtp     = getenv('SMTP_ENABLED') === '1';
-	$smtpHost    = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
-	$smtpPort    = (int)(getenv('SMTP_PORT') ?: 587);
-	$smtpUser    = getenv('SMTP_USERNAME') ?: '';
-	$smtpPass    = getenv('SMTP_PASSWORD') ?: '';
-	$smtpSecure  = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_STARTTLS;
-	$fromEmail   = getenv('MAIL_FROM') ?: 'no-reply@fitfuel.local';
-	$fromName    = getenv('MAIL_FROM_NAME') ?: 'FitFuel';
+	// Always use SMTP with Gmail
+	$mail->isSMTP();
+	$mail->Host = 'smtp.gmail.com';
+	$mail->SMTPAuth = true;
+	$mail->Username = 'siafitfuel@gmail.com';
+	$mail->Password = 'Siafitfuel123!';
+	$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+	$mail->Port = 587;
 
-	if ($useSmtp && $smtpUser && $smtpPass) {
-		$mail->isSMTP();
-		$mail->Host       = $smtpHost;
-		$mail->SMTPAuth   = true;
-		$mail->Username   = $smtpUser;
-		$mail->Password   = $smtpPass;
-		$mail->SMTPSecure = $smtpSecure;
-		$mail->Port       = $smtpPort;
-	} else {
-		$mail->isMail();
-	}
-
-	$mail->setFrom($fromEmail, $fromName);
+	$mail->setFrom('siafitfuel@gmail.com', 'FitFuel');
 	$mail->CharSet = 'UTF-8';
 
 	return $mail;

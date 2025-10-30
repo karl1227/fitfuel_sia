@@ -33,8 +33,7 @@ try {
 	// Notify admin via email
 	try {
 		$mail = getMailer();
-		$admin = getenv('MAIL_ADMIN') ?: (getenv('SMTP_USERNAME') ?: '');
-		if ($admin) { $mail->addAddress($admin); }
+		$mail->addAddress('siafitfuel@gmail.com');
 		$mail->Subject = 'New Contact Message - ' . $name;
 		$mail->isHTML(true);
 		$mail->Body = '<p><strong>Name:</strong> ' . htmlspecialchars($name, ENT_QUOTES) . '</p>' .

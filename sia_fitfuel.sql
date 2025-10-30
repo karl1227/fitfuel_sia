@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2025 at 10:07 AM
+-- Generation Time: Oct 30, 2025 at 11:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -501,7 +501,10 @@ INSERT INTO `audit_logs` (`audit_id`, `user_id`, `username`, `action_type`, `mod
 (446, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-10-30 08:54:18'),
 (447, NULL, NULL, 'login_failed', 'authentication', 'Failed login attempt', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', NULL, 'user', 'medium', 'failed', '2025-10-30 08:54:26'),
 (448, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-30 08:54:40'),
-(449, 26, 'ninabianca', 'order_create', 'orders', 'New order created', NULL, '{\"user_id\":26,\"payment_method\":\"paypal\",\"total_amount\":4750,\"custom_order_id\":\"FF-20251030-EQL1W\",\"items_count\":3}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 30, 'order', 'medium', 'success', '2025-10-30 09:06:14');
+(449, 26, 'ninabianca', 'order_create', 'orders', 'New order created', NULL, '{\"user_id\":26,\"payment_method\":\"paypal\",\"total_amount\":4750,\"custom_order_id\":\"FF-20251030-EQL1W\",\"items_count\":3}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 30, 'order', 'medium', 'success', '2025-10-30 09:06:14'),
+(450, 26, 'ninabianca', 'order_create', 'orders', 'New order created', NULL, '{\"user_id\":26,\"payment_method\":\"cod\",\"total_amount\":550,\"custom_order_id\":\"FF-20251030-3X8R1\",\"items_count\":1}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 31, 'order', 'medium', 'success', '2025-10-30 09:13:39'),
+(451, 26, 'ninabianca', 'logout', 'authentication', 'User logged out', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 26, 'user', 'low', 'success', '2025-10-30 09:59:31'),
+(452, 4, 'admin', 'login_success', 'authentication', 'User logged in successfully', NULL, '{\"username\":\"admin\"}', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 4, 'user', 'low', 'success', '2025-10-30 09:59:41');
 
 -- --------------------------------------------------------
 
@@ -561,7 +564,10 @@ INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `
 (148, 14, 161, 1, '2025-10-29 08:02:37'),
 (149, 14, 144, 6, '2025-10-29 08:02:37'),
 (150, 14, 143, 3, '2025-10-29 08:02:38'),
-(151, 14, 175, 1, '2025-10-30 01:32:52');
+(151, 14, 175, 1, '2025-10-30 01:32:52'),
+(156, 25, 143, 4, '2025-10-30 09:55:04'),
+(157, 25, 144, 1, '2025-10-30 09:55:22'),
+(158, 25, 161, 1, '2025-10-30 09:57:52');
 
 -- --------------------------------------------------------
 
@@ -585,6 +591,32 @@ INSERT INTO `categories` (`category_id`, `name`, `description`, `created_at`, `u
 (1, 'Gym Accessories', 'Lifting Gear, Recovery Tools and Hydration & Storage', '2025-09-05 05:35:15', '2025-09-05 06:09:57'),
 (2, 'Gym Equipments', 'Professional gym equipment and accessories', '2025-09-05 05:35:15', '2025-09-05 06:09:45'),
 (3, 'Gym Supplements', 'Protein powders, Pre-workout Boosters and Vitamins', '2025-09-05 05:35:15', '2025-09-05 06:09:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_messages`
+--
+
+CREATE TABLE `contact_messages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contact_messages`
+--
+
+INSERT INTO `contact_messages` (`id`, `name`, `email`, `phone`, `message`, `created_at`) VALUES
+(1, 'Karl Blockstock', 'blockstockkc@gmail.com', '09765725385', 'Hello testinggg!! I have question!!!', '2025-10-30 09:22:34'),
+(2, 'Karl', 'blockstockkc@gmail.com', '09765123456', 'Hello! Testing!!!', '2025-10-30 09:33:07'),
+(3, 'Karl', 'blockstockkc@gmail.com', '09123456789', 'Testingg!!! Pls reply here', '2025-10-30 09:40:51'),
+(4, 'Karl', 'blockstockkc@gmail.com', '123456789', 'Testing!', '2025-10-30 09:45:00'),
+(5, 'Hello', 'blockstock@gmail.com', '123456789', 'Testing Message!', '2025-10-30 09:46:14');
 
 -- --------------------------------------------------------
 
@@ -722,7 +754,8 @@ INSERT INTO `inventory` (`inventory_id`, `product_id`, `change_type`, `quantity`
 (65, 177, 'adjustment', 10, NULL, 4, '2025-10-29 15:54:22'),
 (66, 144, 'stock_out', 1, 30, 26, '2025-10-30 09:06:14'),
 (67, 145, 'stock_out', 1, 30, 26, '2025-10-30 09:06:14'),
-(68, 161, 'stock_out', 1, 30, 26, '2025-10-30 09:06:14');
+(68, 161, 'stock_out', 1, 30, 26, '2025-10-30 09:06:14'),
+(69, 149, 'stock_out', 1, 31, 26, '2025-10-30 09:13:39');
 
 -- --------------------------------------------------------
 
@@ -786,7 +819,8 @@ INSERT INTO `notifications` (`notification_id`, `user_id`, `type`, `title`, `mes
 (18, 23, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
 (19, 19, 'system', 'Test', 'Hello!', NULL, 0, '2025-10-30 00:31:16'),
 (20, 14, 'order_status', 'Order FF-20251029-FSZQM Updated', 'Your order status is now: processing.', 'order_details.php?order_id=29', 0, '2025-10-30 01:55:32'),
-(21, 26, 'order_status', 'Payment Received', 'Your order FF-20251030-EQL1W has been paid.', 'order_details.php?order_id=30', 0, '2025-10-30 09:06:14');
+(21, 26, 'order_status', 'Payment Received', 'Your order FF-20251030-EQL1W has been paid.', 'order_details.php?order_id=30', 0, '2025-10-30 09:06:14'),
+(22, 26, 'order_status', 'Order Placed', 'Your order FF-20251030-3X8R1 has been placed successfully.', 'order_details.php?order_id=31', 0, '2025-10-30 09:13:39');
 
 -- --------------------------------------------------------
 
@@ -854,7 +888,8 @@ INSERT INTO `orders` (`order_id`, `custom_order_id`, `user_id`, `status`, `payme
 (27, 'FF-20251029-29NPF', 14, 'delivered', 'cod', 'paid', NULL, '{\"full_name\":\"Emman Cutie\",\"phone\":\"09123456789\",\"address\":\"\",\"city\":\"Camalig\",\"state\":\"Albay\",\"postal_code\":\"2003\"}', 290.00, '2025-11-01', NULL, NULL, 1, '2025-10-29 07:30:14', '2025-10-29 07:34:23'),
 (28, 'FF-20251029-XDF1B', 14, 'returned', 'cod', 'paid', NULL, '{\"full_name\":\"Karl Cutie\",\"phone\":\"09765000555\",\"address_line1\":\"Testing Karl\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Infanta\",\"state\":\"Quezon\",\"postal_code\":\"1930\",\"country\":\"Philippines\"}', 5830.00, '2025-11-01', 'I don\'t like this item. I want to return it.', 700.00, 1, '2025-10-29 07:42:50', '2025-10-29 08:11:38'),
 (29, 'FF-20251029-FSZQM', 14, 'processing', 'paypal', 'pending', '4JT246156A538015A', '{\"full_name\":\"Karl Testing\",\"phone\":\"09765700300\",\"address_line1\":\"R. Testing St.\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"Angono\",\"state\":\"Rizal\",\"postal_code\":\"1940\",\"country\":\"Philippines\"}', 1600.00, '2025-11-01', NULL, NULL, 1, '2025-10-29 07:43:32', '2025-10-30 01:55:32'),
-(30, 'FF-20251030-EQL1W', 26, 'processing', 'paypal', 'paid', '2JD4506701401520N', '{\"full_name\":\"Nina Bianca \",\"phone\":\"09696111915\",\"address_line1\":\"urban deca homes manila\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 4750.00, '2025-11-02', NULL, NULL, 1, '2025-10-30 09:06:14', '2025-10-30 09:06:14');
+(30, 'FF-20251030-EQL1W', 26, 'processing', 'paypal', 'paid', '2JD4506701401520N', '{\"full_name\":\"Nina Bianca \",\"phone\":\"09696111915\",\"address_line1\":\"urban deca homes manila\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 4750.00, '2025-11-02', NULL, NULL, 1, '2025-10-30 09:06:14', '2025-10-30 09:06:14'),
+(31, 'FF-20251030-3X8R1', 26, 'pending', 'cod', 'pending', NULL, '{\"full_name\":\"Nina Bianca \",\"phone\":\"09696111915\",\"address_line1\":\"urban deca homes manila\",\"address_line2\":\"\",\"address_line3\":\"\",\"city\":\"City of Manila\",\"state\":\"Not applicable\",\"postal_code\":\"1012\",\"country\":\"Philippines\"}', 550.00, '2025-11-02', NULL, NULL, 1, '2025-10-30 09:13:39', '2025-10-30 09:13:39');
 
 -- --------------------------------------------------------
 
@@ -911,7 +946,8 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`
 (50, 29, 154, 1, 1500.00, 0, 0),
 (51, 30, 144, 1, 650.00, 0, 0),
 (52, 30, 145, 1, 1200.00, 0, 0),
-(53, 30, 161, 1, 2800.00, 0, 0);
+(53, 30, 161, 1, 2800.00, 0, 0),
+(54, 31, 149, 1, 450.00, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -995,7 +1031,7 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `
 (146, 'Chalk Ball', 'Enhance grip and reduce sweat with high-quality gym chalk. Perfect for lifting, climbing, and CrossFit.', 190.00, 99, 1, 11, '[\"uploads\\/products\\/68bf1f1817428_1757355800.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:37:50', 10, 5.00, 1, 1, 0, 0, 0, 0),
 (147, 'Barbell Pads', 'Protect your joints during intense workouts with durable, cushioned pads ideal for knees, elbows and floors.', 750.00, 75, 1, 11, '[\"uploads\\/products\\/68bf1fa1cbbf9_1757355937.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 15:52:54', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (148, 'Massage Gun', 'Deep tissue massage gun designed to relieve soreness, improve circulation, and promote faster muscle recovery.', 3500.00, 50, 1, 12, '[\"uploads\\/products\\/68bf1fca48f21_1757355978.jpg\"]', 'active', 0, 0, 10, '2025-09-06 14:37:21', '2025-10-30 00:43:13', 10, 0.00, 0, 0, 0, 0, 0, 0),
-(149, 'Gel Pack', 'Gel packs for targeted relief, soothe sore muscles, reduce inflammation, and speed up recovery.', 450.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 08:02:24', 10, 5.00, 1, 1, 0, 0, 0, 0),
+(149, 'Gel Pack', 'Gel packs for targeted relief, soothe sore muscles, reduce inflammation, and speed up recovery.', 450.00, 98, 1, 12, '[\"uploads\\/products\\/68bf1fdb5ef45_1757355995.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-30 09:13:39', 10, 5.00, 1, 1, 0, 0, 0, 0),
 (150, 'Compression Sleeves', 'Improve blood flow and reduce muscle fatigue with breathable, supportive compression sleeves.', 700.00, 99, 1, 12, '[\"uploads\\/products\\/68bf1fe3cca49_1757356003.jpg\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 07:42:50', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (151, 'Stretching Strap', 'Improve flexibility and mobility with a multi-loop stretching strap, great for yoga, PT, or cool-downs', 400.00, 99, 1, 12, '[\"uploads\\/products\\/69025170a2be2_1761759600.webp\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:40:00', 10, 0.00, 0, 0, 0, 0, 0, 0),
 (152, 'Resistance Band', 'Versatile resistance bands for strength training, stretching, or rehabilitation workouts at home or in the gym.', 300.00, 100, 1, 12, '[\"uploads\\/products\\/69024ab0c4f08_1761757872.png\"]', 'active', 0, 0, 0, '2025-09-06 14:37:21', '2025-10-29 17:11:12', 10, 0.00, 0, 0, 0, 0, 0, 0),
@@ -1219,7 +1255,14 @@ INSERT INTO `product_views` (`view_id`, `product_id`, `user_id`, `viewed_at`) VA
 (22, 174, 14, '2025-10-30 01:32:44'),
 (23, 175, 14, '2025-10-30 01:32:53'),
 (24, 173, 14, '2025-10-30 01:50:41'),
-(25, 145, 14, '2025-10-30 01:53:31');
+(25, 145, 14, '2025-10-30 01:53:31'),
+(26, 149, 26, '2025-10-30 09:13:27'),
+(27, 143, 26, '2025-10-30 09:54:53'),
+(28, 144, 26, '2025-10-30 09:54:57'),
+(29, 143, 26, '2025-10-30 09:55:07'),
+(30, 143, 26, '2025-10-30 09:57:21'),
+(31, 161, 26, '2025-10-30 09:57:23'),
+(32, 143, 26, '2025-10-30 09:57:29');
 
 -- --------------------------------------------------------
 
@@ -1532,7 +1575,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `phone`, `date_of_birth`, `address`, `password_hash`, `google_id`, `role`, `status`, `created_at`, `updated_at`, `last_login`, `first_name`, `last_name`, `profile_picture`, `otp`, `otp_expiry`) VALUES
 (1, 'karl', 'blockstockkc@gmail.com', NULL, NULL, NULL, '$2y$10$ZG5QGe1kwUNuwtODCeJIfuTmqSygTtLLysaVUyoTvP3ZiAEN0ICcK', '106499120974501913190', 'customer', 'active', '2025-09-05 07:47:00', '2025-09-10 15:04:00', '2025-09-10 15:04:00', NULL, NULL, NULL, NULL, NULL),
 (2, 'customer', 'customer@gmail.com', NULL, NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'customer', 'active', '2025-09-05 04:51:51', '2025-09-05 04:51:51', NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-30 08:54:40', '2025-10-30 08:54:40', NULL, NULL, NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$MDMf6XvOBbdlXhB3LpbPYuZwKeUecarmG8tAcC/liZ4ep5DdCQCFO', NULL, 'admin', 'active', '2025-09-05 04:58:17', '2025-10-30 09:59:41', '2025-10-30 09:59:41', NULL, NULL, NULL, NULL, NULL),
 (8, 'karl2003', 'blockstockkc123@gmail.com', NULL, NULL, NULL, '$2y$10$NVD1MhjK3UTq9W1.7yRV/uD4S81sanCuMh/Q6ler5BHWLRSezbO6.', NULL, 'customer', 'active', '2025-09-08 17:03:31', '2025-09-10 20:05:34', '2025-09-10 20:05:34', NULL, NULL, NULL, NULL, NULL),
 (9, 'emmanthemanager', 'emmanadmin@gmail.com', NULL, NULL, NULL, '$2y$10$kSFY7rSwEQmfyeNXtUmf6eWXm/PmBFs1pLJeUYq31iLI6hhi6B/4O', NULL, 'manager', 'active', '2025-09-09 04:07:49', '2025-10-29 15:55:15', '2025-10-27 12:31:10', NULL, NULL, NULL, NULL, NULL),
 (10, 'emman', 'emmancutiexd@gmail.com', NULL, NULL, NULL, '$2y$10$aCMxD41/QpN0KFehEO2gCuE7koPN8Wmb/ss8pxTiwJzU5kFpL6cqK', NULL, 'customer', 'active', '2025-09-10 11:44:53', '2025-09-10 11:45:30', '2025-09-10 11:45:30', NULL, NULL, NULL, NULL, NULL),
@@ -1707,6 +1750,12 @@ ALTER TABLE `cart_items`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`category_id`);
+
+--
+-- Indexes for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `contents`
@@ -1932,7 +1981,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=450;
+  MODIFY `audit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=453;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -1944,13 +1993,19 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `cart_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
   MODIFY `category_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `contents`
@@ -1962,7 +2017,7 @@ ALTER TABLE `contents`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `inventory_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `newsletter_subscribers`
@@ -1974,19 +2029,19 @@ ALTER TABLE `newsletter_subscribers`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `order_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `order_item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `order_promo_codes`
@@ -2016,7 +2071,7 @@ ALTER TABLE `product_images`
 -- AUTO_INCREMENT for table `product_views`
 --
 ALTER TABLE `product_views`
-  MODIFY `view_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `view_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `promo_codes`
@@ -2052,7 +2107,7 @@ ALTER TABLE `review_images`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=848;
+  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=860;
 
 --
 -- AUTO_INCREMENT for table `shipping_addresses`
@@ -2094,7 +2149,7 @@ ALTER TABLE `user_payment_methods`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `wishlist_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables

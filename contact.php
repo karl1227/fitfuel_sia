@@ -154,15 +154,15 @@ try {
 					<form id="contactForm" method="POST" action="contact_submit.php" class="space-y-6" onsubmit="return submitContact(event, this);">
 						<div>
 							<label class="block text-sm font-semibold mb-2">Full Name</label>
-							<input type="text" name="name" required placeholder="Enter name" class="w-full px-4 py-2 border border-gray-300 rounded" />
+							<input type="text" name="name" required placeholder="Enter your name" class="w-full px-4 py-2 border border-gray-300 rounded" />
 						</div>
 						<div>
 							<label class="block text-sm font-semibold mb-2">Email Address</label>
-							<input type="email" name="email" required placeholder="Enter email address" class="w-full px-4 py-2 border border-gray-300 rounded" />
+							<input type="email" name="email" required placeholder="Enter your email address" class="w-full px-4 py-2 border border-gray-300 rounded" />
 						</div>
 						<div>
-							<label class="block text-sm font-semibold mb-2">Telephone Number</label>
-							<input type="text" name="phone" placeholder="Enter telephone number" class="w-full px-4 py-2 border border-gray-300 rounded" />
+							<label class="block text-sm font-semibold mb-2">Phone Number</label>
+							<input type="text" name="phone" placeholder="Enter your phone number" class="w-full px-4 py-2 border border-gray-300 rounded" />
 						</div>
 						<div>
 							<label class="block text-sm font-semibold mb-2">Write Your Message</label>
