@@ -33,7 +33,7 @@ try {
 	// Notify admin via email
 	try {
 		$mail = getMailer();
-		$admin = 'fitfuelsia@gmail.com'; // Admin email for contact form
+		$admin = 'fitfuelsia@gmail.com'; // Admin email updated as requested
 		$mail->addAddress($admin);
 		$mail->Subject = 'New Contact Message - ' . $name;
 		$mail->isHTML(true);

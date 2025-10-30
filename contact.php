@@ -7,7 +7,7 @@ $pageTitle = 'Contact Us';
 
 // Pull contact info from CMS if available
 $contactInfo = [
-	'email' => 'siafitfuel@gmail.com',
+	'email' => 'fitfuelsia@gmail.com',
 	'address' => 'Anonas LRT, Aurora Blvd, Quezon City',
 	'phone' => '09123456789',
 	'facebook' => '#',
