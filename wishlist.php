@@ -265,6 +265,25 @@ function first_image($images, $fallback = 'img/placeholder-product.png') {
     .then(r => r.json())
     .then(d => {
       if (d.success) {
+        // Remove from wishlist after successful add
+        fetch('remove_from_wishlist.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ product_id: productId })
+        })
+        .then(r2 => r2.json())
+        .then(d2 => {
+          if (d2.success) {
+            // Remove the product card from the DOM
+            const button = document.querySelector('button[onclick*="addToCart(' + productId + '"]');
+            if (button) {
+              const card = button.closest('.bg-white');
+              if (card) card.remove();
+            }
+            updateEmptyState();
+          }
+        });
+        
         showNotification('Product added to cart!');
         updateCartCount();
         // After add to cart, remove from wishlist if button (card) is available
